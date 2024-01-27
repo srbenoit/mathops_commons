@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mathops_commons">
+    <output-path>$PROJECT_DIR$/out/artifacts/mathops_commons</output-path>
+    <root id="archive" name="mathops_commons.jar" />
+  </artifact>
+</component>
