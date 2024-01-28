@@ -1,6 +1,6 @@
 package dev.mathops.commons.builder;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 
 /**
  * Provides methods to concatenate string representations of various primitive or object types to the superclass

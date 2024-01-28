@@ -1,6 +1,6 @@
 package dev.mathops.commons.unicode;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 
 /**
  * A unicode character encoding, consisting of a code point, character name, general category, canonical combining

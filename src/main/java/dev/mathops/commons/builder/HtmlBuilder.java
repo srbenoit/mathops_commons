@@ -1,6 +1,6 @@
 package dev.mathops.commons.builder;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 
 /**
  * A simple implementation of the {@code HtmlBuilder} interface which can efficiently build HTML strings.

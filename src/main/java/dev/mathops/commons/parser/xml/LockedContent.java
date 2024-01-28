@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.log.Locked;
+import dev.mathops.commons.log.Locked;
 
 /**
  * A container for a character array of arbitrary content.

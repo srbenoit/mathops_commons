@@ -1,7 +1,7 @@
 package dev.mathops.commons.installation;
 
-import dev.mathops.core.CoreConstants;
-import dev.mathops.core.log.SimpleErrorWarningLog;
+import dev.mathops.commons.CoreConstants;
+import dev.mathops.commons.log.SimpleErrorWarningLog;
 
 import java.io.File;
 import java.io.FileInputStream;

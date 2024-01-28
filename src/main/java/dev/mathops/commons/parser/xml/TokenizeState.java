@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.parser.FilePosition;
+import dev.mathops.commons.parser.FilePosition;
 
 import java.util.ArrayList;
 import java.util.List;

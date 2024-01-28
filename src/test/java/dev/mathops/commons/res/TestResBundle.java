@@ -1,13 +1,13 @@
-package dev.mathops.core.res;
+package dev.mathops.commons.res;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.Locale;
 
 /**
  * Tests for the ResBundle class.

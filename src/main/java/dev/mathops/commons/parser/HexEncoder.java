@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser;
 
-import dev.mathops.core.builder.HtmlBuilder;
+import dev.mathops.commons.builder.HtmlBuilder;
 
 /**
  * Utility class to encode and decode hexadecimal strings.

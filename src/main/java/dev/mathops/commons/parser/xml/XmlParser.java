@@ -1,8 +1,8 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.CoreConstants;
-import dev.mathops.core.parser.ICharSpan;
-import dev.mathops.core.parser.ParsingException;
+import dev.mathops.commons.CoreConstants;
+import dev.mathops.commons.parser.ICharSpan;
+import dev.mathops.commons.parser.ParsingException;
 
 import java.util.ArrayList;
 import java.util.Collection;

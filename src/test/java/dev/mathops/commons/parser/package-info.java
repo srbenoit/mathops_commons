@@ -1,4 +1,4 @@
 /**
- * Test cases for the {@code dev.mathops.core.parser} package.
+ * Test cases for the {@code dev.mathops.commons.parser} package.
  */
-package dev.mathops.core.parser;
+package dev.mathops.commons.parser;

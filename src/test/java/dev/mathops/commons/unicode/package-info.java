@@ -1,4 +1,4 @@
 /**
- * Test cases for the {@code dev.mathops.core.unicode} package.
+ * Test cases for the {@code dev.mathops.commons.unicode} package.
  */
-package dev.mathops.core.unicode;
+package dev.mathops.commons.unicode;

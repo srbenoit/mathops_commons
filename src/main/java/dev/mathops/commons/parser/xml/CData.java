@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.parser.CharSpan;
+import dev.mathops.commons.parser.CharSpan;
 
 import java.util.ArrayList;
 import java.util.List;

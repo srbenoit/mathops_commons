@@ -1,16 +1,16 @@
-package dev.mathops.core.unicode;
+package dev.mathops.commons.unicode;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Iterator;
 
 /**
  * Tests for the UnicodeCharacterSet class.

@@ -1,6 +1,6 @@
 package dev.mathops.commons;
 
-import dev.mathops.core.builder.HtmlBuilder;
+import dev.mathops.commons.builder.HtmlBuilder;
 
 /**
  * System-wide constants.

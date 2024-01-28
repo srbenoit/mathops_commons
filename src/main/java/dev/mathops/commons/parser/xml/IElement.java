@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.parser.ParsingException;
+import dev.mathops.commons.parser.ParsingException;
 
 import java.time.LocalDateTime;
 import java.util.Set;

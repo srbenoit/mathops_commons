@@ -1,8 +1,8 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.log.Log;
-import dev.mathops.core.unicode.UnicodeCharacter;
-import dev.mathops.core.unicode.UnicodeCharacterSet;
+import dev.mathops.commons.log.Log;
+import dev.mathops.commons.unicode.UnicodeCharacter;
+import dev.mathops.commons.unicode.UnicodeCharacterSet;
 
 /**
  * Utilities for working with {@code Char}, as defined in XML 1.0 and XML 1.1.

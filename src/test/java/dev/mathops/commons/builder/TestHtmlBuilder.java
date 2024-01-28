@@ -1,13 +1,13 @@
-package dev.mathops.core.builder;
+package dev.mathops.commons.builder;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for the {@code HTMLBuilder} class.

@@ -1,6 +1,6 @@
 package dev.mathops.commons.res;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 
 import java.util.HashMap;
 import java.util.Iterator;

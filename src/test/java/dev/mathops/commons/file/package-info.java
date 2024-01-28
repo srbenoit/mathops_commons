@@ -1,4 +1,4 @@
 /**
- * Test cases for the {@code dev.mathops.core.file} package.
+ * Test cases for the {@code dev.mathops.commons.file} package.
  */
-package dev.mathops.core.file;
+package dev.mathops.commons.file;

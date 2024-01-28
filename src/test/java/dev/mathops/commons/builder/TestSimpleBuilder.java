@@ -1,4 +1,4 @@
-package dev.mathops.core.builder;
+package dev.mathops.commons.builder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

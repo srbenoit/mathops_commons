@@ -1,7 +1,7 @@
 package dev.mathops.commons.log;
 
-import dev.mathops.core.CoreConstants;
-import dev.mathops.core.builder.HtmlBuilder;
+import dev.mathops.commons.CoreConstants;
+import dev.mathops.commons.builder.HtmlBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -1,13 +1,9 @@
-package dev.mathops.core.file;
+package dev.mathops.commons.file;
 
-import dev.mathops.core.CoreConstants;
-import dev.mathops.core.log.Log;
+import dev.mathops.commons.CoreConstants;
+import dev.mathops.commons.log.Log;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -23,6 +19,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests for the FileLoader class.

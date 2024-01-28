@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 
 import java.io.Serial;
 

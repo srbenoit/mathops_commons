@@ -1,8 +1,14 @@
 plugins {
-    id("java")
+    `java-library`
 }
 
-group = "org.example"
+sourceSets {
+    main {
+        output.setResourcesDir(file("build/classes/java/main"))
+    }
+}
+
+group = "dev.mathops.commons"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -16,4 +22,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.compileJava {
+    options.javaModuleVersion = provider { "1.0" }
 }

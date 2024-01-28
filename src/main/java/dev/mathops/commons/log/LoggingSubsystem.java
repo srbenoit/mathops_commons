@@ -1,6 +1,6 @@
 package dev.mathops.commons.log;
 
-import dev.mathops.core.installation.Installation;
+import dev.mathops.commons.installation.Installation;
 
 /**
  * Provides VM-wide control of the logging subsystem. There is a single log flow for the VM. Until an Installation has

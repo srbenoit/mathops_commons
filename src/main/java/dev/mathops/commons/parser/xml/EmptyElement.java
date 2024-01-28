@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.builder.HtmlBuilder;
+import dev.mathops.commons.builder.HtmlBuilder;
 
 /**
  * An empty element, characterized by a tag of the form &lt; ... /&gt;.

@@ -1,6 +1,6 @@
-package dev.mathops.core.parser;
+package dev.mathops.commons.parser;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

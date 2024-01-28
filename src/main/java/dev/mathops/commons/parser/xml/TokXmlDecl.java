@@ -1,8 +1,8 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.builder.HtmlBuilder;
-import dev.mathops.core.log.Log;
-import dev.mathops.core.parser.ParsingException;
+import dev.mathops.commons.builder.HtmlBuilder;
+import dev.mathops.commons.log.Log;
+import dev.mathops.commons.parser.ParsingException;
 
 /**
  * A token that represents the XML declaration, beginning with <? and ending with ?>.

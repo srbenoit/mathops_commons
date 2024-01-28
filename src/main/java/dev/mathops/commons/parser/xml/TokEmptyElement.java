@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.parser.ParsingException;
+import dev.mathops.commons.parser.ParsingException;
 
 /**
  * A token that represents an empty element, beginning with < and ending with />, with no < or > characters between.

@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.builder.HtmlBuilder;
+import dev.mathops.commons.builder.HtmlBuilder;
 
 /**
  * A utility class to escape strings for use in XML (as an attribute value, for example) and recover the original

@@ -1,6 +1,6 @@
 package dev.mathops.commons.parser.xml;
 
-import dev.mathops.core.parser.CharSpan;
+import dev.mathops.commons.parser.CharSpan;
 
 /**
  * An attribute on an XML element.

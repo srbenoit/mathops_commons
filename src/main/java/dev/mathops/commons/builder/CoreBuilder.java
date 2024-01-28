@@ -1,6 +1,6 @@
 package dev.mathops.commons.builder;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 
 /**
  * Supports the construction of strings by appending to a character array which resizes as needed.

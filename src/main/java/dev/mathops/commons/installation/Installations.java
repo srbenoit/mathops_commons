@@ -1,6 +1,6 @@
 package dev.mathops.commons.installation;
 
-import dev.mathops.core.CoreConstants;
+import dev.mathops.commons.CoreConstants;
 
 import java.io.File;
 import java.nio.file.InvalidPathException;
