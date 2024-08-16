@@ -47,7 +47,7 @@ class LogEntryList extends Synchronized {
                 this.logData.add(new LogEntry(msg));
 
                 if (this.logData.size() > this.maxListEntries) {
-                    this.logData.remove(0);
+                    this.logData.removeFirst();
                 }
             }
         }

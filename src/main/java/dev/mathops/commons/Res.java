@@ -9,44 +9,36 @@ import java.util.Locale;
  */
 final class Res extends ResBundle {
 
-    /** An incrementing index for resource keys. */
-    private static int index = 1;
+    /** A resource key. */
+    static final String RND_UPPER_LIMIT_NOT_POS = key(1);
 
     /** A resource key. */
-    static final String RND_UPPER_LIMIT_NOT_POS = key(index++);
+    static final String PATH_LIST_READ_ERR = key(2);
 
     /** A resource key. */
-    static final String PATH_LIST_READ_ERR = key(index++);
+    static final String PATH_LIST_NO_BASE = key(3);
 
     /** A resource key. */
-    static final String PATH_LIST_NO_BASE = key(index++);
-
-    /** A resource key. */
-    static final String PATH_LIST_WRITE_ERR = key(index++);
+    static final String PATH_LIST_WRITE_ERR = key(4);
 
     // Used by ClassList
 
     /** A resource key. */
-    static final String CANT_DOWNLOAD_JAR = key(index++);
+    static final String CANT_DOWNLOAD_JAR = key(5);
 
     /** A resource key. */
-    static final String CANT_INSTANTIATE_JAR = key(index++);
+    static final String CANT_INSTANTIATE_JAR = key(6);
 
     /** A resource key. */
-    static final String CLASS_NOT_FOUND = key(index++);
+    static final String CLASS_NOT_FOUND = key(7);
 
     /** A resource key. */
-    static final String CLASS_NOT_DEF = key(index++);
-
-    // Used by TestSuite
-
-    /** A resource key. */
-    static final String TEST_SUITE_TITLE = key(index++);
+    static final String CLASS_NOT_DEF = key(8);
 
     //
 
     /** The resources - an array of key-values pairs. */
-    private static final String[][] EN_US = { //
+    private static final String[][] EN_US = {
             {RND_UPPER_LIMIT_NOT_POS, "Upper limit must be positive"},
             {PATH_LIST_READ_ERR, "Exception while reading {0} (using defaults): "},
             {PATH_LIST_NO_BASE, "Must have a base directory."},
@@ -56,8 +48,6 @@ final class Res extends ResBundle {
             {CANT_INSTANTIATE_JAR, "jar file ''{0}'' could not be instantiated from file path."},
             {CLASS_NOT_FOUND, "Class ''{0}'' not found"},
             {CLASS_NOT_DEF, "Class ''{0}'' not defined"},
-
-            {TEST_SUITE_TITLE, "Core Project"},
 
             //
     };

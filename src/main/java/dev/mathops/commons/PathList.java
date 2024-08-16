@@ -41,17 +41,13 @@ public final class PathList {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' HH:mm a", Locale.US);
 
     /** The singleton instance. */
-    private static PathList instance;
+    private static PathList instance = null;
 
     /** The base installation directory. */
     public final File baseDir;
 
     /** A map from a path enumeration to the corresponding path. */
     private final Map<EPath, File> paths;
-
-    static {
-        instance = null;
-    }
 
     /**
      * Private constructor to prevent instantiation.

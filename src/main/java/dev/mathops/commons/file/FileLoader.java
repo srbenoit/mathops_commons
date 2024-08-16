@@ -112,16 +112,16 @@ public enum FileLoader {
     /**
      * Reads all lines of text from an input stream and appends them to a {@code HtmlBuilder} .
      *
-     * @param stream the stream to read
-     * @param str    a {@code HtmlBuilder} to which to add the loaded text from the stream
+     * @param stream  the stream to read
+     * @param builder a {@code HtmlBuilder} to which to add the loaded text from the stream
      * @throws IOException if an error occurred reading from the stream
      */
-    private static void readStreamAsString(final InputStream stream, final HtmlBuilder str)
+    private static void readStreamAsString(final InputStream stream, final HtmlBuilder builder)
             throws IOException {
 
         try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
-                str.add(line, CoreConstants.CRLF);
+                builder.add(line, CoreConstants.CRLF);
             }
         }
     }
@@ -483,7 +483,7 @@ public enum FileLoader {
             throws IOException {
 
         final String classname = caller.getName();
-        String path;
+        final String path;
         final int lastDot = classname.lastIndexOf('.');
         if (lastDot == -1) {
             path = name;
@@ -528,7 +528,8 @@ public enum FileLoader {
                         Log.warning("  *** ", module.getName(), ".getResourceAsStream(", path, ") failed");
                         input = loader.getResourceAsStream(path);
                         if (input == null) {
-                            Log.warning("  *** ", module.getName(), ".getClassLoader().getResourceAsStream(", path, ") failed");
+                            Log.warning("  *** ", module.getName(), ".getClassLoader().getResourceAsStream(", path,
+                                    ") failed");
                         }
                     }
                 }

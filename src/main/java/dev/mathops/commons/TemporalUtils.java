@@ -65,6 +65,9 @@ public enum TemporalUtils {
     /** A date/time format that matches that expected by Informix. */
     public static final DateTimeFormatter FMT_INFORMIX = DateTimeFormatter.ofPattern("MMddyy", Locale.US);
 
+    /** The number of minutes ina day. */
+    public static final int MINUTES_PER_DAY = 1440;
+
     /**
      * Gets a local date/time represented by a Java (long) timestamp in the system default time zone.
      *
@@ -102,10 +105,10 @@ public enum TemporalUtils {
 
         if (min < 0) {
             actualDate = actualDate.minusDays(1L);
-            min += 1440;
-        } else if (min >= 1440) {
+            min += MINUTES_PER_DAY;
+        } else if (min >= MINUTES_PER_DAY) {
             actualDate = actualDate.plusDays(1L);
-            min -= 1440;
+            min -= MINUTES_PER_DAY;
         }
 
         return LocalDateTime.of(actualDate, LocalTime.of(min / 60, min % 60));

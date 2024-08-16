@@ -9,19 +9,16 @@ import java.util.Locale;
  */
 final class Res extends ResBundle {
 
-    /** An incrementing index for resource keys. */
-    private static int index = 1;
+    /** A resource key. */
+    static final String FILE_LOAD_FAIL = key(1);
 
     /** A resource key. */
-    static final String FILE_LOAD_FAIL = key(index++);
-
-    /** A resource key. */
-    static final String FILE_NOT_FOUND = key(index++);
+    static final String FILE_NOT_FOUND = key(2);
 
     //
 
     /** The resources - an array of key-values pairs. */
-    private static final String[][] EN_US = { //
+    private static final String[][] EN_US = {
             {FILE_LOAD_FAIL, "FileLoader failed to read file {0}"},
             {FILE_NOT_FOUND, "File not found: {0} - {1}"},
 

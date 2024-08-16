@@ -25,8 +25,7 @@ public class CharSpan implements ICharSpan {
      * @param theLineNumber the line number of the start of the span (the first line in the file is line 1)
      * @param theColumn     the column of the start of the span (the first character in the line is column 1)
      */
-    public CharSpan(final int theStart, final int theEnd, final int theLineNumber,
-                    final int theColumn) {
+    public CharSpan(final int theStart, final int theEnd, final int theLineNumber, final int theColumn) {
 
         this.start = theStart;
         this.end = theEnd;

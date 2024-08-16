@@ -7,14 +7,11 @@ import java.util.Locale;
  */
 final class Res extends ResBundle {
 
-    /** An incrementing index for resource keys. */
-    private static int index = 1;
+    /** A resource key. */
+    static final String NULL_LOCALE = key(1);
 
     /** A resource key. */
-    static final String NULL_LOCALE = key(index++);
-
-    /** A resource key. */
-    static final String BAD_ARRAY = key(index++);
+    static final String BAD_ARRAY = key(2);
 
     //
 

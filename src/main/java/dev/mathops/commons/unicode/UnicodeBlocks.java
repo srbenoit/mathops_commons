@@ -52,12 +52,12 @@ public final class UnicodeBlocks {
 
         final String[] lines = FileLoader.loadFileAsLines(getClass(), FILENAME, true);
         try {
-            for (String line : lines) {
+            for (final String line : lines) {
                 if (!line.isEmpty() && line.charAt(0) != '#') {
                     processLine(line);
                 }
             }
-        } catch (NumberFormatException ex) {
+        } catch (final NumberFormatException ex) {
             Log.warning("Invalid block specification in ", FILENAME, ex);
             this.blocks.clear();
         }
@@ -95,7 +95,7 @@ public final class UnicodeBlocks {
     public static String normalizeBlockName(final CharSequence name) {
 
         final int len = name.length();
-        final HtmlBuilder str = new HtmlBuilder(len);
+        final HtmlBuilder builder = new HtmlBuilder(len);
 
         for (int i = 0; i < len; ++i) {
             final char chr = name.charAt(i);
@@ -104,10 +104,10 @@ public final class UnicodeBlocks {
                 continue;
             }
 
-            str.add(Character.toLowerCase(chr));
+            builder.add(Character.toLowerCase(chr));
         }
 
-        return str.toString();
+        return builder.toString();
     }
 
     /**
@@ -120,7 +120,7 @@ public final class UnicodeBlocks {
     public static String stripSpaces(final CharSequence name) {
 
         final int len = name.length();
-        final HtmlBuilder str = new HtmlBuilder(len);
+        final HtmlBuilder builder = new HtmlBuilder(len);
 
         for (int i = 0; i < len; ++i) {
             final char chr = name.charAt(i);
@@ -129,10 +129,10 @@ public final class UnicodeBlocks {
                 continue;
             }
 
-            str.add(chr);
+            builder.add(chr);
         }
 
-        return str.toString();
+        return builder.toString();
     }
 
     /**

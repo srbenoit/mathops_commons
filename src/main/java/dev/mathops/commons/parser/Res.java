@@ -5,43 +5,40 @@ import dev.mathops.commons.res.ResBundle;
 import java.util.Locale;
 
 /**
- * Localized resources for the {@code edu.colostate.math.core.parser} package.
+ * Localized resources for the {@code dev.mathops.commons.parser} package.
  */
 final class Res extends ResBundle {
-
-    /** An incrementing index for resource keys. */
-    private static int index = 1;
 
     // Used by HexEncoder
 
     /** A resource key. */
-    static final String INVALID_HEX_LEN = key(index++);
+    static final String INVALID_HEX_LEN = key(1);
 
     /** A resource key. */
-    static final String INVALID_HEX = key(index++);
+    static final String INVALID_HEX = key(2);
 
     // Used by Base64
 
     /** A resource key. */
-    static final String B64_PAD_BEFORE_END = key(index++);
+    static final String B64_PAD_BEFORE_END = key(3);
 
     /** A resource key. */
-    static final String B64_BAD_SECOND = key(index++);
+    static final String B64_BAD_SECOND = key(4);
 
     /** A resource key. */
-    static final String B64_BAD_THIRD = key(index++);
+    static final String B64_BAD_THIRD = key(5);
 
     /** A resource key. */
-    static final String B64_OUT_OF_RANGE = key(index++);
+    static final String B64_OUT_OF_RANGE = key(6);
 
     /** A resource key. */
-    static final String B64_BAD_CHAR = key(index++);
+    static final String B64_BAD_CHAR = key(7);
 
     /** A resource key. */
-    static final String B64_BYTE1_PAD = key(index++);
+    static final String B64_BYTE1_PAD = key(8);
 
     /** A resource key. */
-    static final String B64_BYTE2_PAD = key(index++);
+    static final String B64_BYTE2_PAD = key(9);
 
     //
 

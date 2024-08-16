@@ -13,10 +13,10 @@ public enum UIUtilities {
     ;
 
     /** Default horizontal position. */
-    private static final double DEFULT_X = 0.5;
+    private static final double DEFAULT_X = 0.5;
 
     /** Default vertical position. */
-    private static final double DEFULT_Y = 0.3;
+    private static final double DEFAULT_Y = 0.3;
 
     /**
      * Packs a window (including JFrame and JDialog), centers it within the desktop, and makes it visible.
@@ -25,7 +25,7 @@ public enum UIUtilities {
      */
     public static void packAndCenter(final Window window) {
 
-        packAndShow(window, DEFULT_X, DEFULT_Y);
+        packAndShow(window, DEFAULT_X, DEFAULT_Y);
     }
 
     /**

@@ -9,22 +9,19 @@ import java.util.Locale;
  */
 final class Res extends ResBundle {
 
-    /** An incrementing index for resource keys. */
-    private static int index = 1;
-
     // Resources used by Installation
 
     /** A resource key. */
-    static final String CFG_FILE_NONEXIST = key(index++);
+    static final String CFG_FILE_NONEXIST = key(1);
 
     /** A resource key. */
-    static final String CANT_READ_CFG_FILE = key(index++);
+    static final String CANT_READ_CFG_FILE = key(2);
 
     /** A resource key. */
-    static final String CANT_CREATE_DIR = key(index++);
+    static final String CANT_CREATE_DIR = key(3);
 
     /** A resource key. */
-    static final String PATH_IS_NOT_DIR = key(index++);
+    static final String PATH_IS_NOT_DIR = key(4);
 
     //
 
@@ -33,7 +30,7 @@ final class Res extends ResBundle {
 
             {CFG_FILE_NONEXIST, "Configuration file ''{0}'' does not exist",},
             {CANT_READ_CFG_FILE, "Unable to load configuration file ''{0}''",},
-            {CANT_CREATE_DIR, "Unable to create diretory ''{0}''",},
+            {CANT_CREATE_DIR, "Unable to create directory ''{0}''",},
             {PATH_IS_NOT_DIR, "Path ''{0}'' exists but is not a directory",},
 
     };

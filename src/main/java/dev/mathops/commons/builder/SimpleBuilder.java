@@ -204,9 +204,9 @@ public class SimpleBuilder extends CoreBuilder {
 
         final SimpleBuilder builder = new SimpleBuilder(100);
 
-        for (final Object s : strings) {
-            if (s != null) {
-                builder.innerAddObject(s);
+        for (final Object o : strings) {
+            if (o != null) {
+                builder.innerAddObject(o);
             }
         }
 

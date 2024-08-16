@@ -9,75 +9,68 @@ import java.util.Locale;
  */
 final class Res extends ResBundle {
 
-    /** An incrementing index for resource keys. */
-    private static int index = 1;
+    /** Resource key. */
+    static final String MUT_IN_NOTIFY = key(1);
 
     /** Resource key. */
-    static final String MUT_IN_NOTIFY = key(index++);
+    static final String RENAME_FAIL = key(2);
 
     /** Resource key. */
-    static final String RENAME_FAIL = key(index++);
+    static final String DELETE_FAIL = key(3);
 
     /** Resource key. */
-    static final String DELETE_FAIL = key(index++);
+    static final String COPY_FAIL = key(4);
 
     /** Resource key. */
-    static final String COPY_FAIL = key(index++);
+    static final String COPY_ERROR = key(5);
 
     /** Resource key. */
-    static final String COPY_ERROR = key(index++);
+    static final String LOG_FAILED = key(6);
 
     /** Resource key. */
-    static final String LOG_FAILED = key(index++);
+    static final String EMPTY_FNAME = key(7);
 
     /** Resource key. */
-    static final String EMPTY_FPATH = key(index++);
+    static final String FNAME_CHAR1 = key(8);
 
     /** Resource key. */
-    static final String EMPTY_FNAME = key(index++);
+    static final String NO_SRC = key(9);
 
     /** Resource key. */
-    static final String FNAME_CHAR1 = key(index++);
+    static final String ERRLOG_NO_INTERFACE = key(10);
 
     /** Resource key. */
-    static final String NO_SRC = key(index++);
+    static final String SETTINGS_BAD_FILE_COUNT = key(11);
 
     /** Resource key. */
-    static final String ERRLOG_NO_INTERFACE = key(index++);
+    static final String SETTINGS_BAD_FILE_SIZE = key(12);
 
     /** Resource key. */
-    static final String SETTINGS_BAD_FILE_COUNT = key(index++);
+    static final String SETTINGS_BAD_COUNT = key(13);
 
     /** Resource key. */
-    static final String SETTINGS_BAD_FILE_SIZE = key(index++);
+    static final String SETTINGS_PARSE_COUNT = key(14);
 
     /** Resource key. */
-    static final String SETTINGS_BAD_COUNT = key(index++);
+    static final String SETTINGS_BAD_SIZE = key(15);
 
     /** Resource key. */
-    static final String SETTINGS_PARSE_COUNT = key(index++);
+    static final String SETTINGS_PARSE_SIZE = key(16);
 
     /** Resource key. */
-    static final String SETTINGS_BAD_SIZE = key(index++);
+    static final String SETTINGS_BAD_LEVEL = key(17);
 
     /** Resource key. */
-    static final String SETTINGS_PARSE_SIZE = key(index++);
-
-    /** Resource key. */
-    static final String SETTINGS_BAD_LEVEL = key(index++);
-
-    /** Resource key. */
-    static final String CANT_MK_LOGDIR = key(index++);
+    static final String CANT_MK_LOGDIR = key(18);
 
     /** The resources - an array of key-values pairs. */
-    private static final String[][] EN_US = {//
+    private static final String[][] EN_US = {
             {MUT_IN_NOTIFY, "Attempt to mutate in notification"},
             {RENAME_FAIL, "Unable to rename {0} to {1} while rotating logs"},
             {DELETE_FAIL, "Unable to delete {0}"},
             {COPY_FAIL, "Unable to copy {0} to {1} while rotating logs"},
             {COPY_ERROR, "Error copying file: {0}"},
             {LOG_FAILED, "Failed to log to {0}: {1}"},
-            {EMPTY_FPATH, "Log file path may not be empty string"},
             {EMPTY_FNAME, "Log filename base may not be empty string"},
             {FNAME_CHAR1, "Log filename must start with a character (A-Z or a-z)"},
             {NO_SRC, "(source unavailable for {0})"},

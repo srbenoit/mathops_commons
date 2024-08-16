@@ -71,9 +71,6 @@ public enum CoreConstants {
     /** The standard end-of-line characters. */
     public static final String CRLF = "\r\n";
 
-    /** A commonly used string. */
-    public static final String STATIC = "static-method";
-
     /** Characters from which to make IDs (62). */
     private static final char[] ID_CHARS =
             "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789".toCharArray();
@@ -90,14 +87,14 @@ public enum CoreConstants {
      */
     public static String newId(final int length) {
 
-        final HtmlBuilder str = new HtmlBuilder(length);
+        final HtmlBuilder builder = new HtmlBuilder(length);
 
         synchronized (RND) {
             for (int i = 0; i < length; ++i) {
-                str.add(ID_CHARS[RND.nextInt(ID_CHARS.length)]);
+                builder.add(ID_CHARS[RND.nextInt(ID_CHARS.length)]);
             }
         }
 
-        return str.toString();
+        return builder.toString();
     }
 }

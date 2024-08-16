@@ -43,28 +43,28 @@ public class LogBase extends Synchronized {
     public static final int ALL = 0x00FF;
 
     /** Name of a logging level. */
-    /* default */ static final String SEVERE_LVL = "SEVERE";
+    static final String SEVERE_LVL = "SEVERE";
 
     /** Name of a logging level. */
-    /* default */ static final String WARNING_LVL = "WARNING";
+    static final String WARNING_LVL = "WARNING";
 
     /** Name of a logging level. */
-    /* default */ static final String INFO_LVL = "INFO";
+    static final String INFO_LVL = "INFO";
 
     /** Name of a logging level. */
-    /* default */ static final String CONFIG_LVL = "CONFIG";
+    static final String CONFIG_LVL = "CONFIG";
 
     /** Name of a logging level. */
-    /* default */ static final String ENTERING_LVL = "ENTERING";
+    static final String ENTERING_LVL = "ENTERING";
 
     /** Name of a logging level. */
-    /* default */ static final String EXITING_LVL = "EXITING";
+    static final String EXITING_LVL = "EXITING";
 
     /** Name of a logging level. */
-    /* default */ static final String FINE_LVL = "FINE";
+    static final String FINE_LVL = "FINE";
 
     /** Name of a logging level. */
-    /* default */ static final String FINEST_LVL = "FINEST";
+    static final String FINEST_LVL = "FINEST";
 
     /** Indentation to make follow-on lines align with lines that have log info. */
     private static final String INDENT = "                           ";

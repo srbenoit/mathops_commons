@@ -23,7 +23,7 @@ public final class UnicodeCharacterSet {
     /** The singleton instance. */
     private static UnicodeCharacterSet instance;
 
-    /** The unicode characters by code point. */
+    /** The Unicode characters by code point. */
     private final Map<Integer, UnicodeCharacter> chars;
 
     /**
@@ -44,12 +44,12 @@ public final class UnicodeCharacterSet {
 
         final String[] lines = FileLoader.loadFileAsLines(getClass(), FILENAME, true);
         try {
-            for (String line : lines) {
+            for (final String line : lines) {
                 if (!line.isEmpty() && line.charAt(0) != '#') {
                     processLine(line);
                 }
             }
-        } catch (NumberFormatException ex) {
+        } catch (final NumberFormatException ex) {
             Log.warning("Invalid character specification in ", FILENAME, ex);
             this.chars.clear();
         }
@@ -172,8 +172,8 @@ public final class UnicodeCharacterSet {
     }
 
     /**
-     * Given a Unicode code point, returns code point of the titlecase equivalent. If the code point does not have a
-     * titlecase mapping or is not defined, the original code point is returned.
+     * Given a Unicode code point, returns code point of the title case equivalent. If the code point does not have a
+     * title case mapping or is not defined, the original code point is returned.
      *
      * @param codePoint the code point
      * @return the lowercase equivalent

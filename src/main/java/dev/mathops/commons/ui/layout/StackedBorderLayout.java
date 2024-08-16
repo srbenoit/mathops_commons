@@ -30,9 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A layout manager that behaves much like {@code BorderLayout}, but under which multiple components can be added to each
- * of the four edges. They will then "stack" from the edge toward the center, as if a sequence of nested containers with
- * {@code BorderLayout} layouts were created.
+ * A layout manager that behaves much like {@code BorderLayout}, but under which multiple components can be added to
+ * each of the four edges. They will then "stack" from the edge toward the center, as if a sequence of nested containers
+ * with {@code BorderLayout} layouts were created.
  */
 public class StackedBorderLayout implements LayoutManager2, Serializable {
 
@@ -166,8 +166,7 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
             if (constraints == null || constraints instanceof String) {
                 addLayoutComponent((String) constraints, comp);
             } else {
-                throw new IllegalArgumentException(
-                        "cannot add to layout: constraint must be a string (or null)");
+                throw new IllegalArgumentException("cannot add to layout: constraint must be a string (or null)");
             }
         }
     }
@@ -204,8 +203,7 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
                     Log.warning("BorderLayout constant used in StackedBorderLayout: ", new IllegalArgumentException());
                     this.east.add(comp);
                 }
-                default -> throw new IllegalArgumentException(
-                        "cannot add to layout: unknown constraint: " + name);
+                default -> throw new IllegalArgumentException("cannot add to layout: unknown constraint: " + name);
             }
         }
     }

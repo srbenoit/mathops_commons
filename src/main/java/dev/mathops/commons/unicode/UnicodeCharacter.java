@@ -3,9 +3,9 @@ package dev.mathops.commons.unicode;
 import dev.mathops.commons.CoreConstants;
 
 /**
- * A unicode character encoding, consisting of a code point, character name, general category, canonical combining
+ * A Unicode character encoding, consisting of a code point, character name, general category, canonical combining
  * classes, bidirectional category, character decomposition mapping, decimal digit value, digit value, numeric value,
- * mirrored, Unicode 1.0 name, 10646 comment field, uppercase mapping, lowercase mapping, and titlecase mapping.
+ * mirrored, Unicode 1.0 name, 10646 comment field, uppercase mapping, lowercase mapping, and title case mapping.
  */
 public final class UnicodeCharacter {
 
@@ -151,8 +151,7 @@ public final class UnicodeCharacter {
         this.name = fields[NAME_IDX];
         this.category = fields[CATEGORY_IDX];
 
-        this.combining =
-                fields[COMBINING_IDX].isEmpty() ? null : Integer.valueOf(fields[COMBINING_IDX]);
+        this.combining = fields[COMBINING_IDX].isEmpty() ? null : Integer.valueOf(fields[COMBINING_IDX]);
 
         this.bidiCategory = fields[BIDI_CATEGORY_IDX];
 

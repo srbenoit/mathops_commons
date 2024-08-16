@@ -16,7 +16,11 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
+    compileOnly("jakarta.websocket:jakarta.websocket-api:2.2.0")
+    compileOnly("jakarta.websocket:jakarta.websocket-client-api:2.2.0")
+
+    testImplementation(platform("org.junit:junit-bom:5.11.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 

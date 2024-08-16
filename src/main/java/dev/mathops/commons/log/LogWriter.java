@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 public final class LogWriter extends LogEntryList {
 
     /** File extension for log files. */
-    private static final String EXTENTION = ".log";
+    private static final String EXTENSION = ".log";
 
     /** System output print stream that can support Unicode. */
     private final PrintStream sysout;
@@ -48,7 +48,7 @@ public final class LogWriter extends LogEntryList {
         if (LoggingSubsystem.getInstallation() != null && this.settings.isLogToFiles()) {
             final File logDir = determineLogDir();
             final String filanemeNase = this.settings.getFilenameBase();
-            this.curFile = new File(logDir, filanemeNase + EXTENTION);
+            this.curFile = new File(logDir, filanemeNase + EXTENSION);
 
             if (this.curFile.exists() && !this.settings.isAppend()) {
                 rotateLogs();
@@ -103,7 +103,7 @@ public final class LogWriter extends LogEntryList {
                 if (this.curFile == null) {
                     final File logDir = determineLogDir();
                     final String filenameBase = this.settings.getFilenameBase();
-                    this.curFile = new File(logDir, filenameBase + EXTENTION);
+                    this.curFile = new File(logDir, filenameBase + EXTENSION);
                 }
 
                 try {
