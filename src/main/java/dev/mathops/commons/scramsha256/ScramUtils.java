@@ -14,6 +14,30 @@ import java.security.NoSuchAlgorithmException;
 enum ScramUtils {
     ;
 
+    /** The length of a "nonce" value. */
+    static final int NONCE_LEN = 30;
+
+    /** The length of a "salt" value. */
+    static final int SALT_LEN = 24;
+
+    /** The length of a "stored key" value. */
+    static final int STORED_KEY_LEN = 32;
+
+    /** The length of a "server key" value. */
+    static final int SERVER_KEY_LEN = 32;
+
+    /** The minimum allowed number of iterations. */
+    static final int MIN_ITERATIONS = 4096;
+
+    /** The maximum allowed number of iterations. */
+    static final int MAX_ITERATIONS = 9999;
+
+    /** A zero-length byte array. */
+    static final byte[] ZERO_BYTES = new byte[0];
+
+    /** A commonly used byte array. */
+    static final String CLIENT_KEY_STR = "Client Key";
+
     /** The Unicode character set. */
     private static final UnicodeCharacterSet UNICODE = UnicodeCharacterSet.getInstance();
 
@@ -33,17 +57,17 @@ enum ScramUtils {
         for (final int cp : codePoints) {
             // "Map to nothing" table B.1 from RFC 3454
             if (cp == 0x00AD || cp == 0x034F || cp == 0x1806 || cp == 0x180B || cp == 0x180C || cp == 0x180D ||
-                    cp == 0x200B || cp == 0x200C || cp == 0x200D || cp == 0x2060 || cp == 0xFE00 || cp == 0xFE01 ||
-                    cp == 0xFE02 || cp == 0xFE03 || cp == 0xFE04 || cp == 0xFE05 || cp == 0xFE06 || cp == 0xFE07 ||
-                    cp == 0xFE08 || cp == 0xFE09 || cp == 0xFE0A || cp == 0xFE0B || cp == 0xFE0C || cp == 0xFE0D ||
-                    cp == 0xFE0E || cp == 0xFE0F || cp == 0xFEFF) {
+                cp == 0x200B || cp == 0x200C || cp == 0x200D || cp == 0x2060 || cp == 0xFE00 || cp == 0xFE01 ||
+                cp == 0xFE02 || cp == 0xFE03 || cp == 0xFE04 || cp == 0xFE05 || cp == 0xFE06 || cp == 0xFE07 ||
+                cp == 0xFE08 || cp == 0xFE09 || cp == 0xFE0A || cp == 0xFE0B || cp == 0xFE0C || cp == 0xFE0D ||
+                cp == 0xFE0E || cp == 0xFE0F || cp == 0xFEFF) {
                 continue;
             }
 
             // "Map to space" table C.1.2 from RFC 3454
             if (cp == 0x00A0 || cp == 0x1680 || cp == 0x2000 || cp == 0x2001 || cp == 0x2002 || cp == 0x2003 ||
-                    cp == 0x2004 || cp == 0x2005 || cp == 0x2006 || cp == 0x2007 || cp == 0x2008 || cp == 0x2009 ||
-                    cp == 0x200A || cp == 0x202F || cp == 0x205F || cp == 0x3000) {
+                cp == 0x2004 || cp == 0x2005 || cp == 0x2006 || cp == 0x2007 || cp == 0x2008 || cp == 0x2009 ||
+                cp == 0x200A || cp == 0x202F || cp == 0x205F || cp == 0x3000) {
                 mapped.appendCodePoint(0x20);
             } else {
                 decomp(cp, mapped);
@@ -59,22 +83,22 @@ enum ScramUtils {
      * @param codePoint the code point
      * @param mapped    the {@code StringBuilder} to which to append decomposed code points
      */
-
     private static void decomp(final int codePoint, final StringBuilder mapped) {
 
         final UnicodeCharacter cp = UNICODE.getCharacter(codePoint);
 
         if (cp == null) {
             mapped.appendCodePoint(codePoint);
-        } else{
-            final Integer[] decomp = cp.getDecompMappingCodePoints();
+        } else {
+            final Integer[] mappedCodePoints = cp.getDecompMappingCodePoints();
 
-            if (decomp == null) {
+            if (mappedCodePoints == null) {
                 mapped.appendCodePoint(codePoint);
             } else {
                 // This includes compatibility decompositions
-                for (final Integer i : decomp) {
-                    decomp(i.intValue(), mapped);
+                for (final Integer i : mappedCodePoints) {
+                    final int iValue = i.intValue();
+                    decomp(iValue, mapped);
                 }
             }
         }
@@ -88,23 +112,29 @@ enum ScramUtils {
      */
     static byte[] sha_256(final byte[] stringBytes) {
 
+        byte[] result;
+
         try {
             final MessageDigest dig = MessageDigest.getInstance("SHA-256");
-            return dig.digest(stringBytes);
+            result = dig.digest(stringBytes);
         } catch (final NoSuchAlgorithmException ex) {
             Log.warning(ex);
-            return null;
+            result = ZERO_BYTES;
         }
+
+        return result;
     }
 
     /**
      * Performs the HMAC-SHA-256 keyed hash algorithm defined in RFC 2104.
      *
-     * @param key the key (of any nonzero size)
+     * @param key         the key (of any nonzero size)
      * @param stringBytes the string (of any nonzero size)
      * @return the keyed hash (32 bytes in length)
      */
     static byte[] hmac_sha_256(final byte[] key, final byte[] stringBytes) {
+
+        byte[] result;
 
         try {
             final MessageDigest dig = MessageDigest.getInstance("SHA-256");
@@ -134,19 +164,21 @@ enum ScramUtils {
             System.arraycopy(keyXorOpad, 0, arg2, 0, 64);
             System.arraycopy(inner, 0, arg2, 64, inner.length);
 
-            return dig.digest(arg2);
+            result = dig.digest(arg2);
         } catch (final NoSuchAlgorithmException ex) {
             Log.warning(ex);
-            return null;
+            result = ZERO_BYTES;
         }
+
+        return result;
     }
 
     /**
      * Computes the "HI" iterated hash of a string with a salt and iteration count.
      *
-     * @param stringBytes       the string to hash
-     * @param salt      the salt
-     * @param iterCount the iteration count
+     * @param stringBytes the string to hash
+     * @param salt        the salt
+     * @param iterCount   the iteration count
      * @return the iterated hash
      */
     static byte[] hi(final byte[] stringBytes, final byte[] salt, final int iterCount) {
@@ -174,5 +206,30 @@ enum ScramUtils {
         }
 
         return hi;
+    }
+
+    /**
+     * Tests whether spans of bytes in two different byte arrays match.
+     *
+     * @param array1 the first array
+     * @param start1 the start position in the first array
+     * @param array2 the second array
+     * @param start2 the start position in the second array
+     * @param len    the number of bytes to test
+     * @return true of the indicated spans of bytes in the two arrays are the same; false if not
+     */
+    static boolean isSame(final byte[] array1, final int start1, final byte[] array2, final int start2,
+                          final int len) {
+
+        boolean match = true;
+
+        for (int i = 0; i < len; ++i) {
+            if ((int) array1[start1 + i] != (int) array2[start2 + i]) {
+                match = false;
+                break;
+            }
+        }
+
+        return match;
     }
 }

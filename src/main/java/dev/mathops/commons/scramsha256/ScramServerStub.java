@@ -3,12 +3,9 @@ package dev.mathops.commons.scramsha256;
 import dev.mathops.commons.log.Log;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -28,8 +25,8 @@ public final class ScramServerStub {
     /** A source of random numbers. */
     private final Random random;
 
-    /** The list of pending requests. */
-    private final List<Request> requests;
+    /** A map from token to pending request. */
+    private final Map<String, PendingAuthentication> requests;
 
     /** Map from token to timeout for that token. */
     private final Map<String, Long> tokenTimeouts;
@@ -49,7 +46,7 @@ public final class ScramServerStub {
         final long seed = System.currentTimeMillis() + System.nanoTime();
         this.random = new Random(seed);
 
-        this.requests = new ArrayList<>(10);
+        this.requests = new HashMap<>(10);
         this.tokenTimeouts = new HashMap<>(10);
         this.tokenCredentials = new HashMap<>(10);
     }
@@ -64,8 +61,12 @@ public final class ScramServerStub {
 
         ServerFirstMessage result;
 
+        // Delete any requests that have timed out
         final long now = System.currentTimeMillis();
-        this.requests.removeIf(request -> request.timeout < now);
+        this.requests.entrySet().removeIf(entry -> {
+            final PendingAuthentication value = entry.getValue();
+            return value.timeout < now;
+        });
 
         if (this.requests.size() > 100) {
             Log.warning("Too many pending requests");
@@ -83,8 +84,10 @@ public final class ScramServerStub {
                 } else {
                     // Request is valid - store for the next step in the process
                     result = new ServerFirstMessage(clientFirst, cred, this.random);
-                    final Request req = new Request(cred, clientFirst, result, now + REQUEST_TIMEOUT);
-                    this.requests.add(req);
+
+                    final PendingAuthentication req = new PendingAuthentication(cred, clientFirst, result,
+                            now + REQUEST_TIMEOUT);
+                    this.requests.put(result.token, req);
                 }
             } catch (final IllegalArgumentException ex) {
                 final String exMsg = ex.getMessage();
@@ -99,57 +102,33 @@ public final class ScramServerStub {
     /**
      * Called when the website receives a "client-final" message.
      *
+     * @param token  the token sent with the server-first message, used to identify the request
      * @param base64 the base64-encoded request
      * @return the reply to send to the client (either the hex of a "server-first" message, or "!" followed by an error
      *         message
      */
-    public ServerFinalMessage handleClientFinal(final byte[] base64) {
+    public ServerFinalMessage handleClientFinal(final String token, final byte[] base64) {
 
-        ServerFinalMessage result;
+        final ServerFinalMessage result;
 
-        try {
-            final byte[] decoded = Base64.getDecoder().decode(base64);
-            if (decoded.length == 93) {
+        final PendingAuthentication req = this.requests.get(token);
 
-                final byte[] cNonce = new byte[30];
-                final byte[] sNonce = new byte[30];
-                System.arraycopy(decoded, 0, cNonce, 0, 30);
-                System.arraycopy(decoded, 30, sNonce, 0, 30);
-
-                Request req = null;
-                for (final Request test : this.requests) {
-                    if (Arrays.equals(cNonce, test.clientFirst.cNonce)
-                        && Arrays.equals(sNonce, test.serverFirst.sNonce)) {
-                        req = test;
-                    }
-                }
-
-                if (req == null) {
-                    Log.warning("client-final without matching client-first");
-                    result = new ServerFinalMessage("invalid-encoding");
-                } else {
-                    final ClientFinalMessage clientFinal = new ClientFinalMessage(base64, req.clientFirst,
-                            req.serverFirst, req.credentials);
-
-                    final String token = req.serverFirst.token;
-                    result = new ServerFinalMessage(clientFinal, req.credentials, token);
-
-                    final long now = System.currentTimeMillis();
-                    final Long timeout = Long.valueOf(now + TOKEN_TIMEOUT);
-                    this.tokenTimeouts.put(token, timeout);
-                    this.tokenCredentials.put(token, req.credentials);
-
-                    Log.info("SCRAM-SHA-256 authentication of user ", new String(req.credentials.normalizedUsername,
-                            StandardCharsets.UTF_8));
-                }
-            } else {
-                Log.warning("Invalid client-final message");
-                result = new ServerFinalMessage("invalid-encoding");
-            }
-        } catch (final IllegalArgumentException ex) {
-            final String msg = ex.getMessage();
-            Log.warning("Invalid client-final message: ", msg);
+        if (req == null) {
+            Log.warning("client-final token does not match any pending requests");
             result = new ServerFinalMessage("invalid-encoding");
+        } else {
+            final ClientFinalMessage clientFinal = new ClientFinalMessage(base64, req.clientFirst,
+                    req.serverFirst, req.credentials);
+
+            result = new ServerFinalMessage(clientFinal, req.credentials, token);
+
+            final long now = System.currentTimeMillis();
+            final Long timeout = Long.valueOf(now + TOKEN_TIMEOUT);
+            this.tokenTimeouts.put(token, timeout);
+            this.tokenCredentials.put(token, req.credentials);
+
+            Log.info("SCRAM-SHA-256 authentication of user ", new String(req.credentials.normalizedUsername,
+                    StandardCharsets.UTF_8));
         }
 
         return result;
@@ -175,50 +154,16 @@ public final class ScramServerStub {
             } else {
                 result = this.tokenCredentials.get(token);
 
-                if (result == null) {
+                if (Objects.nonNull(result)) {
+                    final Long newTimeout = Long.valueOf(now + TOKEN_TIMEOUT);
+                    this.tokenTimeouts.put(token, newTimeout);
+                } else {
                     Log.warning("Timeout present but credentials not");
                     this.tokenTimeouts.remove(token);
-                } else {
-                    this.tokenTimeouts.put(token, Long.valueOf(now + TOKEN_TIMEOUT));
                 }
             }
         }
 
         return result;
-    }
-
-    /**
-     * A request.
-     */
-    static class Request {
-
-        /** The user credentials. */
-        final UserCredentials credentials;
-
-        /** The client-first message. */
-        final ClientFirstMessage clientFirst;
-
-        /** The server-first message. */
-        final ServerFirstMessage serverFirst;
-
-        /** The time when this request times out. */
-        final long timeout;
-
-        /**
-         * Constructs a new {@code Request}.
-         *
-         * @param theCredentials the user credentials
-         * @param theClientFirst the client-first message
-         * @param theServerFirst the server-first message
-         * @param theTimeout     the timeout
-         */
-        Request(final UserCredentials theCredentials, final ClientFirstMessage theClientFirst,
-                final ServerFirstMessage theServerFirst, final long theTimeout) {
-
-            this.credentials = theCredentials;
-            this.clientFirst = theClientFirst;
-            this.serverFirst = theServerFirst;
-            this.timeout = theTimeout;
-        }
     }
 }

@@ -1,5 +1,9 @@
 package dev.mathops.commons.scramsha256;
 
+import dev.mathops.commons.builder.SimpleBuilder;
+import dev.mathops.commons.parser.HexEncoder;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.random.RandomGenerator;
 
@@ -13,6 +17,12 @@ import java.util.random.RandomGenerator;
  * </pre>
  */
 final class ClientFirstMessage {
+
+    /** A commonly used byte array. */
+    private static final byte[] LEADING = "n,,n=".getBytes(StandardCharsets.UTF_8);
+
+    /** A commonly used byte array. */
+    private static final byte[] MID = ",r=".getBytes(StandardCharsets.UTF_8);
 
     /** The normalized username. */
     final byte[] normalizedUsername;
@@ -35,34 +45,33 @@ final class ClientFirstMessage {
      */
     ClientFirstMessage(final CharSequence username, final RandomGenerator rnd) {
 
-        if (username == null) {
-            throw new IllegalArgumentException("Username may not be null");
+        if (username == null || username.isEmpty()) {
+            final String msg = Res.get(Res.CF_NO_USERNAME);
+            throw new IllegalArgumentException(msg);
         }
         if (rnd == null) {
-            throw new IllegalArgumentException("Random source may not be null");
+            final String msg = Res.get(Res.CF_NO_RANDOM);
+            throw new IllegalArgumentException(msg);
         }
 
         this.normalizedUsername = ScramUtils.normalize(username);
         final int nameLen = this.normalizedUsername.length;
         if (nameLen < 1) {
-            throw new IllegalArgumentException("Username may not be empty");
+            final String msg = Res.get(Res.CF_NO_USERNAME);
+            throw new IllegalArgumentException(msg);
         }
 
-        this.cNonce = new byte[30];
+        this.cNonce = new byte[ScramUtils.NONCE_LEN];
         rnd.nextBytes(this.cNonce);
 
-        this.clientFirst = new byte[38 + nameLen];
-        this.clientFirst[0] = 'n';
-        this.clientFirst[1] = ',';
-        this.clientFirst[2] = ',';
-        this.clientFirst[3] = 'n';
-        this.clientFirst[4] = '=';
-
-        System.arraycopy(this.normalizedUsername, 0, this.clientFirst, 5, nameLen);
-        this.clientFirst[5 + nameLen] = ',';
-        this.clientFirst[6 + nameLen] = 'r';
-        this.clientFirst[7 + nameLen] = '=';
-        System.arraycopy(this.cNonce, 0, this.clientFirst, 8 + nameLen, 30);
+        this.clientFirst = new byte[LEADING.length + nameLen + MID.length + ScramUtils.NONCE_LEN];
+        System.arraycopy(LEADING, 0, this.clientFirst, 0, LEADING.length);
+        int pos = LEADING.length;
+        System.arraycopy(this.normalizedUsername, 0, this.clientFirst, pos, nameLen);
+        pos += nameLen;
+        System.arraycopy(MID, 0, this.clientFirst, pos, MID.length);
+        pos += MID.length;
+        System.arraycopy(this.cNonce, 0, this.clientFirst, pos, ScramUtils.NONCE_LEN);
 
         this.base64 = Base64.getEncoder().encode(this.clientFirst);
     }
@@ -78,22 +87,44 @@ final class ClientFirstMessage {
         this.base64 = theBase64.clone();
         this.clientFirst = Base64.getDecoder().decode(theBase64);
 
+        final int minLen = LEADING.length + 1 + MID.length + ScramUtils.NONCE_LEN;
         final int len = this.clientFirst.length;
-        if (len < 38) {
-            throw new IllegalArgumentException("Invalid message data");
+        if (len < minLen) {
+            final String msg = Res.get(Res.CF_BAD_MESSAGE);
+            throw new IllegalArgumentException(msg);
         }
 
-        if (this.clientFirst[0] == 'n' && this.clientFirst[1] == ',' && this.clientFirst[2] == ','
-            && this.clientFirst[3] == 'n' && this.clientFirst[4] == '=' && this.clientFirst[len - 33] == ','
-            && this.clientFirst[len - 32] == 'r' && this.clientFirst[len - 31] == '=') {
+        final int midStart = len - ScramUtils.NONCE_LEN - MID.length;
 
-            this.normalizedUsername = new byte[len - 38];
-            this.cNonce = new byte[30];
+        if (ScramUtils.isSame(LEADING, 0, this.clientFirst, 0, LEADING.length)
+            && ScramUtils.isSame(MID, 0, this.clientFirst, midStart, MID.length)) {
 
-            System.arraycopy(this.clientFirst, 5, this.normalizedUsername, 0, len - 38);
-            System.arraycopy(this.clientFirst, len - 30, this.cNonce, 0, 30);
+            final int nameLen = len - LEADING.length - MID.length - ScramUtils.NONCE_LEN;
+            this.normalizedUsername = new byte[nameLen];
+            this.cNonce = new byte[ScramUtils.NONCE_LEN];
+
+            System.arraycopy(this.clientFirst, LEADING.length, this.normalizedUsername, 0, nameLen);
+            System.arraycopy(this.clientFirst, midStart + MID.length, this.cNonce, 0, ScramUtils.NONCE_LEN);
         } else {
-            throw new IllegalArgumentException("Invalid message data");
+            final String msg = Res.get(Res.CF_BAD_MESSAGE);
+            throw new IllegalArgumentException(msg);
         }
+    }
+
+    /**
+     * Generates a string representation of this object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final String usernameStr = new String(this.normalizedUsername, StandardCharsets.UTF_8);
+        final String nonceStr = HexEncoder.encodeLowercase(this.cNonce);
+        final String msgStr = new String(this.clientFirst, StandardCharsets.UTF_8);
+        final String base64Str = new String(this.base64, StandardCharsets.UTF_8);
+
+        return SimpleBuilder.concat("ClientFirstMessage{normalizedUsername='", usernameStr, "', cNonce=", nonceStr,
+                ", encoded=", msgStr, ", base64=", base64Str, "}");
     }
 }

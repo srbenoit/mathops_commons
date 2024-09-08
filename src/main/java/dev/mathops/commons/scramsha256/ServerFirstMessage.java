@@ -1,6 +1,7 @@
 package dev.mathops.commons.scramsha256;
 
 import dev.mathops.commons.CoreConstants;
+import dev.mathops.commons.builder.SimpleBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -18,10 +19,7 @@ import java.util.random.RandomGenerator;
  * SERVER_FIRST = CNONCE[30] + SNONCE[30] + "," + SALT[30] + ",i=" + ITER_COUNT[4]
  * </pre>
  */
-class ServerFirstMessage {
-
-    /** A zero-length array. */
-    private static final byte[] ZERO_BYTES = new byte[0];
+public final class ServerFirstMessage {
 
     /** The server nonce (30 bytes). */
     final byte[] sNonce;
@@ -89,7 +87,7 @@ class ServerFirstMessage {
         System.arraycopy(theCredentials.salt, 0, this.salt, 0, 24);
 
         this.iterCount = theCredentials.iterCount;
-        this.error = ZERO_BYTES;
+        this.error = ScramUtils.ZERO_BYTES;
 
         this.serverFirst = new byte[96];
         this.serverFirst[0] = 'r';
@@ -124,8 +122,8 @@ class ServerFirstMessage {
             throw new IllegalArgumentException("Error message may not be null or blank");
         }
 
-        this.sNonce = ZERO_BYTES;
-        this.salt = ZERO_BYTES;
+        this.sNonce = ScramUtils.ZERO_BYTES;
+        this.salt = ScramUtils.ZERO_BYTES;
         this.iterCount = 0;
         this.error = theError.getBytes(StandardCharsets.UTF_8);
 
@@ -157,8 +155,8 @@ class ServerFirstMessage {
             this.error = new byte[len - 2];
             System.arraycopy(this.serverFirst, 2, this.error, 0, len - 2);
 
-            this.sNonce = ZERO_BYTES;
-            this.salt = ZERO_BYTES;
+            this.sNonce = ScramUtils.ZERO_BYTES;
+            this.salt = ScramUtils.ZERO_BYTES;
             this.iterCount = 0;
             this.token = CoreConstants.EMPTY;
         } else {
@@ -194,7 +192,7 @@ class ServerFirstMessage {
 
             this.iterCount = ((int) this.serverFirst[92] - '0') * 1000 + ((int) this.serverFirst[93] - '0') * 100
                              + ((int) this.serverFirst[94] - '0') * 10 + (int) this.serverFirst[95] - '0';
-            this.error = ZERO_BYTES;
+            this.error = ScramUtils.ZERO_BYTES;
 
             if (this.iterCount < 4096) {
                 throw new IllegalArgumentException("server-first message had invalid iteration count: "
@@ -202,5 +200,19 @@ class ServerFirstMessage {
             }
             this.token = CoreConstants.EMPTY;
         }
+    }
+
+    /**
+     * Generates a string representation of this object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final String msgStr = new String(this.serverFirst, StandardCharsets.UTF_8);
+        final String base64Str = new String(this.base64, StandardCharsets.UTF_8);
+
+        return SimpleBuilder.concat("ServerFirstMessage{encoded=", msgStr, ", base64=", base64Str, "}");
     }
 }

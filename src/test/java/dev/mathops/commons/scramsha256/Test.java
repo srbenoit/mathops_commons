@@ -186,7 +186,7 @@ final class Test {
             Log.fine(CoreConstants.EMPTY);
 
             // Code that the server would need to include...
-            final ServerFinalMessage serverFinal = serverStub.handleClientFinal(clientFinalBase64);
+            final ServerFinalMessage serverFinal = serverStub.handleClientFinal(serverFirst.token, clientFinalBase64);
             final byte[] serverFinalBase64 = serverFinal.base64;
 
             Log.fine("    9) The server sends a reply with an HTTP status code 200 (OK), and includes an");

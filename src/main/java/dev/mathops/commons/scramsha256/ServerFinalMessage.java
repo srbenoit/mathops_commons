@@ -1,6 +1,7 @@
 package dev.mathops.commons.scramsha256;
 
 import dev.mathops.commons.CoreConstants;
+import dev.mathops.commons.builder.SimpleBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -12,10 +13,7 @@ import java.util.Base64;
  * SERVER_SIG[32] + "," + TOKEN[30]
  * </pre>
  */
-class ServerFinalMessage {
-
-    /** A zero-length array. */
-    private static final byte[] ZERO_BYTES = new byte[0];
+public final class ServerFinalMessage {
 
     /** The computed server signature. */
     private final byte[] serverSig;
@@ -55,7 +53,7 @@ class ServerFinalMessage {
         }
 
         this.serverSig = ScramUtils.hmac_sha_256(credentials.serverKey, clientFinal.authMessage);
-        this.error = ZERO_BYTES;
+        this.error = ScramUtils.ZERO_BYTES;
 
         this.token = theToken;
 
@@ -79,7 +77,7 @@ class ServerFinalMessage {
             throw new IllegalArgumentException("Error message may not be null or blank");
         }
 
-        this.serverSig = ZERO_BYTES;
+        this.serverSig = ScramUtils.ZERO_BYTES;
         this.error = theError.getBytes(StandardCharsets.UTF_8);
 
         this.serverFinal = new byte[this.error.length + 2];
@@ -103,7 +101,7 @@ class ServerFinalMessage {
 
         this.base64 = theBase64.clone();
         this.serverFinal = Base64.getDecoder().decode(this.base64);
-        this.error = ZERO_BYTES;
+        this.error = ScramUtils.ZERO_BYTES;
 
         final int len = this.serverFinal.length;
         if (len > 2 && this.serverFinal[0] == 'e' && this.serverFinal[1] == '=') {
@@ -125,5 +123,19 @@ class ServerFinalMessage {
         System.arraycopy(this.serverFinal, 0, this.serverSig, 0, 32);
 
         this.token = new String(this.serverFinal, 33, 30, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Generates a string representation of this object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final String msgStr = new String(this.serverFinal, StandardCharsets.UTF_8);
+        final String base64Str = new String(this.base64, StandardCharsets.UTF_8);
+
+        return SimpleBuilder.concat("ServerFinalMessage{encoded=", msgStr, ", base64=", base64Str, "}");
     }
 }

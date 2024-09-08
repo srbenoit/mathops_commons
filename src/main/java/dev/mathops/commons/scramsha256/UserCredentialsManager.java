@@ -1,5 +1,7 @@
 package dev.mathops.commons.scramsha256;
 
+import dev.mathops.commons.builder.SimpleBuilder;
+
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,5 +41,19 @@ public final class UserCredentialsManager {
     UserCredentials getCredentials(final String normalizedUsername) {
 
         return this.credentials.get(normalizedUsername);
+    }
+
+    /**
+     * Generates a string representation of this object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final int size = this.credentials.size();
+        final String sizeStr = Integer.toString(size);
+
+        return SimpleBuilder.concat("UserCredentialsManager with ", sizeStr, " credentials");
     }
 }
