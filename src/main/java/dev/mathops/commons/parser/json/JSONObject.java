@@ -81,6 +81,19 @@ public class JSONObject {
     }
 
     /**
+     * Gets the Boolean value of a property.
+     *
+     * @param name the property name
+     * @return the value, if the value was present and is a Boolean; null if not
+     */
+    public Boolean getBooleanProperty(final String name) {
+
+        final Object value = this.properties.get(name);
+
+        return value instanceof Boolean ? (Boolean) value : null;
+    }
+
+    /**
      * Escapes a string, so it can be emitted in a JSON formatted file.
      *
      * @param source the source string to escape
