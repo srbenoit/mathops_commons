@@ -12,7 +12,7 @@ final class Res extends ResBundle {
     // Resources used by Installation
 
     /** A resource key. */
-    static final String CFG_FILE_NONEXIST = key(1);
+    static final String CFG_FILE_NONEXISTENT = key(1);
 
     /** A resource key. */
     static final String CANT_READ_CFG_FILE = key(2);
@@ -23,12 +23,24 @@ final class Res extends ResBundle {
     /** A resource key. */
     static final String PATH_IS_NOT_DIR = key(4);
 
+
+    // Resources used by PathList
+
+    /** A resource key. */
+    static final String PATH_LIST_READ_ERR= key(5);
+
+    /** A resource key. */
+    static final String PATH_LIST_NO_BASE= key(6);
+
+    /** A resource key. */
+    static final String PATH_LIST_WRITE_ERR= key(7);
+
     //
 
     /** The resources - an array of key-values pairs. */
     private static final String[][] EN_US = {
 
-            {CFG_FILE_NONEXIST, "Configuration file ''{0}'' does not exist",},
+            {CFG_FILE_NONEXISTENT, "Configuration file ''{0}'' does not exist",},
             {CANT_READ_CFG_FILE, "Unable to load configuration file ''{0}''",},
             {CANT_CREATE_DIR, "Unable to create directory ''{0}''",},
             {PATH_IS_NOT_DIR, "Path ''{0}'' exists but is not a directory",},
@@ -44,6 +56,16 @@ final class Res extends ResBundle {
     private Res() {
 
         super(Locale.US, EN_US);
+    }
+    /**
+     * Gets the message with a specified key using the current locale.
+     *
+     * @param key the message key
+     * @return the best-matching message, an empty string if none is registered (never {@code null})
+     */
+    static String get(final String key) {
+
+        return instance.getMsg(key);
     }
 
     /**

@@ -11,10 +11,10 @@ class LogContext {
     private final String remoteAddr;
 
     /** The log session ID. */
-    private String sessionId;
+    private String sessionId = null;
 
     /** The log user ID. */
-    private String userId;
+    private String userId = null;
 
     /**
      * Constructs a new {@code LogContext}.

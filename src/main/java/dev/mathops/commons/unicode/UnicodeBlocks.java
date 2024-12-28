@@ -21,7 +21,7 @@ public final class UnicodeBlocks {
     private static final int NUM_BLOCKS = 222;
 
     /** The singleton instance. */
-    private static UnicodeBlocks instance;
+    private static UnicodeBlocks instance = null;
 
     /** A map from normalized block name to code point range. */
     private final Map<String, CodePointRange> blocks;
@@ -50,10 +50,11 @@ public final class UnicodeBlocks {
      */
     private void loadBlocksFile() {
 
-        final String[] lines = FileLoader.loadFileAsLines(getClass(), FILENAME, true);
+        final Class<? extends UnicodeBlocks> cls = getClass();
+        final String[] lines = FileLoader.loadFileAsLines(cls, FILENAME, true);
         try {
             for (final String line : lines) {
-                if (!line.isEmpty() && line.charAt(0) != '#') {
+                if (!line.isEmpty() && (int) line.charAt(0) != (int) '#') {
                     processLine(line);
                 }
             }
@@ -71,18 +72,23 @@ public final class UnicodeBlocks {
      */
     private void processLine(final String line) {
 
-        final int semi = line.indexOf(';');
+        final int semi = line.indexOf((int) ';');
         final int dots = line.indexOf("..");
 
         if (semi != -1 && dots != -1) {
-            final int first = Integer.parseInt(line.substring(0, dots), 16);
-            final int last = Integer.parseInt(line.substring(dots + 2, semi), 16);
+            final String firstStr = line.substring(0, dots);
+            final int first = Integer.parseInt(firstStr, 16);
+
+            final String lastStr = line.substring(dots + 2, semi);
+            final int last = Integer.parseInt(lastStr, 16);
+
             final String name = line.substring(semi + 2);
             final String normalized = normalizeBlockName(name);
 
             this.blocks.put(normalized, new CodePointRange(first, last));
             this.names.put(normalized, name);
-            this.noSpaceNames.put(stripSpaces(name), normalized);
+            final String stripped = stripSpaces(name);
+            this.noSpaceNames.put(stripped, normalized);
         }
     }
 
@@ -100,11 +106,12 @@ public final class UnicodeBlocks {
         for (int i = 0; i < len; ++i) {
             final char chr = name.charAt(i);
 
-            if (chr == '-' || chr == '_' || chr == ' ' || chr == '\t') {
+            if ((int) chr == (int) '-' || (int) chr == (int) '_' || (int) chr == (int) ' ' || (int) chr == (int) '\t') {
                 continue;
             }
 
-            builder.add(Character.toLowerCase(chr));
+            final char lc = Character.toLowerCase(chr);
+            builder.add(lc);
         }
 
         return builder.toString();
@@ -125,7 +132,7 @@ public final class UnicodeBlocks {
         for (int i = 0; i < len; ++i) {
             final char chr = name.charAt(i);
 
-            if (chr == ' ' || chr == '\t') {
+            if ((int) chr == (int) ' ' || (int) chr == (int) '\t') {
                 continue;
             }
 

@@ -12,4 +12,13 @@ class AbstractTile extends JComponent {
     @Serial
     private static final long serialVersionUID = -8217523698234610469L;
 
+    /**
+     * Constructs an {@code AbstractTile}.
+     */
+    AbstractTile() {
+
+        super();
+
+        // No action
+    }
 }

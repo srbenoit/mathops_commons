@@ -84,7 +84,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add('x');
 
-        assertEquals(1, htm.length(), "Expected length to be 1");
+        final int length = htm.length();
+        assertEquals(1, length, "Expected length to be 1");
     }
 
     /**
@@ -97,7 +98,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add('x');
 
-        assertEquals('x', htm.charAt(0), CHAR_MISMATCH);
+        final char actual = htm.charAt(0);
+        assertEquals('x', actual, CHAR_MISMATCH);
     }
 
     /**
@@ -110,7 +112,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add('x');
 
-        assertEquals("x", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("x", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -123,7 +126,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(new char[]{'x', 'y', 'z'});
 
-        assertEquals(3, htm.length(), EXPECT_LEN_3);
+        final int length = htm.length();
+        assertEquals(3, length, EXPECT_LEN_3);
     }
 
     /**
@@ -136,9 +140,12 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(new char[]{'x', 'y', 'z'});
 
-        assertEquals('x', htm.charAt(0), CHAR_MISMATCH);
-        assertEquals('y', htm.charAt(1), CHAR_MISMATCH);
-        assertEquals('z', htm.charAt(2), CHAR_MISMATCH);
+        final char ch0 = htm.charAt(0);
+        assertEquals('x', ch0, CHAR_MISMATCH);
+        final char ch1 = htm.charAt(1);
+        assertEquals('y', ch1, CHAR_MISMATCH);
+        final char ch2 = htm.charAt(2);
+        assertEquals('z', ch2, CHAR_MISMATCH);
     }
 
     /**
@@ -151,7 +158,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(new char[]{'x', 'y', 'z'});
 
-        assertEquals(XYZ, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(XYZ, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -164,7 +172,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(XYZ);
 
-        assertEquals(3, htm.length(), EXPECT_LEN_3);
+        final int length = htm.length();
+        assertEquals(3, length, EXPECT_LEN_3);
     }
 
     /**
@@ -177,9 +186,12 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(XYZ);
 
-        assertEquals('x', htm.charAt(0), CHAR_MISMATCH);
-        assertEquals('y', htm.charAt(1), CHAR_MISMATCH);
-        assertEquals('z', htm.charAt(2), CHAR_MISMATCH);
+        final char ch0 = htm.charAt(0);
+        assertEquals('x', ch0, CHAR_MISMATCH);
+        final char ch1 = htm.charAt(1);
+        assertEquals('y', ch1, CHAR_MISMATCH);
+        final char ch2 = htm.charAt(2);
+        assertEquals('z', ch2, CHAR_MISMATCH);
     }
 
     /**
@@ -192,7 +204,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(XYZ);
 
-        assertEquals(XYZ, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(XYZ, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -205,7 +218,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(true);
 
-        assertEquals(4, htm.length(), EXPECT_LEN_4);
+        final int length = htm.length();
+        assertEquals(4, length, EXPECT_LEN_4);
     }
 
     /**
@@ -218,7 +232,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(true);
 
-        assertEquals("true", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("true", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -231,7 +246,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(false);
 
-        assertEquals(5, htm.length(), EXPECT_LEN_5);
+        final int length = htm.length();
+        assertEquals(5, length, EXPECT_LEN_5);
     }
 
     /**
@@ -244,7 +260,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(false);
 
-        assertEquals("false", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("false", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -257,7 +274,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(-123);
 
-        assertEquals(4, htm.length(), EXPECT_LEN_4);
+        final int length = htm.length();
+        assertEquals(4, length, EXPECT_LEN_4);
     }
 
     /**
@@ -270,7 +288,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(-123);
 
-        assertEquals("-123", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("-123", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -283,7 +302,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(-1234567890123L);
 
-        assertEquals(14, htm.length(), "Expected length to be 14");
+        final int length = htm.length();
+        assertEquals(14, length, "Expected length to be 14");
     }
 
     /**
@@ -296,7 +316,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(-1234567890123L);
 
-        assertEquals("-1234567890123", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("-1234567890123", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -309,7 +330,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(1.234f);
 
-        assertEquals(5, htm.length(), EXPECT_LEN_5);
+        final int length = htm.length();
+        assertEquals(5, length, EXPECT_LEN_5);
     }
 
     /**
@@ -322,7 +344,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(1.234f);
 
-        assertEquals("1.234", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("1.234", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -335,7 +358,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Float.NaN);
 
-        assertEquals(3, htm.length(), EXPECT_LEN_3);
+        final int length = htm.length();
+        assertEquals(3, length, EXPECT_LEN_3);
     }
 
     /**
@@ -348,7 +372,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Float.NaN);
 
-        assertEquals(NAN, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NAN, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -361,7 +386,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Float.POSITIVE_INFINITY);
 
-        assertEquals(INF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(INF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -374,7 +400,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Float.NEGATIVE_INFINITY);
 
-        assertEquals(NEGINF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NEGINF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -387,7 +414,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(1.234564789);
 
-        assertEquals(11, htm.length(), "Expected length to be 11");
+        final int length = htm.length();
+        assertEquals(11, length, "Expected length to be 11");
     }
 
     /**
@@ -400,7 +428,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(1.23456789);
 
-        assertEquals("1.23456789", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("1.23456789", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -413,7 +442,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Double.NaN);
 
-        assertEquals(3, htm.length(), EXPECT_LEN_3);
+        final int length = htm.length();
+        assertEquals(3, length, EXPECT_LEN_3);
     }
 
     /**
@@ -426,7 +456,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Double.NaN);
 
-        assertEquals(NAN, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NAN, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -439,7 +470,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Double.POSITIVE_INFINITY);
 
-        assertEquals(INF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(INF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -452,7 +484,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(Double.NEGATIVE_INFINITY);
 
-        assertEquals(NEGINF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NEGINF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -466,7 +499,9 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(ld);
 
-        assertEquals(ld.toString(), htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        final String expect = ld.toString();
+        assertEquals(expect, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -479,7 +514,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add((Object) null);
 
-        assertEquals("null", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("null", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -492,7 +528,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add((Object[]) null);
 
-        assertEquals(CoreConstants.EMPTY, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(CoreConstants.EMPTY, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -507,7 +544,9 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(ld, lt);
 
-        assertEquals(ld + lt.toString(), htm.toString(), TOSTR_MISMATCH);
+        final String expectTime = lt.toString();
+        final String actual = htm.toString();
+        assertEquals(ld + expectTime, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -522,7 +561,9 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.add(ld, lt);
 
-        assertEquals(ld + lt.toString(), htm.toString(), TOSTR_MISMATCH);
+        final String expectTime = lt.toString();
+        final String actual = htm.toString();
+        assertEquals(ld + expectTime, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -535,7 +576,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln();
 
-        assertEquals(2, htm.length(), "Length mismatch after addln");
+        final int length = htm.length();
+        assertEquals(2, length, "Length mismatch after addln");
     }
 
     /**
@@ -548,7 +590,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln();
 
-        assertEquals(CoreConstants.CRLF, htm.toString(), "String mismatch after addln");
+        final String actual = htm.toString();
+        assertEquals(CoreConstants.CRLF, actual, "String mismatch after addln");
     }
 
     /**
@@ -561,7 +604,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln('x');
 
-        assertEquals(3, htm.length(), EXPECT_LEN_3);
+        final int length = htm.length();
+        assertEquals(3, length, EXPECT_LEN_3);
     }
 
     /**
@@ -574,9 +618,12 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln('x');
 
-        assertEquals('x', htm.charAt(0), CHAR_MISMATCH);
-        assertEquals('\r', htm.charAt(1), CHAR_MISMATCH);
-        assertEquals('\n', htm.charAt(2), CHAR_MISMATCH);
+        final char ch0 = htm.charAt(0);
+        assertEquals('x', ch0, CHAR_MISMATCH);
+        final char ch1 = htm.charAt(1);
+        assertEquals('\r', ch1, CHAR_MISMATCH);
+        final char ch2 = htm.charAt(2);
+        assertEquals('\n', ch2, CHAR_MISMATCH);
     }
 
     /**
@@ -589,7 +636,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln('x');
 
-        assertEquals("x\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("x\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -603,7 +651,8 @@ final class TestHtmlBuilder {
         final char[] chars = {'x', 'y', 'z'};
         htm.addln(chars);
 
-        assertEquals(5, htm.length(), EXPECT_LEN_5);
+        final int length = htm.length();
+        assertEquals(5, length, EXPECT_LEN_5);
     }
 
     /**
@@ -617,11 +666,16 @@ final class TestHtmlBuilder {
         final char[] chars = {'x', 'y', 'z'};
         htm.addln(chars);
 
-        assertEquals('x', htm.charAt(0), CHAR_MISMATCH);
-        assertEquals('y', htm.charAt(1), CHAR_MISMATCH);
-        assertEquals('z', htm.charAt(2), CHAR_MISMATCH);
-        assertEquals('\r', htm.charAt(3), CHAR_MISMATCH);
-        assertEquals('\n', htm.charAt(4), CHAR_MISMATCH);
+        final char ch0 = htm.charAt(0);
+        assertEquals('x', ch0, CHAR_MISMATCH);
+        final char ch1 = htm.charAt(1);
+        assertEquals('y', ch1, CHAR_MISMATCH);
+        final char ch2 = htm.charAt(2);
+        assertEquals('z', ch2, CHAR_MISMATCH);
+        final char ch3 = htm.charAt(3);
+        assertEquals('\r', ch3, CHAR_MISMATCH);
+        final char ch4 = htm.charAt(4);
+        assertEquals('\n', ch4, CHAR_MISMATCH);
     }
 
     /**
@@ -635,7 +689,8 @@ final class TestHtmlBuilder {
         final char[] chars = {'x', 'y', 'z'};
         htm.addln(chars);
 
-        assertEquals(XYZ_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(XYZ_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -648,7 +703,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(XYZ);
 
-        assertEquals(5, htm.length(), EXPECT_LEN_3);
+        final int length = htm.length();
+        assertEquals(5, length, EXPECT_LEN_3);
     }
 
     /**
@@ -661,11 +717,16 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(XYZ);
 
-        assertEquals('x', htm.charAt(0), CHAR_MISMATCH);
-        assertEquals('y', htm.charAt(1), CHAR_MISMATCH);
-        assertEquals('z', htm.charAt(2), CHAR_MISMATCH);
-        assertEquals('\r', htm.charAt(3), CHAR_MISMATCH);
-        assertEquals('\n', htm.charAt(4), CHAR_MISMATCH);
+        final char ch0 = htm.charAt(0);
+        assertEquals('x', ch0, CHAR_MISMATCH);
+        final char ch1 = htm.charAt(1);
+        assertEquals('y', ch1, CHAR_MISMATCH);
+        final char ch2 = htm.charAt(2);
+        assertEquals('z', ch2, CHAR_MISMATCH);
+        final char ch3 = htm.charAt(3);
+        assertEquals('\r', ch3, CHAR_MISMATCH);
+        final char ch4 = htm.charAt(4);
+        assertEquals('\n', ch4, CHAR_MISMATCH);
     }
 
     /**
@@ -678,7 +739,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(XYZ);
 
-        assertEquals(XYZ_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(XYZ_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -691,7 +753,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(true);
 
-        assertEquals(6, htm.length(), EXPECT_LEN_6);
+        final int length = htm.length();
+        assertEquals(6, length, EXPECT_LEN_6);
     }
 
     /**
@@ -704,7 +767,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(true);
 
-        assertEquals("true\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("true\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -717,7 +781,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(false);
 
-        assertEquals(7, htm.length(), EXPECT_LEN_7);
+        final int length = htm.length();
+        assertEquals(7, length, EXPECT_LEN_7);
     }
 
     /**
@@ -730,7 +795,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(false);
 
-        assertEquals("false\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("false\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -743,7 +809,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(-123);
 
-        assertEquals(6, htm.length(), EXPECT_LEN_6);
+        final int length = htm.length();
+        assertEquals(6, length, EXPECT_LEN_6);
     }
 
     /**
@@ -756,7 +823,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(-123);
 
-        assertEquals("-123\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("-123\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -769,7 +837,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(-1234567890123L);
 
-        assertEquals(16, htm.length(), "Expected length to be 16");
+        final int length = htm.length();
+        assertEquals(16, length, "Expected length to be 16");
     }
 
     /**
@@ -782,7 +851,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(-1234567890123L);
 
-        assertEquals("-1234567890123\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("-1234567890123\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -795,7 +865,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(1.234f);
 
-        assertEquals(7, htm.length(), EXPECT_LEN_7);
+        final int length = htm.length();
+        assertEquals(7, length, EXPECT_LEN_7);
     }
 
     /**
@@ -808,7 +879,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(1.234f);
 
-        assertEquals("1.234\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("1.234\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -821,7 +893,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Float.NaN);
 
-        assertEquals(5, htm.length(), EXPECT_LEN_5);
+        final int length = htm.length();
+        assertEquals(5, length, EXPECT_LEN_5);
     }
 
     /**
@@ -834,7 +907,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Float.NaN);
 
-        assertEquals(NAN_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NAN_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -847,7 +921,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Float.POSITIVE_INFINITY);
 
-        assertEquals(INF_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(INF_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -860,7 +935,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Float.NEGATIVE_INFINITY);
 
-        assertEquals(NEGINF_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NEGINF_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -873,7 +949,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(1.234564789);
 
-        assertEquals(13, htm.length(), "Expected length to be 13");
+        final int length = htm.length();
+        assertEquals(13, length, "Expected length to be 13");
     }
 
     /**
@@ -886,7 +963,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(1.23456789);
 
-        assertEquals("1.23456789\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("1.23456789\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -899,7 +977,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Double.NaN);
 
-        assertEquals(5, htm.length(), EXPECT_LEN_5);
+        final int length = htm.length();
+        assertEquals(5, length, EXPECT_LEN_5);
     }
 
     /**
@@ -912,7 +991,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Double.NaN);
 
-        assertEquals(NAN_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NAN_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -925,7 +1005,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Double.POSITIVE_INFINITY);
 
-        assertEquals(INF_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(INF_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -938,7 +1019,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(Double.NEGATIVE_INFINITY);
 
-        assertEquals(NEGINF_CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(NEGINF_CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -952,7 +1034,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(ld);
 
-        assertEquals(ld + CoreConstants.CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(ld + CoreConstants.CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -965,7 +1048,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln((Object) null);
 
-        assertEquals("null\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("null\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -978,7 +1062,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln((Object[]) null);
 
-        assertEquals(CoreConstants.CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(CoreConstants.CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -993,7 +1078,9 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(ld, lt);
 
-        assertEquals(ld + lt.toString() + CoreConstants.CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String expectTime = lt.toString();
+        final String actual = htm.toString();
+        assertEquals(ld + expectTime + CoreConstants.CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1008,7 +1095,9 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addln(ld, lt);
 
-        assertEquals(ld + lt.toString() + CoreConstants.CRLF, htm.toString(), TOSTR_MISMATCH);
+        final String expectTime = lt.toString();
+        final String actual = htm.toString();
+        assertEquals(ld + expectTime + CoreConstants.CRLF, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1021,7 +1110,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.indent(5);
 
-        assertEquals("     ", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("     ", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1034,7 +1124,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.indent(0);
 
-        assertEquals(CoreConstants.EMPTY, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(CoreConstants.EMPTY, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1047,7 +1138,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.indent(-10);
 
-        assertEquals(CoreConstants.EMPTY, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(CoreConstants.EMPTY, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1060,7 +1152,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addEscaped(XYZ);
 
-        assertEquals(XYZ, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(XYZ, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1073,7 +1166,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addEscaped("this&that");
 
-        assertEquals("this&amp;that", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("this&amp;that", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1086,7 +1180,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addEscaped("foo='abc'");
 
-        assertEquals("foo=&apos;abc&apos;", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("foo=&apos;abc&apos;", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1099,7 +1194,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addEscaped("foo=\"abc\"");
 
-        assertEquals("foo=&quot;abc&quot;", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("foo=&quot;abc&quot;", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1112,7 +1208,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addEscaped("foo=<html>");
 
-        assertEquals("foo=&lt;html&gt;", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("foo=&lt;html&gt;", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1125,7 +1222,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addAttribute(XYZ, ABC, 0);
 
-        assertEquals(" xyz='abc'", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(" xyz='abc'", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1138,7 +1236,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addAttribute(XYZ, ABC, 4);
 
-        assertEquals("\r\n    xyz='abc'", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("\r\n    xyz='abc'", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1151,7 +1250,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.addAttribute("expr", "0<x<10", 0);
 
-        assertEquals(" expr='0&lt;x&lt;10'", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(" expr='0&lt;x&lt;10'", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1164,7 +1264,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.openElement(5, HTML);
 
-        assertEquals("     <html", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("     <html", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1177,7 +1278,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.startNonempty(5, HTML, false);
 
-        assertEquals("     <html>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("     <html>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1190,7 +1292,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.startNonempty(5, HTML, true);
 
-        assertEquals("     <html>\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("     <html>\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1203,7 +1306,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.endNonempty(5, HTML, false);
 
-        assertEquals("     </html>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("     </html>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1216,7 +1320,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.endNonempty(5, HTML, true);
 
-        assertEquals("     </html>\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("     </html>\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1229,7 +1334,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.endOpenElement(false);
 
-        assertEquals(">", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(">", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1242,7 +1348,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.endOpenElement(true);
 
-        assertEquals(">\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(">\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1255,7 +1362,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.closeEmptyElement(false);
 
-        assertEquals("/>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("/>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1268,7 +1376,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.closeEmptyElement(true);
 
-        assertEquals("/>\r\n", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("/>\r\n", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1281,7 +1390,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sP();
 
-        assertEquals("<p>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<p>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1294,7 +1404,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sP(ABC);
 
-        assertEquals("<p class='abc'>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<p class='abc'>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1307,7 +1418,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sP(ABC, ATTR_A_EQ_B, ATTR_C_EQ_D);
 
-        assertEquals("<p class='abc' a='b' c='d'>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<p class='abc' a='b' c='d'>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1320,7 +1432,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eP();
 
-        assertEquals("</p>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</p>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1333,7 +1446,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sSpan(null);
 
-        assertEquals("<span>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<span>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1346,7 +1460,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sSpan(ABC);
 
-        assertEquals("<span class='abc'>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<span class='abc'>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1359,7 +1474,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sSpan(ABC, ATTR_A_EQ_B, ATTR_C_EQ_D);
 
-        assertEquals("<span class='abc' a='b' c='d'>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<span class='abc' a='b' c='d'>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1372,7 +1488,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eSpan();
 
-        assertEquals("</span>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</span>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1385,7 +1502,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sH(1);
 
-        assertEquals("<h1>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<h1>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1398,7 +1516,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eH(2);
 
-        assertEquals("</h2>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</h2>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1411,7 +1530,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.br();
 
-        assertEquals("<br/>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<br/>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1424,7 +1544,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sDiv();
 
-        assertEquals(DIV_TAG, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(DIV_TAG, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1437,7 +1558,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sDiv(null);
 
-        assertEquals(DIV_TAG, htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals(DIV_TAG, actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1450,7 +1572,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sDiv(ABC);
 
-        assertEquals("<div class='abc'>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<div class='abc'>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1463,7 +1586,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sDiv(ABC, ATTR_A_EQ_B, ATTR_C_EQ_D);
 
-        assertEquals("<div class='abc' a='b' c='d'>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<div class='abc' a='b' c='d'>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1476,7 +1600,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eDiv();
 
-        assertEquals("</div>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</div>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1489,7 +1614,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.div(null);
 
-        assertEquals("<div></div>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<div></div>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1502,7 +1628,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.div(ABC);
 
-        assertEquals("<div class='abc'></div>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<div class='abc'></div>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1515,7 +1642,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.div(ABC, ATTR_A_EQ_B, ATTR_C_EQ_D);
 
-        assertEquals("<div class='abc' a='b' c='d'></div>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<div class='abc' a='b' c='d'></div>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1528,7 +1656,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sTr();
 
-        assertEquals("<tr>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<tr>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1541,7 +1670,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eTr();
 
-        assertEquals("</tr>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</tr>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1554,7 +1684,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sTable();
 
-        assertEquals("<table>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<table>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1567,7 +1698,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eTable();
 
-        assertEquals("</table>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</table>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1580,7 +1712,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sTh();
 
-        assertEquals("<th>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<th>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1593,7 +1726,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eTh();
 
-        assertEquals("</th>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</th>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1606,7 +1740,8 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.sTd();
 
-        assertEquals("<td>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("<td>", actual, TOSTR_MISMATCH);
     }
 
     /**
@@ -1619,6 +1754,7 @@ final class TestHtmlBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.eTd();
 
-        assertEquals("</td>", htm.toString(), TOSTR_MISMATCH);
+        final String actual = htm.toString();
+        assertEquals("</td>", actual, TOSTR_MISMATCH);
     }
 }

@@ -127,7 +127,8 @@ final class Rnd {
     public int nextInt(final int upperLimit) {
 
         if (upperLimit <= 0) {
-            throw new IllegalArgumentException(Res.get(Res.RND_UPPER_LIMIT_NOT_POS));
+            final String msg = Res.get(Res.RND_UPPER_LIMIT_NOT_POS);
+            throw new IllegalArgumentException(msg);
         }
 
         return (nextInt() & INT_NONSIGN_BITS) % upperLimit;

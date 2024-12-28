@@ -107,7 +107,8 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertEquals(Integer.valueOf(2), chr.combining, "GetCombining");
+        final Integer expected = Integer.valueOf(2);
+        assertEquals(expected, chr.combining, "GetCombining");
     }
 
     /** Test case. */
@@ -146,8 +147,9 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertArrayEquals(chr.getDecompMappingCodePoints(), new Integer[]{Integer.valueOf(0x0123)},
-                "GetDecompMappingCodePoint");
+        final Integer[] expected = chr.getDecompMappingCodePoints();
+        final Integer actual = Integer.valueOf(0x0123);
+        assertArrayEquals(expected, new Integer[]{actual}, "GetDecompMappingCodePoint");
     }
 
     /** Test case. */
@@ -160,7 +162,8 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertEquals(Integer.valueOf(9), chr.decimal, "GetDecimal");
+        final Integer expected = Integer.valueOf(9);
+        assertEquals(expected, chr.decimal, "GetDecimal");
     }
 
     /** Test case. */
@@ -173,7 +176,8 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertEquals(Integer.valueOf(8), chr.digit, "GetDigit");
+        final Integer expected = Integer.valueOf(8);
+        assertEquals(expected, chr.digit, "GetDigit");
     }
 
     /** Test case. */
@@ -186,7 +190,8 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertEquals(Double.valueOf(8.0 / 3.0), chr.numeric, "GetNumeric");
+        final Double expected = Double.valueOf(8.0 / 3.0);
+        assertEquals(expected, chr.numeric, "GetNumeric");
     }
 
     /** Test case. */
@@ -238,7 +243,8 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertEquals(Integer.valueOf(0x2346), chr.uppercase, "GetUppercase");
+        final Integer expected = Integer.valueOf(0x2346);
+        assertEquals(expected, chr.uppercase, "GetUppercase");
     }
 
     /** Test case. */
@@ -251,7 +257,8 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertEquals(Integer.valueOf(0x2347), chr.lowercase, "GetLowercase");
+        final Integer expected = Integer.valueOf(0x2347);
+        assertEquals(expected, chr.lowercase, "GetLowercase");
     }
 
     /** Test case. */
@@ -264,7 +271,8 @@ final class TestUnicodeCharacter {
                 TEST_DECOMP, TEST_DECIMAL, TEST_DIGIT, TEST_NUMERIC, TEST_MIRRORED, TEST_OLD_NAME,
                 TEST_COMMENT, TEST_UPPERCASE, TEST_LOWERCASE, TEST_TITLECASE);
 
-        assertEquals(Integer.valueOf(0x2348), chr.titlecase, "GetTitlecase");
+        final Integer expected = Integer.valueOf(0x2348);
+        assertEquals(expected, chr.titlecase, "GetTitlecase");
     }
 
     /** Test case. */
@@ -276,7 +284,8 @@ final class TestUnicodeCharacter {
 
         while (iter.hasNext()) {
             final UnicodeCharacter chr = iter.next();
-            assertEquals(chr.stringValue(), new String(new int[]{chr.codePoint}, 0, 1), "StringValue");
+            final String expected = chr.stringValue();
+            assertEquals(expected, new String(new int[]{chr.codePoint}, 0, 1), "StringValue");
         }
     }
 }

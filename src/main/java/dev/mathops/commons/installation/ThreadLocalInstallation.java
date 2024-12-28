@@ -20,7 +20,7 @@ class ThreadLocalInstallation extends ThreadLocal<Installation> {
      * @return the initial value
      */
     @Override
-    protected Installation initialValue() {
+    protected final Installation initialValue() {
 
         return null;
     }

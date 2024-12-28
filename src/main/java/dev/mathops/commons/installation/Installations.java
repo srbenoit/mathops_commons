@@ -17,17 +17,20 @@ public final class Installations {
     /** The default name of the configuration file. */
     public static final String DEF_CFG_FILE_NAME = "installation.properties";
 
+    /** The default base directory path. */
+    public static final String MATHOPS_PATH = "/opt/zircon";
+
     /** The default base directory. */
-    public static final File DEF_BASE_DIR = new File("/opt/zircon");
+    public static final File DEF_BASE_DIR = new File(MATHOPS_PATH);
 
     /** The single instance of this object. */
-    private static Installations inst;
+    private static Installations inst = null;
 
     /** Installations, by configuration file. */
     private final Map<String, Installation> installationMap;
 
     /** A thread-local variable to store a thread's installation. */
-    private final ThreadLocalInstallation threadLocal;
+    private static final ThreadLocalInstallation THREAD_LOCAL = new ThreadLocalInstallation();
 
     /**
      * Constructs a new {@code Installations}.
@@ -35,7 +38,6 @@ public final class Installations {
     private Installations() {
 
         this.installationMap = new ConcurrentHashMap<>(3);
-        this.threadLocal = new ThreadLocalInstallation();
     }
 
     /**
@@ -61,7 +63,7 @@ public final class Installations {
      */
     public static Installation getMyInstallation() {
 
-        return get().threadLocal.get();
+        return get().getThreadLocal().get();
     }
 
     /**
@@ -71,7 +73,7 @@ public final class Installations {
      */
     public static void setMyInstallation(final Installation myInstallation) {
 
-        get().threadLocal.set(myInstallation);
+        get().getThreadLocal().set(myInstallation);
     }
 
     /**
@@ -82,8 +84,7 @@ public final class Installations {
      * @return the instance
      * @throws InvalidPathException if the base directory does not represent a legitimate path
      */
-    public Installation getInstallation(final File theBaseDir, final String theCfgFile)
-            throws InvalidPathException {
+    public Installation getInstallation(final File theBaseDir, final String theCfgFile) throws InvalidPathException {
 
         final File actualBaseDir = theBaseDir == null ? DEF_BASE_DIR : theBaseDir;
         final String actualCfgFile = theCfgFile == null ? DEF_CFG_FILE_NAME : theCfgFile;
@@ -91,7 +92,7 @@ public final class Installations {
         final File file = new File(actualBaseDir, actualCfgFile);
         final String path = file.getAbsolutePath();
 
-        synchronized (this) {
+        synchronized (this.installationMap) {
             Installation installation = this.installationMap.get(path);
 
             if (installation == null) {
@@ -110,8 +111,18 @@ public final class Installations {
      */
     public int getNumInstallations() {
 
-        synchronized (this) {
+        synchronized (this.installationMap) {
             return this.installationMap.size();
         }
+    }
+
+    /**
+     * Gets the thread-local installation.
+     *
+     * @return the thread-local installation
+     */
+    private ThreadLocalInstallation getThreadLocal() {
+
+        return THREAD_LOCAL;
     }
 }

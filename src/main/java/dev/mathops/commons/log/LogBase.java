@@ -42,30 +42,6 @@ public class LogBase extends Synchronized {
     /** Bit flag to enable all levels of logging. */
     public static final int ALL = 0x00FF;
 
-    /** Name of a logging level. */
-    static final String SEVERE_LVL = "SEVERE";
-
-    /** Name of a logging level. */
-    static final String WARNING_LVL = "WARNING";
-
-    /** Name of a logging level. */
-    static final String INFO_LVL = "INFO";
-
-    /** Name of a logging level. */
-    static final String CONFIG_LVL = "CONFIG";
-
-    /** Name of a logging level. */
-    static final String ENTERING_LVL = "ENTERING";
-
-    /** Name of a logging level. */
-    static final String EXITING_LVL = "EXITING";
-
-    /** Name of a logging level. */
-    static final String FINE_LVL = "FINE";
-
-    /** Name of a logging level. */
-    static final String FINEST_LVL = "FINEST";
-
     /** Indentation to make follow-on lines align with lines that have log info. */
     private static final String INDENT = "                           ";
 
@@ -79,7 +55,7 @@ public class LogBase extends Synchronized {
     private static final ThreadLocalLogContext LOG_CONTEXT = new ThreadLocalLogContext();
 
     /** The writer that will write log records to configured outputs. */
-    private final LogWriter writer;
+    private final LogWriter logWriter;
 
     /** A {@code HtmlBuilder} to assemble log messages. */
     private final HtmlBuilder html;
@@ -94,7 +70,7 @@ public class LogBase extends Synchronized {
 
         super();
 
-        this.writer = new LogWriter();
+        this.logWriter = new LogWriter();
         this.html = new HtmlBuilder(INIT_BUILDER_SIZE);
 
         final String clsName = LogBase.class.getName();
@@ -111,7 +87,7 @@ public class LogBase extends Synchronized {
      */
     final LogWriter getLogWriter() {
 
-        return this.writer;
+        return this.logWriter;
     }
 
     /**
@@ -119,9 +95,9 @@ public class LogBase extends Synchronized {
      *
      * @return the log settings
      */
-    LogSettings getSettings() {
+    final LogSettings getSettings() {
 
-        return this.writer.getSettings();
+        return this.logWriter.getSettings();
     }
 
     /**
@@ -155,7 +131,7 @@ public class LogBase extends Synchronized {
         appendSource();
         addExceptionInfo(INDENT, args);
         final String htmStr = this.html.toString();
-        this.writer.writeMessage(htmStr, true);
+        this.logWriter.writeMessage(htmStr, true);
         this.html.reset();
     }
 
@@ -239,7 +215,7 @@ public class LogBase extends Synchronized {
 
         final IllegalArgumentException except = new IllegalArgumentException();
         final StackTraceElement[] stack = except.getStackTrace();
-        boolean found = false;
+        boolean scanning = true;
 
         for (final StackTraceElement stackTraceElement : stack) {
 
@@ -252,10 +228,11 @@ public class LogBase extends Synchronized {
             }
 
             if (clsname.endsWith(".java")) {
-                clsname = clsname.substring(0, clsname.length() - 5);
+                final int classNameLen = clsname.length();
+                clsname = clsname.substring(0, classNameLen - 5);
             }
 
-            final int lastDot = clsname.lastIndexOf('.');
+            final int lastDot = clsname.lastIndexOf((int) '.');
             final String pkgname = lastDot == -1 ? clsname : clsname.substring(0, lastDot + 1);
             final String name = clsname.substring(lastDot + 1);
 
@@ -267,11 +244,11 @@ public class LogBase extends Synchronized {
             final String lineNumberStr = Integer.toString(lineNumber);
             final String className = stackTraceElement.getClassName();
             this.html.add(" (", className, ".java:", lineNumberStr, ")");
-            found = true;
+            scanning = false;
             break;
         }
 
-        if (!found) {
+        if (scanning) {
             final Class<? extends LogBase> cls = getClass();
             final String clsName = cls.getName();
             final String msg = Res.fmt(Res.NO_SRC, clsName);

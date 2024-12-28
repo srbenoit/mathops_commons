@@ -191,6 +191,16 @@ public enum EMimeType {
     }
 
     /**
+     * Gets the file extension.
+     *
+     * @return the extension (without the dot)
+     */
+    public String getExt() {
+
+        return this.ext;
+    }
+
+    /**
      * Looks up a MIME type from a file extension.
      *
      * @param ext the extension
@@ -205,7 +215,9 @@ public enum EMimeType {
 
         EMimeType result = null;
         for (final EMimeType value : values()) {
-            if (ext.equals(value.ext)) {
+            final String valueExt = value.getExt();
+
+            if (ext.equals(valueExt)) {
                 result = value;
                 break;
             }

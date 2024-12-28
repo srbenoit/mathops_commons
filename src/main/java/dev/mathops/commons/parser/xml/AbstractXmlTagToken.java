@@ -16,7 +16,7 @@ abstract class AbstractXmlTagToken extends AbstractXmlToken {
     private static final int EST_NUM_ATTRIBUTES = 10;
 
     /** The tag name. */
-    private String name;
+    private String name = null;
 
     /** The set of attributes. */
     private final Map<String, Attribute> attributes;
@@ -24,9 +24,9 @@ abstract class AbstractXmlTagToken extends AbstractXmlToken {
     /**
      * Constructs a new {@code AbstractXmlTagToken}.
      *
-     * @param theContent       the content this token belongs to
-     * @param theStart         the index of the '<' character
-     * @param theEnd           the index after '>' character
+     * @param theContent    the content this token belongs to
+     * @param theStart      the index of the '<' character
+     * @param theEnd        the index after '>' character
      * @param theLineNumber the line number of the start of the span
      * @param theColumn     the column of the start of the span
      */
@@ -97,7 +97,9 @@ abstract class AbstractXmlTagToken extends AbstractXmlToken {
             htm.add(" [Attributes:");
 
             for (final Map.Entry<String, Attribute> entry : this.attributes.entrySet()) {
-                htm.add(CoreConstants.SPC, entry.getKey(), "=\"", entry.getValue(), CoreConstants.QUOTE);
+                final String key = entry.getKey();
+                final Attribute value = entry.getValue();
+                htm.add(CoreConstants.SPC, key, "=\"", value, CoreConstants.QUOTE);
             }
 
             htm.add(']');
@@ -115,28 +117,35 @@ abstract class AbstractXmlTagToken extends AbstractXmlToken {
     final void extractNameAndAttributes(final int endChars) throws ParsingException {
 
         final XmlContent content = getContent();
-        int pos = getStart() + 1;
-        boolean valid = XmlChars.isNameStartChar(content.get(pos));
+        final int start = getStart();
+        final int end = getEnd();
+
+        int pos = start + 1;
+        final char startChar = content.get(pos);
+        boolean valid = XmlChars.isNameStartChar((int) startChar);
         ++pos;
 
         // Validate and store the name
-        while (valid && pos < (getEnd() - endChars)) {
+        while (valid && pos < (end - endChars)) {
 
-            if (XmlChars.isWhitespace(content.get(pos))) {
+            final char chr = content.get(pos);
+            if (XmlChars.isWhitespace((int) chr)) {
                 break;
             }
 
-            valid = XmlChars.isNameChar(content.get(pos));
+            valid = XmlChars.isNameChar((int) chr);
             ++pos;
         }
 
         if (!valid) {
-            throw new ParsingException(getStart(), pos, Res.fmt(Res.BAD_TAG,
-                    content.substring(getStart(), getEnd()), content.substring(getStart() + 1, pos)));
+            final String wholeString = content.substring(start, end);
+            final String substring = content.substring(start + 1, pos);
+            final String message = Res.fmt(Res.BAD_TAG, wholeString, substring);
+            throw new ParsingException(start, pos, message);
         }
 
-        this.name = content.substring(getStart() + 1, pos);
+        this.name = content.substring(start + 1, pos);
 
-        extractAttributes(pos, getEnd() - endChars, this.attributes);
+        extractAttributes(pos, end - endChars, this.attributes);
     }
 }

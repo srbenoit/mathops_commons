@@ -6,7 +6,7 @@ import dev.mathops.commons.parser.ICharSpan;
 /**
  * An error message along with the span object with which the error is associated.
  */
-public class XmlContentError {
+public final class XmlContentError {
 
     /** The span. */
     public final ICharSpan span;
@@ -34,10 +34,17 @@ public class XmlContentError {
     @Override
     public String toString() {
 
-        return SimpleBuilder.concat(this.msg, " at line ",
-                Integer.toString(this.span.getLineNumber()), ", column ",
-                Integer.toString(this.span.getColumn()), ", [",
-                Integer.toString(this.span.getStart()), ":",
-                Integer.toString(this.span.getEnd()), "]");
+        final int lineNumber = this.span.getLineNumber();
+        final int column = this.span.getColumn();
+        final int start = this.span.getStart();
+        final int end = this.span.getEnd();
+
+        final String lineNumberStr = Integer.toString(lineNumber);
+        final String columnStr = Integer.toString(column);
+        final String startStr = Integer.toString(start);
+        final String endStr = Integer.toString(end);
+
+        return SimpleBuilder.concat(this.msg, " at line ", lineNumberStr, ", column ", columnStr, ", [", startStr, ":",
+                endStr, "]");
     }
 }

@@ -18,13 +18,13 @@ public final class Installation extends SimpleErrorWarningLog {
     private static final String BASE_DIR_TAG = "$BASE_DIR";
 
     /** The base directory for the installation. */
-    public final File baseDir;
+    private final File baseDir;
 
     /** The name of the configuration file to read. */
-    public final String cfgFile;
+    private final String cfgFile;
 
     /** Properties loaded from the configuration file. */
-    public final Properties properties;
+    private final Properties properties;
 
     /** Flag indicating configuration was loaded successfully. */
     private boolean loaded;
@@ -36,12 +36,11 @@ public final class Installation extends SimpleErrorWarningLog {
      * @param theCfgFile the name of the configuration file ({@code null} to use the default file name)
      * @throws InvalidPathException if the base directory does not represent a legitimate path
      */
-    /* default */ Installation(final File theBaseDir, final String theCfgFile) throws InvalidPathException {
+    Installation(final File theBaseDir, final String theCfgFile) throws InvalidPathException {
 
         super();
 
         // Validate the path
-        //noinspection ResultOfMethodCallIgnored
         theBaseDir.toPath();
 
         this.baseDir = theBaseDir;
@@ -72,6 +71,36 @@ public final class Installation extends SimpleErrorWarningLog {
     }
 
     /**
+     * Gets the base directory.
+     *
+     * @return the base directory
+     */
+    public File getBaseDir() {
+
+        return this.baseDir;
+    }
+
+    /**
+     * Gets the name of the configuration file.
+     *
+     * @return the configuration file
+     */
+    public String getCfgFile() {
+
+        return this.cfgFile;
+    }
+
+    /**
+     * Gets the loaded properties.
+     *
+     * @return the properties
+     */
+    public Properties getProperties() {
+
+        return this.properties;
+    }
+
+    /**
      * Loads the bare configuration settings from the file.
      */
     private void loadConfiguration() {
@@ -89,19 +118,20 @@ public final class Installation extends SimpleErrorWarningLog {
                 for (final String propName : this.properties.stringPropertyNames()) {
                     final String value = this.properties.getProperty(propName);
                     if (value.contains(BASE_DIR_TAG)) {
-                        this.properties.setProperty(propName, value.replace(BASE_DIR_TAG, base));
+                        final String replaced = value.replace(BASE_DIR_TAG, base);
+                        this.properties.setProperty(propName, replaced);
                     }
                 }
                 this.loaded = true;
             } catch (final IOException ex) {
-                final String absPath = cfg.getAbsolutePath();
-                final String msg = Res.fmt(Res.CANT_READ_CFG_FILE, absPath);
-                indicateException(msg, ex);
+                final String absolutePath = cfg.getAbsolutePath();
+                final String errMsg = Res.fmt(Res.CANT_READ_CFG_FILE, absolutePath);
+                indicateException(errMsg, ex);
             }
         } else {
-            final String absPath = cfg.getAbsolutePath();
-            final String msg = Res.fmt(Res.CFG_FILE_NONEXIST, absPath);
-            addError(msg);
+            final String absolutePath = cfg.getAbsolutePath();
+            final String errMsg = Res.fmt(Res.CFG_FILE_NONEXISTENT, absolutePath);
+            addError(errMsg);
         }
     }
 
@@ -125,8 +155,8 @@ public final class Installation extends SimpleErrorWarningLog {
             result = def;
         } else {
             if (path.startsWith(BASE_DIR_TAG)) {
-                final int len = BASE_DIR_TAG.length();
-                path = this.baseDir.getAbsolutePath() + path.substring(len);
+                final int length = BASE_DIR_TAG.length();
+                path = this.baseDir.getAbsolutePath() + path.substring(length);
             }
 
             final File file = new File(path);
@@ -134,12 +164,12 @@ public final class Installation extends SimpleErrorWarningLog {
                 if (file.isDirectory()) {
                     result = file;
                 } else {
-                    final String msg = Res.fmt(Res.PATH_IS_NOT_DIR, path);
-                    addWarning(msg);
+                    final String errMsg = Res.fmt(Res.PATH_IS_NOT_DIR, path);
+                    addWarning(errMsg);
                 }
             } else {
-                final String msg = Res.fmt(Res.CANT_CREATE_DIR, path);
-                addWarning(msg);
+                final String errMsg = Res.fmt(Res.CANT_CREATE_DIR, path);
+                addWarning(errMsg);
             }
         }
 

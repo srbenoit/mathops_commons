@@ -435,7 +435,7 @@ public final class HtmlBuilder extends XmlBuilder {
             add(CoreConstants.SPC_CHAR).add(attr);
         }
 
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }
@@ -471,7 +471,7 @@ public final class HtmlBuilder extends XmlBuilder {
             add(CoreConstants.SPC_CHAR).add(attr);
         }
 
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }
@@ -496,7 +496,7 @@ public final class HtmlBuilder extends XmlBuilder {
      */
     public HtmlBuilder sH(final int level) {
 
-        add(OPEN_H).add(level).add(XmlBuilder.GT_CHAR);
+        add(OPEN_H).add(level).add(GT_CHAR);
 
         return this;
     }
@@ -512,9 +512,9 @@ public final class HtmlBuilder extends XmlBuilder {
 
         add(OPEN_H).add(level);
         if (cls != null) {
-            add(" class='").add(cls).add(XmlBuilder.TICK_CHAR);
+            add(" class='").add(cls).add(TICK_CHAR);
         }
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }
@@ -527,7 +527,7 @@ public final class HtmlBuilder extends XmlBuilder {
      */
     public HtmlBuilder eH(final int level) {
 
-        add("</h").add(level).add(XmlBuilder.GT_CHAR);
+        add("</h").add(level).add(GT_CHAR);
 
         return this;
     }
@@ -600,7 +600,7 @@ public final class HtmlBuilder extends XmlBuilder {
             add(CoreConstants.SPC_CHAR).add(attr);
         }
 
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }
@@ -672,7 +672,7 @@ public final class HtmlBuilder extends XmlBuilder {
             add(CoreConstants.SPC_CHAR).add(attr);
         }
 
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }
@@ -720,7 +720,7 @@ public final class HtmlBuilder extends XmlBuilder {
             add(CoreConstants.SPC_CHAR).add(attr);
         }
 
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }
@@ -784,7 +784,7 @@ public final class HtmlBuilder extends XmlBuilder {
             add(CoreConstants.SPC_CHAR).add(attr);
         }
 
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }
@@ -848,7 +848,7 @@ public final class HtmlBuilder extends XmlBuilder {
             add(CoreConstants.SPC_CHAR).add(attr);
         }
 
-        add(XmlBuilder.GT_CHAR);
+        add(GT_CHAR);
 
         return this;
     }

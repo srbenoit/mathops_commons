@@ -20,18 +20,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * A layout manager that behaves much like {@code FlowLayout}, except that the vertical alignment of components with
  * different height can be specified.
  */
-public final class AlignedFlowLayout implements LayoutManager, Serializable {
-
-    /** Version for serialization. */
-    @Serial
-    private static final long serialVersionUID = 8947943341385029745L;
+public final class AlignedFlowLayout implements LayoutManager {
 
     /** This value indicates that each row of components should be left-justified. */
     public static final int LEFT = 0;
@@ -283,8 +277,9 @@ public final class AlignedFlowLayout implements LayoutManager, Serializable {
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
 
+        final boolean useBaseline = this.verticalAlign == BASELINE;
+
         synchronized (parent.getTreeLock()) {
-            final boolean useBaseline = this.verticalAlign == BASELINE;
             final Dimension dim = new Dimension(0, 0);
             final int nmembers = parent.getComponentCount();
             boolean firstVisible = true;
@@ -331,15 +326,20 @@ public final class AlignedFlowLayout implements LayoutManager, Serializable {
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
 
+        final boolean useBaseline = this.verticalAlign == BASELINE;
+        final Dimension dim = new Dimension(0, 0);
+
+        final int twiceHGap = this.hgap << 1;
+        final int twiceVGap = this.vgap << 1;
+
+        int maxAscent = 0;
+        int maxDescent = 0;
+
         synchronized (parent.getTreeLock()) {
-            final boolean useBaseline = this.verticalAlign == BASELINE;
-            final Dimension dim = new Dimension(0, 0);
-            final int nmembers = parent.getComponentCount();
-            int maxAscent = 0;
-            int maxDescent = 0;
+            final int numMembers = parent.getComponentCount();
             boolean firstVisible = true;
 
-            for (int i = 0; i < nmembers; i++) {
+            for (int i = 0; i < numMembers; i++) {
                 final Component component = parent.getComponent(i);
                 if (component.isVisible()) {
                     final Dimension minimumSize = component.getMinimumSize();
@@ -361,8 +361,8 @@ public final class AlignedFlowLayout implements LayoutManager, Serializable {
             }
 
             final Insets insets = parent.getInsets();
-            dim.width += insets.left + insets.right + (this.hgap << 1);
-            dim.height += insets.top + insets.bottom + (this.vgap << 1);
+            dim.width += insets.left + insets.right + twiceHGap;
+            dim.height += insets.top + insets.bottom + twiceVGap;
             return dim;
         }
     }
@@ -378,25 +378,28 @@ public final class AlignedFlowLayout implements LayoutManager, Serializable {
     @Override
     public void layoutContainer(final Container parent) {
 
+        final boolean useBaseline = this.verticalAlign == BASELINE;
+        final int theHGap = this.hgap;
+        final int theVGap = this.vgap;
+
         synchronized (parent.getTreeLock()) {
             final Insets insets = parent.getInsets();
-            final int maxwidth = parent.getWidth() - (insets.left + insets.right + (this.hgap << 1));
+            final int maxWidth = parent.getWidth() - (insets.left + insets.right + (theHGap << 1));
 
-            final int nmembers = parent.getComponentCount();
+            final int numMembers = parent.getComponentCount();
             final boolean ltr = parent.getComponentOrientation().isLeftToRight();
 
-            final boolean useBaseline = this.verticalAlign == BASELINE;
-            final int[] ascent = useBaseline ? new int[nmembers] : EMPTY_ARRAY;
-            final int[] descent = useBaseline ? new int[nmembers] : EMPTY_ARRAY;
+            final int[] ascent = useBaseline ? new int[numMembers] : EMPTY_ARRAY;
+            final int[] descent = useBaseline ? new int[numMembers] : EMPTY_ARRAY;
 
             int x = 0;
-            int y = insets.top + this.vgap;
+            int y = insets.top + theVGap;
             int rowheight = 0;
             int start = 0;
 
             // Lay out members in rows, wrapping when width exceeds container's width,
             // and when each row is formed, perform horizontal/vertical alignment
-            for (int i = 0; i < nmembers; ++i) {
+            for (int i = 0; i < numMembers; ++i) {
                 final Component component = parent.getComponent(i);
 
                 if (component.isVisible()) {
@@ -413,27 +416,27 @@ public final class AlignedFlowLayout implements LayoutManager, Serializable {
                         }
                     }
 
-                    if ((x == 0) || ((x + dimension.width) <= maxwidth)) {
+                    if ((x == 0) || ((x + dimension.width) <= maxWidth)) {
                         if (x > 0) {
-                            x += this.hgap;
+                            x += theHGap;
                         }
                         x += dimension.width;
                         rowheight = Math.max(rowheight, dimension.height);
                     } else {
                         // Need to start a new row, so align the row we've just finished
-                        rowheight = moveComponents(parent, insets.left + this.hgap, y, maxwidth - x,
+                        rowheight = moveComponents(parent, insets.left + theHGap, y, maxWidth - x,
                                 rowheight, start, i, ltr, ascent, descent);
 
                         x = dimension.width;
-                        y += this.vgap + rowheight;
+                        y += theVGap + rowheight;
                         rowheight = dimension.height;
                         start = i;
                     }
                 }
             }
 
-            moveComponents(parent, insets.left + this.hgap, y, maxwidth - x, rowheight, start,
-                    nmembers, ltr, ascent, descent);
+            moveComponents(parent, insets.left + theHGap, y, maxWidth - x, rowheight, start,
+                    numMembers, ltr, ascent, descent);
         }
     }
 
@@ -486,7 +489,8 @@ public final class AlignedFlowLayout implements LayoutManager, Serializable {
                         maxAscent = Math.max(maxAscent, ascent[i]);
                         maxDescent = Math.max(maxDescent, descent[i]);
                     } else {
-                        nonbaselineHeight = Math.max(component.getHeight(), nonbaselineHeight);
+                        final int height = component.getHeight();
+                        nonbaselineHeight = Math.max(height, nonbaselineHeight);
                     }
                 }
             }
@@ -514,7 +518,9 @@ public final class AlignedFlowLayout implements LayoutManager, Serializable {
                 if (ltr) {
                     component.setLocation(xx, cy);
                 } else {
-                    component.setLocation(target.getWidth() - xx - component.getWidth(), cy);
+                    final int targetWidth = target.getWidth();
+                    final int componentWidth = component.getWidth();
+                    component.setLocation(targetWidth - xx - componentWidth, cy);
                 }
                 xx += component.getWidth() + this.hgap;
             }

@@ -41,13 +41,14 @@ enum XmlTokenizer {
         while (filePos.byteOffset < len) {
             final char chr = theContent.get(filePos.byteOffset);
 
-            if (!XmlChars.isChar(chr)) {
-                throw new ParsingException(filePos.byteOffset, filePos.byteOffset + 1, Res.get(Res.BAD_CHAR));
+            if (!XmlChars.isChar((int) chr)) {
+                final String message = Res.get(Res.BAD_CHAR);
+                throw new ParsingException(filePos.byteOffset, filePos.byteOffset + 1, message);
             }
 
             processChar(chr, filePos, state);
             ++filePos.byteOffset;
-            if (chr == '\n') {
+            if ((int) chr == (int) '\n') {
                 ++filePos.lineNumber;
                 filePos.column = 0;
             }
@@ -68,10 +69,12 @@ enum XmlTokenizer {
                     final int count = tokens.size();
                     final int debugStart = Math.max(0, count - 5);
                     for (int i = debugStart; i < count; ++i) {
-                        Log.info("Recent token was " + tokens.get(i));
+                        final IXmlToken tok = tokens.get(i);
+                        Log.info("Recent token was " + tok);
                     }
                 }
-                throw new ParsingException(start.byteOffset, len, Res.get(Res.BAD_EOF));
+                final String message = Res.get(Res.BAD_EOF);
+                throw new ParsingException(start.byteOffset, len, message);
             }
         }
 
@@ -122,19 +125,20 @@ enum XmlTokenizer {
      */
     private static void tokenizeChars(final char chr, final FilePosition filePos, final TokenizeState state) {
 
-        if (chr == '<' || chr == '&' || XmlChars.isWhitespace(chr)) {
+        if ((int) chr == (int) '<' || (int) chr == (int) '&' || XmlChars.isWhitespace((int) chr)) {
             final FilePosition start = state.getStart();
 
             if (state.getStart().byteOffset < filePos.byteOffset) {
-                state.addToken(new TokChars(state.getContent(), start.byteOffset, filePos.byteOffset, start.lineNumber,
+                final XmlContent content = state.getContent();
+                state.addToken(new TokChars(content, start.byteOffset, filePos.byteOffset, start.lineNumber,
                         start.column));
             }
 
             start.copyFrom(filePos);
 
-            if (chr == '<') {
+            if ((int) chr == (int) '<') {
                 state.setState(EXmlParseState.TAG);
-            } else if (chr == '&') {
+            } else if ((int) chr == (int) '&') {
                 state.setState(EXmlParseState.REFERENCE);
             } else {
                 state.setState(EXmlParseState.WHITESPACE);
@@ -151,19 +155,20 @@ enum XmlTokenizer {
      */
     private static void tokenizeWhitespace(final char chr, final FilePosition filePos, final TokenizeState state) {
 
-        if (!XmlChars.isWhitespace(chr)) {
+        if (!XmlChars.isWhitespace((int) chr)) {
             final FilePosition start = state.getStart();
 
             if (state.getStart().byteOffset < filePos.byteOffset) {
-                state.addToken(new TokWhitespace(state.getContent(), start.byteOffset, filePos.byteOffset,
+                final XmlContent content = state.getContent();
+                state.addToken(new TokWhitespace(content, start.byteOffset, filePos.byteOffset,
                         start.lineNumber, start.column));
             }
 
             start.copyFrom(filePos);
 
-            if (chr == '<') {
+            if ((int) chr == (int) '<') {
                 state.setState(EXmlParseState.TAG);
-            } else if (chr == '&') {
+            } else if ((int) chr == (int) '&') {
                 state.setState(EXmlParseState.REFERENCE);
             } else {
                 state.setState(EXmlParseState.CHARS);
@@ -180,11 +185,12 @@ enum XmlTokenizer {
      */
     private static void tokenizeReference(final char chr, final FilePosition filePos, final TokenizeState state) {
 
-        if (chr == ';') {
+        if ((int) chr == (int) ';') {
             final FilePosition start = state.getStart();
 
-            state.addToken(new TokReference(state.getContent(), start.byteOffset, filePos.byteOffset + 1,
-                    start.lineNumber, start.column));
+            final XmlContent content = state.getContent();
+            state.addToken(new TokReference(content, start.byteOffset, filePos.byteOffset + 1, start.lineNumber,
+                    start.column));
 
             start.copyFrom(filePos);
             ++start.byteOffset;
@@ -204,12 +210,13 @@ enum XmlTokenizer {
 
         final FilePosition start = state.getStart();
 
-        if (filePos.byteOffset >= (start.byteOffset + MIN_COMMENT_LEN - 1) && chr == '>'
-                && state.getContent().get(filePos.byteOffset - 1) == '-'
-                && state.getContent().get(filePos.byteOffset - 2) == '-') {
+        final XmlContent content = state.getContent();
+        if (filePos.byteOffset >= (start.byteOffset + MIN_COMMENT_LEN - 1) && (int) chr == (int) '>'
+            && (int) content.get(filePos.byteOffset - 1) == (int) '-'
+            && (int) content.get(filePos.byteOffset - 2) == (int) '-') {
 
-            state.addToken(new TokComment(state.getContent(), start.byteOffset, filePos.byteOffset + 1,
-                    start.lineNumber, start.column));
+            state.addToken(new TokComment(content, start.byteOffset, filePos.byteOffset + 1, start.lineNumber,
+                    start.column));
 
             start.copyFrom(filePos);
             ++start.byteOffset;
@@ -229,21 +236,22 @@ enum XmlTokenizer {
 
         final FilePosition start = state.getStart();
 
-        if (chr == '?' && filePos.byteOffset == (start.byteOffset + 1)) {
+        if ((int) chr == (int) '?' && filePos.byteOffset == (start.byteOffset + 1)) {
             state.setState(EXmlParseState.XMLDECL);
-        } else if (chr == '!' && filePos.byteOffset == (start.byteOffset + 1)) {
+        } else if ((int) chr == (int) '!' && filePos.byteOffset == (start.byteOffset + 1)) {
             state.setState(EXmlParseState.BANGTAG);
-        } else if (chr == '>') {
+        } else if ((int) chr == (int) '>') {
+            final XmlContent content = state.getContent();
 
-            if (state.getContent().get(start.byteOffset + 1) == '/') {
-                state.addToken(new TokETag(state.getContent(), start.byteOffset, filePos.byteOffset + 1,
+            if ((int) content.get(start.byteOffset + 1) == (int) '/') {
+                state.addToken(new TokETag(content, start.byteOffset, filePos.byteOffset + 1,
                         start.lineNumber, start.column));
-            } else if (state.getContent().get(filePos.byteOffset - 1) == '/') {
-                state.addToken(new TokEmptyElement(state.getContent(), start.byteOffset, filePos.byteOffset + 1,
+            } else if ((int) content.get(filePos.byteOffset - 1) == (int) '/') {
+                state.addToken(new TokEmptyElement(content, start.byteOffset, filePos.byteOffset + 1,
                         start.lineNumber, start.column));
             } else {
-                state.addToken(new TokSTag(state.getContent(), start.byteOffset, filePos.byteOffset + 1,
-                        start.lineNumber, start.column));
+                state.addToken(new TokSTag(content, start.byteOffset, filePos.byteOffset + 1, start.lineNumber,
+                        start.column));
             }
 
             start.copyFrom(filePos);
@@ -264,14 +272,16 @@ enum XmlTokenizer {
     private static void tokenizeBangTag(final char chr, final FilePosition filePos,
                                         final TokenizeState state) throws ParsingException {
 
-        if (chr == 'D') {
+        if ((int) chr == (int) 'D') {
             state.setState(EXmlParseState.DOCTYPE);
-        } else if (chr == '-') {
+        } else if ((int) chr == (int) '-') {
             state.setState(EXmlParseState.COMMENT);
-        } else if (chr == '[') {
+        } else if ((int) chr == (int) '[') {
             state.setState(EXmlParseState.CDATA);
         } else {
-            throw new ParsingException(state.getStart().byteOffset, filePos.byteOffset + 1, Res.get(Res.UNSUP_TAG));
+            final FilePosition start = state.getStart();
+            final String message = Res.get(Res.UNSUP_TAG);
+            throw new ParsingException(start.byteOffset, filePos.byteOffset + 1, message);
         }
     }
 
@@ -284,11 +294,12 @@ enum XmlTokenizer {
      */
     private static void tokenizeXmlDecl(final char chr, final FilePosition filePos, final TokenizeState state) {
 
-        if (chr == '>') {
+        if ((int) chr == (int) '>') {
             final FilePosition start = state.getStart();
 
-            state.addToken(new TokXmlDecl(state.getContent(), start.byteOffset, filePos.byteOffset + 1,
-                    start.lineNumber, start.column));
+            final XmlContent content = state.getContent();
+            state.addToken(new TokXmlDecl(content, start.byteOffset, filePos.byteOffset + 1, start.lineNumber,
+                    start.column));
 
             start.copyFrom(filePos);
             ++start.byteOffset;
@@ -306,14 +317,15 @@ enum XmlTokenizer {
      */
     private static void tokenizeDoctype(final char chr, final FilePosition filePos, final TokenizeState state) {
 
-        if (chr == '<') {
+        if ((int) chr == (int) '<') {
             state.incrementNesting();
-        } else if (chr == '>') {
+        } else if ((int) chr == (int) '>') {
             if (state.getNesting() == 0) {
                 final FilePosition start = state.getStart();
 
-                state.addToken(new TokDoctype(state.getContent(), start.byteOffset, filePos.byteOffset + 1,
-                        start.lineNumber, start.column));
+                final XmlContent content = state.getContent();
+                state.addToken(new TokDoctype(content, start.byteOffset, filePos.byteOffset + 1, start.lineNumber,
+                        start.column));
 
                 start.copyFrom(filePos);
                 ++start.byteOffset;
@@ -341,21 +353,26 @@ enum XmlTokenizer {
         final int offset = filePos.byteOffset - start.byteOffset;
 
         if (offset < CDATA_START.length()) {
-            if (chr != CDATA_START.charAt(offset)) {
+            if ((int) chr != (int) CDATA_START.charAt(offset)) {
                 // Bad CDATA token start, such as <![foo
-                throw new ParsingException(state.getStart().byteOffset, filePos.byteOffset + 1, Res.get(Res.BAD_CDATA));
+                final String message = Res.get(Res.BAD_CDATA);
+                throw new ParsingException(start.byteOffset, filePos.byteOffset + 1, message);
             }
-        } else if (filePos.byteOffset >= (start.byteOffset + MIN_CDATA_LEN - 1) && chr == '>'
-                && state.getContent().get(filePos.byteOffset - 1) == ']'
-                && state.getContent().get(filePos.byteOffset - 2) == ']') {
+        } else {
+            final XmlContent content = state.getContent();
 
-            state.addToken(new TokCData(state.getContent(), start.byteOffset, filePos.byteOffset + 1, start.lineNumber,
-                    start.column));
+            if (filePos.byteOffset >= (start.byteOffset + MIN_CDATA_LEN - 1) && (int) chr == (int) '>'
+                && (int) content.get(filePos.byteOffset - 1) == (int) ']'
+                && (int) content.get(filePos.byteOffset - 2) == (int) ']') {
 
-            start.copyFrom(filePos);
-            ++start.byteOffset;
+                state.addToken(new TokCData(content, start.byteOffset, filePos.byteOffset + 1, start.lineNumber,
+                        start.column));
 
-            state.setState(EXmlParseState.CHARS);
+                start.copyFrom(filePos);
+                ++start.byteOffset;
+
+                state.setState(EXmlParseState.CHARS);
+            }
         }
     }
 }

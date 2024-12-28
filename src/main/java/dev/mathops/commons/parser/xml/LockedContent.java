@@ -14,10 +14,10 @@ import dev.mathops.commons.log.Locked;
  * <p>
  * If it can be guaranteed that only one thread will access the content, locks are not necessary.
  */
-class LockedContent extends Locked {
+public class LockedContent extends Locked {
 
     /** The content. */
-    private char[] content;
+    private char[] content = null;
 
     /**
      * Constructs a new, empty, {@code LockedContent}.
@@ -25,7 +25,6 @@ class LockedContent extends Locked {
     LockedContent() {
 
         super();
-        this.content = null;
     }
 
     /**
@@ -44,7 +43,7 @@ class LockedContent extends Locked {
      *
      * @return the content string
      */
-    public String getContent() {
+    public final String getContent() {
 
         return new String(this.content);
     }
@@ -117,7 +116,7 @@ class LockedContent extends Locked {
 
         final int len = this.content.length;
         for (int i = start; i < len; ++i) {
-            if (this.content[i] == chr) {
+            if ((int) this.content[i] == (int) chr) {
                 index = i;
                 break;
             }

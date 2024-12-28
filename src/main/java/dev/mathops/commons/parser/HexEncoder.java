@@ -27,19 +27,24 @@ public enum HexEncoder {
 
         final int numBytes = hex.length() / 2;
         if (hex.length() != numBytes << 1) {
-            throw new IllegalArgumentException(Res.fmt(Res.INVALID_HEX_LEN, hex));
+            final String message = Res.fmt(Res.INVALID_HEX_LEN, hex);
+            throw new IllegalArgumentException(message);
         }
 
         final byte[] bytes = new byte[numBytes];
 
         for (int i = 0; i < numBytes; ++i) {
-            final int lo = decodeNibble(hex.charAt((i << 1) + 1));
+            final char chr2 = hex.charAt((i << 1) + 1);
+            final int lo = decodeNibble(chr2);
             if (lo < 0) {
-                throw new IllegalArgumentException(Res.fmt(Res.INVALID_HEX, hex));
+                final String message = Res.fmt(Res.INVALID_HEX, hex);
+                throw new IllegalArgumentException(message);
             }
-            final int hi = decodeNibble(hex.charAt(i << 1));
+            final char chr1 = hex.charAt(i << 1);
+            final int hi = decodeNibble(chr1);
             if (hi < 0) {
-                throw new IllegalArgumentException(Res.fmt(Res.INVALID_HEX, hex));
+                final String message = Res.fmt(Res.INVALID_HEX, hex);
+                throw new IllegalArgumentException(message);
             }
             bytes[i] = (byte) ((hi << 4) + lo);
         }
@@ -57,12 +62,12 @@ public enum HexEncoder {
 
         final int nibble;
 
-        if (chr >= '0' && chr <= '9') {
-            nibble = chr - '0';
-        } else if (chr >= 'a' && chr <= 'f') {
-            nibble = chr - 'a' + 10;
-        } else if (chr >= 'A' && chr <= 'F') {
-            nibble = chr - 'A' + 10;
+        if ((int) chr >= (int) '0' && (int) chr <= (int) '9') {
+            nibble = (int) chr - (int) '0';
+        } else if ((int) chr >= (int) 'a' && (int) chr <= (int) 'f') {
+            nibble = (int) chr - (int) 'a' + 10;
+        } else if ((int) chr >= (int) 'A' && (int) chr <= (int) 'F') {
+            nibble = (int) chr - (int) 'A' + 10;
         } else {
             nibble = -1;
         }

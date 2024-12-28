@@ -15,7 +15,7 @@ import java.io.IOException;
 final class LogRotator {
 
     /** File extension for log files. */
-    private static final String EXTENTION = ".log";
+    private static final String EXTENSION = ".log";
 
     /** Base for decimal numbers. */
     private static final int DEC_BASE = 10;
@@ -35,19 +35,19 @@ final class LogRotator {
      * Rotates the log files when the active log file reaches its file size limit.
      *
      * @param logDir      the log directory
-     * @param fnameBase   the base of log filenames
+     * @param filenameBase   the base of log filenames
      * @param maxNumFiles the maximum number of files
      * @param curFile     the currently active log file
      * @return error text on failure
      */
-    static String rotateLogs(final File logDir, final String fnameBase, final long maxNumFiles, final File curFile) {
+    static String rotateLogs(final File logDir, final String filenameBase, final long maxNumFiles, final File curFile) {
 
         final HtmlBuilder err = new HtmlBuilder(100);
 
         // see how many numbered log files there are
         int onFile = 1;
         while ((long) onFile < maxNumFiles) {
-            final String filename = makeFilename(fnameBase, onFile);
+            final String filename = makeFilename(filenameBase, onFile);
             final File file = new File(logDir, filename);
             if (!file.exists()) {
                 break;
@@ -58,10 +58,10 @@ final class LogRotator {
         // "onFile" will be one larger than the highest numbered log file found
 
         // starting at index of last file and working downward, rename files
-        final String filename0 = makeFilename(fnameBase, onFile);
+        final String filename0 = makeFilename(filenameBase, onFile);
         File dstFile = new File(logDir, filename0);
         while (onFile > 1) {
-            final String filename1 = makeFilename(fnameBase, onFile - 1);
+            final String filename1 = makeFilename(filenameBase, onFile - 1);
             final File srcFile = new File(logDir, filename1);
             renameFile(srcFile, dstFile, err);
             dstFile = srcFile;
@@ -100,10 +100,11 @@ final class LogRotator {
      */
     private static String makeFilename(final String filenameBase, final int index) {
 
-        return filenameBase + "_"
-                + index / DEC_BASE / DEC_BASE
-                + (index / DEC_BASE) % DEC_BASE + index % DEC_BASE
-                + EXTENTION;
+        final int hundreds = index / DEC_BASE / DEC_BASE;
+        final int tens = (index / DEC_BASE) % DEC_BASE;
+        final int ones = index % DEC_BASE;
+
+        return filenameBase + "_" + hundreds + tens + ones + EXTENSION;
     }
 
     /**
@@ -116,14 +117,14 @@ final class LogRotator {
     private static void renameFile(final File srcFile, final File dstFile, final HtmlBuilder err) {
 
         if (dstFile.exists() && !dstFile.delete()) {
-            final String srcpath = srcFile.getPath();
+            final String sourcePath = srcFile.getPath();
             final String dstPath = dstFile.getPath();
-            final String msg = Res.fmt(Res.COPY_FAIL, srcpath, dstPath);
+            final String msg = Res.fmt(Res.COPY_FAIL, sourcePath, dstPath);
             err.addln(msg);
         } else if (!srcFile.renameTo(dstFile)) {
-            final String srcpath = srcFile.getPath();
+            final String sourcePath = srcFile.getPath();
             final String dstPath = dstFile.getPath();
-            final String msg = Res.fmt(Res.RENAME_FAIL, srcpath, dstPath);
+            final String msg = Res.fmt(Res.RENAME_FAIL, sourcePath, dstPath);
             err.addln(msg);
         }
     }

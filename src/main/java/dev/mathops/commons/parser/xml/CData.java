@@ -15,7 +15,7 @@ public final class CData extends CharSpan implements IContentNode {
     public final String content;
 
     /** Errors associated with the element. */
-    private List<XmlContentError> errors;
+    private List<XmlContentError> errors = null;
 
     /**
      * Constructs a new {@code CData} with content taken directly from the source XML.

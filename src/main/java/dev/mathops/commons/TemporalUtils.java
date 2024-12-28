@@ -76,7 +76,8 @@ public enum TemporalUtils {
      */
     public static LocalDateTime toLocalDateTime(final long timestamp) {
 
-        return toLocalDateTime(Instant.ofEpochMilli(timestamp));
+        final Instant millis = Instant.ofEpochMilli(timestamp);
+        return toLocalDateTime(millis);
     }
 
     /**
@@ -88,7 +89,8 @@ public enum TemporalUtils {
      */
     public static LocalDateTime toLocalDateTime(final Instant instant) {
 
-        return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        final ZoneId defaultZone = ZoneId.systemDefault();
+        return instant.atZone(defaultZone).toLocalDateTime();
     }
 
     /**
@@ -111,7 +113,9 @@ public enum TemporalUtils {
             min -= MINUTES_PER_DAY;
         }
 
-        return LocalDateTime.of(actualDate, LocalTime.of(min / 60, min % 60));
+        final LocalTime actualTime = LocalTime.of(min / 60, min % 60);
+
+        return LocalDateTime.of(actualDate, actualTime);
     }
 
     /**

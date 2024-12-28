@@ -6,7 +6,7 @@ package dev.mathops.commons.parser;
 public final class FilePosition {
 
     /** The byte offset within the file. */
-    public int byteOffset;
+    public int byteOffset = 0;
 
     /** The line number (the first line in the file is line 1). */
     public int lineNumber;

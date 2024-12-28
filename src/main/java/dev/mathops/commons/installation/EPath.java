@@ -1,4 +1,4 @@
-package dev.mathops.commons;
+package dev.mathops.commons.installation;
 
 /**
  * The set of configurable system directory paths.
@@ -20,6 +20,18 @@ public enum EPath {
     /** The path where database configurations are stored. */
     DB_PATH("db-path", "{base-dir}/db"),
 
+    /** The path where SSL/TLS and code signing certificates are stored. */
+    CERT_PATH("cert-path", "{base-dir}/certs"),
+
+    /** The path to which reports are written. */
+    REPORT_PATH("report-path", "{base-dir}/reports"),
+
+    /** The path where web content is stored. */
+    WWW_PATH("www-path", "/opt/public/www"),
+
+    /** The path where live sessions are persisted during server restarts. */
+    SESSION_PATH("session-path", "{base-dir}/sessions"),
+
     /** The path where current-term data is stored. */
     CUR_DATA_PATH("cur-data-path", "{base-dir}/data"),
 
@@ -36,10 +48,10 @@ public enum EPath {
     HTML_PATH("html-path", "{base-dir}/html");
 
     /** The key used to refer to the path. */
-    public final String key;
+    private final String key;
 
     /** The default path, relative to the installation base directory. */
-    public final String defaultPath;
+    private final String defaultPath;
 
     /**
      * Constructs a new {@code EPath}.
@@ -51,5 +63,25 @@ public enum EPath {
 
         this.key = theKey;
         this.defaultPath = theDefaultPath;
+    }
+
+    /**
+     * Gets the key used to refer to the path.
+     *
+     * @return the key
+     */
+    public String getKey() {
+
+        return this.key;
+    }
+
+    /**
+     * Gets the default path.
+     *
+     * @return the default path
+     */
+    public String getDefaultPath() {
+
+        return this.defaultPath;
     }
 }

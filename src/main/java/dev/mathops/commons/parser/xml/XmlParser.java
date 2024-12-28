@@ -94,10 +94,11 @@ enum XmlParser {
      * @return the list of nodes
      * @throws ParsingException if the content could not be parsed
      */
-    private static List<INode> buildNodes(final Collection<IXmlToken> tokens, final boolean elementsOnly,
+    private static List<INode> buildNodes(final Collection<? extends IXmlToken> tokens, final boolean elementsOnly,
                                           final boolean includeComments) throws ParsingException {
 
-        final List<INode> rootNodes = new ArrayList<>(tokens.size());
+        final int numTokens = tokens.size();
+        final List<INode> rootNodes = new ArrayList<>(numTokens);
         final Deque<NonemptyElement> stack = new LinkedList<>();
         List<INode> current = rootNodes;
 
@@ -109,7 +110,9 @@ enum XmlParser {
                 final int end = tok.getEnd();
 
                 final String content = xml.substring(start + 4, end - 3);
-                final INode comment = new Comment(start, end, tok.getLineNumber(), tok.getColumn(), content);
+                final int lineNumber = tok.getLineNumber();
+                final int column = tok.getColumn();
+                final INode comment = new Comment(start, end, lineNumber, column, content);
                 current.add(comment);
             } else {
                 if (!tok.hasNodeStructure()) {
@@ -149,25 +152,28 @@ enum XmlParser {
     private static void processNonElement(final IXmlToken tok, final List<INode> current,
                                           final boolean includeComments) {
 
-        IContentNode newData;
+        IContentNode newData = null;
 
-        if (tok instanceof TokCData) {
-            newData = new CData(tok.getContent(), tok.getStart() + CDATA_START_LEN,
-                    tok.getEnd() - CDATA_END_LEN, tok.getLineNumber(), tok.getColumn());
-        } else if (tok instanceof TokChars) {
-            newData = new CData(tok.getContent(), tok.getStart(), tok.getEnd(), tok.getLineNumber(),
-                    tok.getColumn());
-        } else if (tok instanceof TokComment && includeComments) {
-            newData = new Comment(tok.getContent(), tok.getStart() + CDATA_START_LEN,
-                    tok.getEnd() - CDATA_END_LEN, tok.getLineNumber(), tok.getColumn());
-        } else if (tok instanceof TokReference) {
-            newData = new CData(tok.getContent(), tok.getStart(), tok.getEnd(), tok.getLineNumber(),
-                    tok.getColumn(), ((TokReference) tok).getValue());
-        } else if (tok instanceof TokWhitespace) {
-            newData = new CData(tok.getContent(), tok.getStart(), tok.getEnd(), tok.getLineNumber(),
-                    tok.getColumn(), CoreConstants.SPC);
-        } else {
-            newData = null;
+        final XmlContent content = tok.getContent();
+        final int start = tok.getStart();
+        final int end = tok.getEnd();
+        final int lineNumber = tok.getLineNumber();
+        final int column = tok.getColumn();
+
+        switch (tok) {
+            case final TokCData tokCData ->
+                    newData = new CData(content, start + CDATA_START_LEN, end - CDATA_END_LEN, lineNumber, column);
+            case final TokChars tokChars -> newData = new CData(content, start, end, lineNumber, column);
+            case final TokComment tokComment when includeComments ->
+                    newData = new Comment(content, start + CDATA_START_LEN, end - CDATA_END_LEN, lineNumber, column);
+            case final TokReference ref -> {
+                final String value = ref.getValue();
+                newData = new CData(content, start, end, lineNumber, column, value);
+            }
+            case final TokWhitespace tokWhitespace ->
+                    newData = new CData(content, start, end, lineNumber, column, CoreConstants.SPC);
+            default -> {
+            }
         }
 
         if (newData != null) {
@@ -178,8 +184,11 @@ enum XmlParser {
 
                 // Don't allow two adjacent CData nodes - concatenate
                 if (last instanceof final CData prior) {
-                    newData = new CData(tok.getContent(), prior.getStart(), newData.getEnd(),
-                            tok.getLineNumber(), tok.getColumn(), prior.content + newData.getContent());
+                    final int priorStart = prior.getStart();
+                    final int newEnd = newData.getEnd();
+                    final String newContent = newData.getContent();
+
+                    newData = new CData(content, priorStart, newEnd, lineNumber, column, prior.content + newContent);
 
                     current.remove(size - 1);
                 }
@@ -195,14 +204,20 @@ enum XmlParser {
      * @param tok     the token being processed
      * @param current the current list of nodes
      */
-    private static void processEmptyElement(final ICharSpan tok, final Collection<INode> current) {
+    private static void processEmptyElement(final ICharSpan tok, final Collection<? super INode> current) {
 
         final TokEmptyElement token = (TokEmptyElement) tok;
 
-        final TagSpan span = new TagSpan(tok.getStart(), tok.getEnd(), tok.getLineNumber(), tok.getColumn(), true,
-                true, tok.getStart() + 1, tok.getStart() + 1 + token.getName().length());
+        final int start = tok.getStart();
+        final int end = tok.getEnd();
+        final int lineNumber = tok.getLineNumber();
+        final int column = tok.getColumn();
+        final String name = token.getName();
+        final int length = name.length();
 
-        final IElement node = new EmptyElement(token.getName(), span);
+        final TagSpan span = new TagSpan(start, end, lineNumber, column, true, true, start + 1, start + 1 + length);
+
+        final IElement node = new EmptyElement(name, span);
 
         for (final Attribute attribute : token.getAttributes().values()) {
             node.putAttribute(attribute);
@@ -219,15 +234,21 @@ enum XmlParser {
      * @param stack   the stack of node lists
      * @return the new list of nodes representing content of the started tag
      */
-    private static List<INode> processStartTag(final ICharSpan tok, final Collection<INode> current,
-                                               final Deque<NonemptyElement> stack) {
+    private static List<INode> processStartTag(final ICharSpan tok, final Collection<? super INode> current,
+                                               final Deque<? super NonemptyElement> stack) {
 
         final TokSTag token = (TokSTag) tok;
 
-        final TagSpan span = new TagSpan(tok.getStart(), tok.getEnd(), tok.getLineNumber(), tok.getColumn(), true,
-                true, tok.getStart() + 1, tok.getStart() + 1 + token.getName().length());
+        final int start = tok.getStart();
+        final int end = tok.getEnd();
+        final int lineNumber = tok.getLineNumber();
+        final int column = tok.getColumn();
+        final String name = token.getName();
+        final int length = name.length();
 
-        final NonemptyElement node = new NonemptyElement(token.getName(), span);
+        final TagSpan span = new TagSpan(start, end, lineNumber, column, true, true, start + 1, start + 1 + length);
+
+        final NonemptyElement node = new NonemptyElement(name, span);
 
         for (final Attribute attribute : token.getAttributes().values()) {
             node.putAttribute(attribute);
@@ -251,19 +272,28 @@ enum XmlParser {
     private static List<INode> processEndTag(final ICharSpan tok, final Deque<NonemptyElement> stack,
                                              final List<INode> rootNodes) throws ParsingException {
 
+        final int start = tok.getStart();
+        final int end = tok.getEnd();
         if (stack.isEmpty()) {
-            throw new ParsingException(tok.getStart(), tok.getEnd(), Res.get(Res.NO_OPEN));
+            final String errMsg = Res.get(Res.NO_OPEN);
+            throw new ParsingException(start, end, errMsg);
         }
 
         final TokETag token = (TokETag) tok;
         final NonemptyElement opening = stack.pop();
 
-        if (!opening.getTagName().equals(token.getName())) {
-            throw new ParsingException(tok.getStart(), tok.getEnd(), Res.fmt(Res.BAD_CLOSE, opening.getTagName()));
+        final String name = token.getName();
+        final String tagName = opening.getTagName();
+        if (!tagName.equals(name)) {
+            final String errMsg = Res.fmt(Res.BAD_CLOSE, tagName);
+            throw new ParsingException(start, end, errMsg);
         }
 
-        final TagSpan span = new TagSpan(tok.getStart(), tok.getEnd(), tok.getLineNumber(), tok.getColumn(), false,
-                true, tok.getStart() + 1, tok.getStart() + 1 + token.getName().length());
+        final int lineNumber = tok.getLineNumber();
+        final int column = tok.getColumn();
+        final int length = name.length();
+
+        final TagSpan span = new TagSpan(start, end, lineNumber, column, false, true, start + 1, start + 1 + length);
         opening.setClosingTagSpan(span);
 
         return stack.isEmpty() ? rootNodes : stack.peek().getChildrenAsList();

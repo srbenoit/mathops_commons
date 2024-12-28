@@ -18,7 +18,7 @@ public class Locked {
     private int numWriters;
 
     /** The thread currently holding any open write locks. */
-    private Thread curWriter;
+    private Thread curWriter = null;
 
     /**
      * Flag indicating the object is notifying listeners of a mutation (this is done without write locks held, but if a
@@ -36,16 +36,15 @@ public class Locked {
 
         this.numReaders = 0;
         this.numWriters = 0;
-        this.curWriter = null;
         this.notifying = false;
         this.lockSynch = new Object();
     }
 
     /**
      * Acquires a lock to begin mutating the data this lock protects. There can be no writing, notification of changes,
-     * or reading going on in order to gain the lock. Additionally, a thread is allowed to gain more than one write lock,
-     * as long as it doesn't attempt to gain additional write locks from within listener notification. Attempting to
-     * gain a write lock from within a listener notification will result in an {@code IllegalStateException}.
+     * or reading going on in order to gain the lock. Additionally, a thread is allowed to gain more than one write
+     * lock, as long as it doesn't attempt to gain additional write locks from within listener notification. Attempting
+     * to gain a write lock from within a listener notification will result in an {@code IllegalStateException}.
      *
      * <p>
      * Calls to {@code writeLock} must be balanced with calls to {@code writeUnlock}, else the protected data will be
@@ -61,7 +60,8 @@ public class Locked {
 
                     if (curThread == this.curWriter) {
                         if (this.notifying) {
-                            throw new IllegalStateException(Res.get(Res.MUT_IN_NOTIFY));
+                            final String message = Res.get(Res.MUT_IN_NOTIFY);
+                            throw new IllegalStateException(message);
                         }
 
                         ++this.numWriters;
@@ -105,6 +105,10 @@ public class Locked {
      */
     public final boolean isCurWriter() {
 
-        return this.curWriter == Thread.currentThread();
+        final Thread currentThread = Thread.currentThread();
+
+        synchronized (this.lockSynch) {
+            return this.curWriter == currentThread;
+        }
     }
 }

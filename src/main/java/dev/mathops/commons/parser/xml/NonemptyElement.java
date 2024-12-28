@@ -23,7 +23,7 @@ public final class NonemptyElement extends AbstractAttributedElementBase {
     private final List<IXmlToken> tokens;
 
     /** The closing tag span of the element. */
-    private TagSpan closingTagSpan;
+    private TagSpan closingTagSpan = null;
 
     /**
      * Constructs a new {@code Element}.
@@ -37,7 +37,6 @@ public final class NonemptyElement extends AbstractAttributedElementBase {
 
         this.children = new ArrayList<>(EST_CHILDREN);
         this.tokens = new ArrayList<>(EST_CHILDREN);
-        this.closingTagSpan = null;
     }
 
     /**
@@ -78,7 +77,8 @@ public final class NonemptyElement extends AbstractAttributedElementBase {
      */
     public List<IElement> getElementChildrenAsList() {
 
-        final List<IElement> result = new ArrayList<>(this.children.size());
+        final int numChildren = this.children.size();
+        final List<IElement> result = new ArrayList<>(numChildren);
 
         for (final INode child : this.children) {
             if (child instanceof IElement) {
@@ -96,7 +96,8 @@ public final class NonemptyElement extends AbstractAttributedElementBase {
      */
     public List<NonemptyElement> getNonemptyElementChildren() {
 
-        final List<NonemptyElement> result = new ArrayList<>(this.children.size());
+        final int numChildren = this.children.size();
+        final List<NonemptyElement> result = new ArrayList<>(numChildren);
 
         for (final INode child : this.children) {
             if (child instanceof NonemptyElement) {
@@ -149,12 +150,13 @@ public final class NonemptyElement extends AbstractAttributedElementBase {
         final HtmlBuilder xml = openAndPrintAttributes(indent);
         xml.endOpenElement(true);
 
-        // Append children
         for (final INode child : this.children) {
-            xml.add(child.print(indent + 1));
+            final String content = child.print(indent + 1);
+            xml.add(content);
         }
 
-        xml.endNonempty(indent, getTagName(), false);
+        final String tagName = getTagName();
+        xml.endNonempty(indent, tagName, false);
 
         return xml.toString();
     }

@@ -24,7 +24,7 @@ public enum XmlEscaper {
     /** The ampersand escape. */
     public static final String AMP = "&amp;";
 
-    /** The initial size of the escaper buffer. */
+    /** The initial size of the buffer. */
     private static final int INIT_BUFFER_SIZE = 100;
 
     /** Offset of a hex value in the escape "&#x12ab". */
@@ -36,13 +36,6 @@ public enum XmlEscaper {
     /** Base of hex numbers. */
     private static final int HEX_BASE = 16;
 
-    /** A string builder used to construct output strings. */
-    private static final HtmlBuilder STR;
-
-    static {
-        STR = new HtmlBuilder(INIT_BUFFER_SIZE);
-    }
-
     /**
      * Escapes a string for use in an XML attribute.
      *
@@ -53,27 +46,25 @@ public enum XmlEscaper {
 
         final char[] chars = orig.toCharArray();
 
-        synchronized (STR) {
-            STR.reset();
+        final HtmlBuilder builder = new HtmlBuilder(chars.length * 11 / 10);
 
-            for (final char chr : chars) {
-                if (chr == '\"') {
-                    STR.add(QUOT);
-                } else if (chr == '\'') {
-                    STR.add(APOS);
-                } else if (chr == '<') {
-                    STR.add(LEFT);
-                } else if (chr == '>') {
-                    STR.add(RIGHT);
-                } else if (chr == '&') {
-                    STR.add(AMP);
-                } else {
-                    STR.add(chr);
-                }
+        for (final char chr : chars) {
+            if ((int) chr == (int) '\"') {
+                builder.add(QUOT);
+            } else if ((int) chr == (int) '\'') {
+                builder.add(APOS);
+            } else if ((int) chr == (int) '<') {
+                builder.add(LEFT);
+            } else if ((int) chr == (int) '>') {
+                builder.add(RIGHT);
+            } else if ((int) chr == (int) '&') {
+                builder.add(AMP);
+            } else {
+                builder.add(chr);
             }
-
-            return STR.toString();
         }
+
+        return builder.toString();
     }
 
     /**
@@ -84,71 +75,75 @@ public enum XmlEscaper {
      */
     public static String unescape(final String escaped) {
 
-        synchronized (STR) {
-            STR.reset();
+        final int len = escaped.length();
 
-            int pos = 0;
+        final HtmlBuilder builder = new HtmlBuilder(len);
 
-            final int len = escaped.length();
-            while (pos < len) {
-                final char chr = escaped.charAt(pos);
+        int pos = 0;
 
-                if (chr == '&') {
+        while (pos < len) {
+            final char chr = escaped.charAt(pos);
 
-                    if (isEscape(escaped, pos, QUOT)) {
-                        STR.add('\"');
-                        pos += QUOT.length();
-                    } else if (isEscape(escaped, pos, APOS)) {
-                        STR.add('\'');
-                        pos += APOS.length();
-                    } else if (isEscape(escaped, pos, LEFT)) {
-                        STR.add('<');
-                        pos += LEFT.length();
-                    } else if (isEscape(escaped, pos, RIGHT)) {
-                        STR.add('>');
-                        pos += RIGHT.length();
-                    } else if (isEscape(escaped, pos, AMP)) {
-                        STR.add('&');
-                        pos += AMP.length();
-                    } else {
-                        pos = unescapeSingle(escaped, pos);
-                    }
+            if ((int) chr == (int) '&') {
+
+                if (isEscape(escaped, pos, QUOT)) {
+                    builder.add('\"');
+                    pos += QUOT.length();
+                } else if (isEscape(escaped, pos, APOS)) {
+                    builder.add('\'');
+                    pos += APOS.length();
+                } else if (isEscape(escaped, pos, LEFT)) {
+                    builder.add('<');
+                    pos += LEFT.length();
+                } else if (isEscape(escaped, pos, RIGHT)) {
+                    builder.add('>');
+                    pos += RIGHT.length();
+                } else if (isEscape(escaped, pos, AMP)) {
+                    builder.add('&');
+                    pos += AMP.length();
                 } else {
-                    STR.add(chr);
-                    ++pos;
+                    pos = unescapeSingle(builder, escaped, pos);
                 }
+            } else {
+                builder.add(chr);
+                ++pos;
             }
-
-            return STR.toString();
         }
+
+        return builder.toString();
     }
 
     /**
      * Processes a single escape sequence. This method must be called from within a block that is synchronized on
      * {@code STR}.
      *
+     * @param builder the {@code HtmlBuilder} to which to append
      * @param escaped the string to unescape
      * @param start   the position of the '&' at the start of the escape
      * @return the position after the escape
      */
-    private static int unescapeSingle(final String escaped, final int start) {
+    private static int unescapeSingle(final HtmlBuilder builder, final String escaped, final int start) {
 
         int pos = start;
-        final int semicolon = escaped.indexOf(';', pos + 1);
+        final int semicolon = escaped.indexOf((int) ';', pos + 1);
 
-        if (semicolon == -1 || escaped.charAt(pos + 1) != '#') {
-            STR.add(escaped.charAt(pos));
+        if (semicolon == -1 || (int) escaped.charAt(pos + 1) != (int) '#') {
+            final char chr = escaped.charAt(pos);
+            builder.add(chr);
             ++pos;
-        } else if (escaped.charAt(pos + 2) == 'x') {
+        } else if ((int) escaped.charAt(pos + 2) == (int) 'x') {
             boolean valid = true;
 
             for (int i = pos + HEX_VALUE_OFFSET; valid && i < semicolon; ++i) {
-                valid = XmlChars.isHex(escaped.charAt(i));
+                final char chr = escaped.charAt(i);
+                valid = XmlChars.isHex((int) chr);
             }
 
             if (valid) {
-                STR.add(Character.toChars(Integer.parseInt(escaped.substring(pos + HEX_VALUE_OFFSET, semicolon),
-                        HEX_BASE)));
+                final String codePointStr = escaped.substring(pos + HEX_VALUE_OFFSET, semicolon);
+                final int codePoint = Integer.parseInt(codePointStr, HEX_BASE);
+                final char[] chars = Character.toChars(codePoint);
+                builder.add(chars);
             }
 
             pos = semicolon + 1;
@@ -156,11 +151,15 @@ public enum XmlEscaper {
             boolean valid = true;
 
             for (int i = pos + DEC_VALUE_OFFSET; valid && i < semicolon; ++i) {
-                valid = XmlChars.isDigit(escaped.charAt(i));
+                final char chr = escaped.charAt(i);
+                valid = XmlChars.isDigit((int) chr);
             }
 
             if (valid) {
-                STR.add(Character.toChars(Integer.parseInt(escaped.substring(pos + DEC_VALUE_OFFSET, semicolon))));
+                final String codePointStr = escaped.substring(pos + DEC_VALUE_OFFSET, semicolon);
+                final int codePoint = Integer.parseInt(codePointStr);
+                final char[] chars = Character.toChars(codePoint);
+                builder.add(chars);
             }
 
             pos = semicolon + 1;
@@ -175,8 +174,7 @@ public enum XmlEscaper {
      * @param escaped the character sequence
      * @param pos     the position
      * @param esc     the escape sequence to test for
-     * @return {@code true} if the code sequence does contain the escape at the given position; {@code false}
-     *         otherwise
+     * @return {@code true} if the code sequence does contain the escape at the given position; {@code false} otherwise
      */
     private static boolean isEscape(final CharSequence escaped, final int pos, final CharSequence esc) {
 
@@ -184,7 +182,7 @@ public enum XmlEscaper {
         boolean hit = escaped.length() >= (pos + len);
 
         for (int i = 1; hit && i < len; ++i) {
-            hit = escaped.charAt(pos + i) == esc.charAt(i);
+            hit = (int) escaped.charAt(pos + i) == (int) esc.charAt(i);
         }
 
         return hit;

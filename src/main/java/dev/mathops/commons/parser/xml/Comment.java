@@ -14,7 +14,7 @@ public final class Comment extends CharSpan implements IContentNode {
     private final String content;
 
     /** Errors associated with the element. */
-    private List<XmlContentError> errors;
+    private List<XmlContentError> errors = null;
 
     /**
      * Constructs a new {@code Comment} with content taken directly from the source XML.

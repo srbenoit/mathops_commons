@@ -12,37 +12,25 @@ final class Res extends ResBundle {
     /** A resource key. */
     static final String RND_UPPER_LIMIT_NOT_POS = key(1);
 
-    /** A resource key. */
-    static final String PATH_LIST_READ_ERR = key(2);
-
-    /** A resource key. */
-    static final String PATH_LIST_NO_BASE = key(3);
-
-    /** A resource key. */
-    static final String PATH_LIST_WRITE_ERR = key(4);
-
     // Used by ClassList
 
     /** A resource key. */
-    static final String CANT_DOWNLOAD_JAR = key(5);
+    static final String CANT_DOWNLOAD_JAR = key(2);
 
     /** A resource key. */
-    static final String CANT_INSTANTIATE_JAR = key(6);
+    static final String CANT_INSTANTIATE_JAR = key(3);
 
     /** A resource key. */
-    static final String CLASS_NOT_FOUND = key(7);
+    static final String CLASS_NOT_FOUND = key(4);
 
     /** A resource key. */
-    static final String CLASS_NOT_DEF = key(8);
+    static final String CLASS_NOT_DEF = key(5);
 
     //
 
     /** The resources - an array of key-values pairs. */
     private static final String[][] EN_US = {
             {RND_UPPER_LIMIT_NOT_POS, "Upper limit must be positive"},
-            {PATH_LIST_READ_ERR, "Exception while reading {0} (using defaults): "},
-            {PATH_LIST_NO_BASE, "Must have a base directory."},
-            {PATH_LIST_WRITE_ERR, "Exception while writing {0}: "},
 
             {CANT_DOWNLOAD_JAR, "Could not download the JAR file {0}"},
             {CANT_INSTANTIATE_JAR, "jar file ''{0}'' could not be instantiated from file path."},

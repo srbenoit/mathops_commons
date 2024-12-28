@@ -25,13 +25,13 @@ import java.util.List;
 public final class XmlContent extends LockedContent {
 
     /** The recognized tokens in the source XML. */
-    private List<IXmlToken> tokens;
+    private List<? extends IXmlToken> tokens = null;
 
     /** The parsed node structure. */
-    private List<INode> nodes;
+    private List<? extends INode> nodes = null;
 
     /** Errors associated with the element. */
-    private List<XmlContentError> errors;
+    private List<XmlContentError> errors = null;
 
     /**
      * Constructs a new, empty, {@code XmlContent}.
@@ -39,9 +39,6 @@ public final class XmlContent extends LockedContent {
     public XmlContent() {
 
         super();
-
-        this.tokens = null;
-        this.nodes = null;
     }
 
     /**
@@ -60,8 +57,6 @@ public final class XmlContent extends LockedContent {
 
         super(content.toCharArray());
 
-        this.tokens = null;
-        this.nodes = null;
         XmlParser.parse(this, elementsOnly, includeComments);
     }
 
@@ -81,8 +76,6 @@ public final class XmlContent extends LockedContent {
 
         super(theContent);
 
-        this.tokens = null;
-        this.nodes = null;
         XmlParser.parse(this, elementsOnly, includeComments);
     }
 
@@ -91,7 +84,7 @@ public final class XmlContent extends LockedContent {
      *
      * @param theTokens the list of tokens
      */
-    public void setTokens(final List<IXmlToken> theTokens) {
+    public void setTokens(final List<? extends IXmlToken> theTokens) {
 
         this.tokens = theTokens;
     }
@@ -111,7 +104,7 @@ public final class XmlContent extends LockedContent {
      *
      * @param theNodes the list of parsed nodes
      */
-    public void setNodes(final List<INode> theNodes) {
+    public void setNodes(final List<? extends INode> theNodes) {
 
         this.nodes = theNodes;
     }

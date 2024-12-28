@@ -77,7 +77,7 @@ public enum Base64 {
      */
     private static String encode(final byte[] data, final int blocksPerLine) {
 
-        final HtmlBuilder str = new HtmlBuilder((int) ((float) data.length * 1.5f));
+        final HtmlBuilder builder = new HtmlBuilder((int) ((float) data.length * 1.5f));
         int len = data.length;
 
         // March through blocks of 3 bytes, converting to 4 characters each
@@ -89,15 +89,15 @@ public enum Base64 {
             final byte byte2 = data[inx - 1];
             final byte byte3 = data[inx];
 
-            str.add(CHARS[(int) byte1 >> SHIFT_2 & (int) LS_6_BITS]);
-            str.add(CHARS[((int) byte1 & (int) LS_2_BITS) << SHIFT_4 | (int) byte2 >> SHIFT_4 & (int) LS_4_BITS]);
-            str.add(CHARS[((int) byte2 & (int) LS_4_BITS) << SHIFT_2 | (int) byte3 >> SHIFT_6 & (int) LS_2_BITS]);
-            str.add(CHARS[(int) byte3 & (int) LS_6_BITS]);
+            builder.add(CHARS[(int) byte1 >> SHIFT_2 & (int) LS_6_BITS]);
+            builder.add(CHARS[((int) byte1 & (int) LS_2_BITS) << SHIFT_4 | (int) byte2 >> SHIFT_4 & (int) LS_4_BITS]);
+            builder.add(CHARS[((int) byte2 & (int) LS_4_BITS) << SHIFT_2 | (int) byte3 >> SHIFT_6 & (int) LS_2_BITS]);
+            builder.add(CHARS[(int) byte3 & (int) LS_6_BITS]);
 
             ++count;
 
             if (count == blocksPerLine) {
-                str.add(CoreConstants.CRLF);
+                builder.add(CoreConstants.CRLF);
                 count = 0;
             }
         }
@@ -109,21 +109,21 @@ public enum Base64 {
         if (len == 1) {
             final byte byte1 = data[inx - 2];
 
-            str.add(CHARS[(int) byte1 >> SHIFT_2 & (int) LS_6_BITS]);
-            str.add(CHARS[((int) byte1 & (int) LS_2_BITS) << SHIFT_4]);
-            str.add(PAD);
-            str.add(PAD);
+            builder.add(CHARS[(int) byte1 >> SHIFT_2 & (int) LS_6_BITS]);
+            builder.add(CHARS[((int) byte1 & (int) LS_2_BITS) << SHIFT_4]);
+            builder.add(PAD);
+            builder.add(PAD);
         } else if (len == 2) {
             final byte byte1 = data[inx - 2];
             final byte byte2 = data[inx - 1];
 
-            str.add(CHARS[(int) byte1 >> SHIFT_2 & (int) LS_6_BITS]);
-            str.add(CHARS[((int) byte1 & (int) LS_2_BITS) << SHIFT_4 | (int) byte2 >> SHIFT_4 & (int) LS_4_BITS]);
-            str.add(CHARS[((int) byte2 & (int) LS_4_BITS) << SHIFT_2]);
-            str.add(PAD);
+            builder.add(CHARS[(int) byte1 >> SHIFT_2 & (int) LS_6_BITS]);
+            builder.add(CHARS[((int) byte1 & (int) LS_2_BITS) << SHIFT_4 | (int) byte2 >> SHIFT_4 & (int) LS_4_BITS]);
+            builder.add(CHARS[((int) byte2 & (int) LS_4_BITS) << SHIFT_2]);
+            builder.add(PAD);
         }
 
-        return str.toString();
+        return builder.toString();
     }
 
     /**
@@ -158,29 +158,32 @@ public enum Base64 {
 
             nextBlock(raw, i, block);
 
-            byte data = (byte) ((int) block[0] << SHIFT_2 | (int) block[1] >> SHIFT_4);
-            baos.write(data);
+            final byte data1 = (byte) ((int) block[0] << SHIFT_2 | (int) block[1] >> SHIFT_4);
+            baos.write((int) data1);
 
             if ((int) block[CHARS_PER_BLOCK - 1] < (int) PAD_INDICATOR) {
-                data = (byte) ((int) block[1] << SHIFT_4 | (int) block[2] >> SHIFT_2);
-                baos.write(data);
-                data = (byte) ((int) block[2] << SHIFT_6 | (int) block[CHARS_PER_BLOCK - 1]);
-                baos.write(data);
+                final byte data2 = (byte) ((int) block[1] << SHIFT_4 | (int) block[2] >> SHIFT_2);
+                baos.write((int) data2);
+                final byte data3 = (byte) ((int) block[2] << SHIFT_6 | (int) block[CHARS_PER_BLOCK - 1]);
+                baos.write((int) data3);
             } else {
 
                 if (len != i + CHARS_PER_BLOCK) {
-                    throw new ParsingException(i - CHARS_PER_BLOCK + 1, i + 1, Res.get(Res.B64_PAD_BEFORE_END));
+                    final String message = Res.get(Res.B64_PAD_BEFORE_END);
+                    throw new ParsingException(i - CHARS_PER_BLOCK + 1, i + 1, message);
                 }
 
                 if ((int) block[CHARS_PER_BLOCK - 2] < (int) PAD_INDICATOR) {
-                    data = (byte) ((int) block[1] << SHIFT_4 | (int) block[2] >> SHIFT_2);
-                    baos.write(data);
+                    final byte data4 = (byte) ((int) block[1] << SHIFT_4 | (int) block[2] >> SHIFT_2);
+                    baos.write((int) data4);
 
                     if (((int) block[CHARS_PER_BLOCK - 2] & (int) LS_2_BITS) != 0) {
-                        throw new ParsingException(i - CHARS_PER_BLOCK + 1, i + 1, Res.get(Res.B64_BAD_THIRD));
+                        final String message = Res.get(Res.B64_BAD_THIRD);
+                        throw new ParsingException(i - CHARS_PER_BLOCK + 1, i + 1, message);
                     }
                 } else if (((int) block[1] & (int) LS_4_BITS) != 0) {
-                    throw new ParsingException(i - CHARS_PER_BLOCK + 1, i + 1, Res.get(Res.B64_BAD_SECOND));
+                    final String message = Res.get(Res.B64_BAD_SECOND);
+                    throw new ParsingException(i - CHARS_PER_BLOCK + 1, i + 1, message);
                 }
             }
         }
@@ -203,28 +206,32 @@ public enum Base64 {
             data[i] = raw[first + i];
 
             if ((int) data[i] < 0) {
-                throw new ParsingException(first + i, first + i,
-                        Res.fmt(Res.B64_OUT_OF_RANGE, Integer.toString(data[i])));
+                final String dataStr = Integer.toString((int) data[i]);
+                final String message = Res.fmt(Res.B64_OUT_OF_RANGE, dataStr);
+                throw new ParsingException(first + i, first + i, message);
             }
 
-            if ((int) data[i] == PAD) {
+            if ((int) data[i] == (int) PAD) {
                 data[i] = PAD_INDICATOR;
             } else {
-                data[i] = REVERSE[data[i]];
+                data[i] = REVERSE[(int) data[i]];
 
                 if ((int) data[i] == -1) {
-                    throw new ParsingException(first + i, first + i + 1,
-                            Res.fmt(Res.B64_BAD_CHAR, Integer.toString(data[i])));
+                    final String dataStr = Integer.toString((int) data[i]);
+                    final String message = Res.fmt(Res.B64_BAD_CHAR, dataStr);
+                    throw new ParsingException(first + i, first + i + 1, message);
                 }
             }
         }
 
         if ((int) data[0] == (int) PAD_INDICATOR) {
-            throw new ParsingException(first, first + 1, Res.get(Res.B64_BYTE1_PAD));
+            final String message = Res.get(Res.B64_BYTE1_PAD);
+            throw new ParsingException(first, first + 1, message);
         }
 
         if ((int) data[1] == (int) PAD_INDICATOR) {
-            throw new ParsingException(first + 1, first + 2, Res.get(Res.B64_BYTE2_PAD));
+            final String message = Res.get(Res.B64_BYTE2_PAD);
+            throw new ParsingException(first + 1, first + 2, message);
         }
     }
 }

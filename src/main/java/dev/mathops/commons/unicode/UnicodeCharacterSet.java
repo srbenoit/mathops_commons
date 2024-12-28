@@ -21,7 +21,7 @@ public final class UnicodeCharacterSet {
     private static final int LINE_FIELDS = 15;
 
     /** The singleton instance. */
-    private static UnicodeCharacterSet instance;
+    private static UnicodeCharacterSet instance = null;
 
     /** The Unicode characters by code point. */
     private final Map<Integer, UnicodeCharacter> chars;
@@ -42,10 +42,11 @@ public final class UnicodeCharacterSet {
      */
     private void loadCharsFile() {
 
-        final String[] lines = FileLoader.loadFileAsLines(getClass(), FILENAME, true);
+        final Class<? extends UnicodeCharacterSet> cls = getClass();
+        final String[] lines = FileLoader.loadFileAsLines(cls, FILENAME, true);
         try {
             for (final String line : lines) {
-                if (!line.isEmpty() && line.charAt(0) != '#') {
+                if (!line.isEmpty() && (int) line.charAt(0) != (int) '#') {
                     processLine(line);
                 }
             }
@@ -75,11 +76,12 @@ public final class UnicodeCharacterSet {
         }
 
         final UnicodeCharacter chr = new UnicodeCharacter(padded);
-        this.chars.put(Integer.valueOf(chr.codePoint), chr);
+        final Integer key = Integer.valueOf(chr.codePoint);
+        this.chars.put(key, chr);
     }
 
     /**
-     * Gets the singleton instance, loading the unicode database data file if not already loaded.
+     * Gets the singleton instance, loading the Unicode database data file if not already loaded.
      *
      * @return the singleton instance
      */
@@ -103,7 +105,8 @@ public final class UnicodeCharacterSet {
      */
     public boolean isValid(final int codePoint) {
 
-        return this.chars.containsKey(Integer.valueOf(codePoint));
+        final Integer key = Integer.valueOf(codePoint);
+        return this.chars.containsKey(key);
     }
 
     /**
@@ -124,7 +127,8 @@ public final class UnicodeCharacterSet {
      */
     public UnicodeCharacter getCharacter(final int codePoint) {
 
-        return codePoint < 0 ? null : this.chars.get(Integer.valueOf(codePoint));
+        final Integer key = Integer.valueOf(codePoint);
+        return codePoint < 0 ? null : this.chars.get(key);
     }
 
     /**

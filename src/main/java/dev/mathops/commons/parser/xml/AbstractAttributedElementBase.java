@@ -31,7 +31,7 @@ public abstract class AbstractAttributedElementBase implements IElement {
     private final TagSpan tagSpan;
 
     /** Errors associated with the element. */
-    private List<XmlContentError> errors;
+    private List<XmlContentError> errors = null;
 
     /** A map from attribute name to attribute. */
     private final Map<String, Attribute> attributes;
@@ -193,7 +193,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
         final Attribute attr = this.attributes.get(name);
 
         if (attr == null) {
-            throw new ParsingException(this.tagSpan, Res.fmt(Res.MISS_ATTR, name, this.tagName));
+            final String message = Res.fmt(Res.MISS_ATTR, name, this.tagName);
+            throw new ParsingException(this.tagSpan, message);
         }
 
         return attr;
@@ -225,7 +226,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
             } else if (FALSE.equalsIgnoreCase(value)) {
                 result = Boolean.FALSE;
             } else {
-                throw new ParsingException(attr, Res.get(Res.BOOLEAN_ERR));
+                final String message = Res.get(Res.BOOLEAN_ERR);
+                throw new ParsingException(attr, message);
             }
         }
 
@@ -251,7 +253,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
         } else if (FALSE.equalsIgnoreCase(value)) {
             result = Boolean.FALSE;
         } else {
-            throw new ParsingException(attr, Res.get(Res.BOOLEAN_ERR));
+            final String message = Res.get(Res.BOOLEAN_ERR);
+            throw new ParsingException(attr, message);
         }
 
         return result;
@@ -326,7 +329,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
             try {
                 result = Integer.valueOf(attr.value);
             } catch (final NumberFormatException ex) {
-                throw new ParsingException(attr, Res.get(Res.INT_ERR), ex);
+                final String message = Res.get(Res.INT_ERR);
+                throw new ParsingException(attr, message, ex);
             }
         }
 
@@ -355,7 +359,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
             try {
                 result = Long.valueOf(attr.value);
             } catch (final NumberFormatException ex) {
-                throw new ParsingException(attr, Res.get(Res.INT_ERR), ex);
+                final String message = Res.get(Res.INT_ERR);
+                throw new ParsingException(attr, message, ex);
             }
         }
 
@@ -378,7 +383,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
         try {
             result = Integer.valueOf(attr.value);
         } catch (final NumberFormatException ex) {
-            throw new ParsingException(attr, Res.get(Res.INT_ERR), ex);
+            final String message = Res.get(Res.INT_ERR);
+            throw new ParsingException(attr, message, ex);
         }
 
         return result;
@@ -400,7 +406,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
         try {
             result = Long.valueOf(attr.value);
         } catch (final NumberFormatException ex) {
-            throw new ParsingException(attr, Res.get(Res.INT_ERR), ex);
+            final String message = Res.get(Res.INT_ERR);
+            throw new ParsingException(attr, message, ex);
         }
 
         return result;
@@ -428,7 +435,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
             try {
                 result = Double.valueOf(attr.value);
             } catch (final NumberFormatException ex) {
-                throw new ParsingException(attr, Res.get(Res.FLOAT_ERR), ex);
+                final String message = Res.get(Res.FLOAT_ERR);
+                throw new ParsingException(attr, message, ex);
             }
         }
 
@@ -451,7 +459,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
         try {
             result = Double.valueOf(attr.value);
         } catch (final NumberFormatException ex) {
-            throw new ParsingException(attr, Res.get(Res.LONG_ERR), ex);
+            final String message = Res.get(Res.LONG_ERR);
+            throw new ParsingException(attr, message, ex);
         }
 
         return result;
@@ -508,7 +517,8 @@ public abstract class AbstractAttributedElementBase implements IElement {
     @Override
     public final Set<String> attributeNames() {
 
-        return Collections.unmodifiableSet(this.attributes.keySet());
+        final Set<String> keySet = this.attributes.keySet();
+        return Collections.unmodifiableSet(keySet);
     }
 
     /**
@@ -525,7 +535,9 @@ public abstract class AbstractAttributedElementBase implements IElement {
         xml.openElement(indent, this.tagName);
 
         for (final String name : attributeNames()) {
-            xml.add(CoreConstants.SPC, name, "='", XmlEscaper.escape(getAttribute(name).value), "'");
+            final Attribute attr = getAttribute(name);
+            final String escaped = XmlEscaper.escape(attr.value);
+            xml.add(CoreConstants.SPC, name, "='", escaped, "'");
         }
 
         return xml;

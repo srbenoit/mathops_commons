@@ -91,7 +91,8 @@ public enum CoreConstants {
 
         synchronized (RND) {
             for (int i = 0; i < length; ++i) {
-                builder.add(ID_CHARS[RND.nextInt(ID_CHARS.length)]);
+                final int randomInt = RND.nextInt(ID_CHARS.length);
+                builder.add(ID_CHARS[randomInt]);
             }
         }
 

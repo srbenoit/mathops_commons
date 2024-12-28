@@ -22,7 +22,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("isValid for valid character")
     void testIsValid1() {
 
-        assertTrue(UnicodeCharacterSet.getInstance().isValid(0x30), "isValid 1");
+        final UnicodeCharacterSet instance = UnicodeCharacterSet.getInstance();
+        final boolean valid = instance.isValid(0x30);
+        assertTrue(valid, "isValid 1");
     }
 
     /** Test case. */
@@ -30,7 +32,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("isValid for invalid character")
     void testIsValid2() {
 
-        assertFalse(UnicodeCharacterSet.getInstance().isValid(-1), "isValid 2");
+        final UnicodeCharacterSet instance = UnicodeCharacterSet.getInstance();
+        final boolean valid = instance.isValid(-1);
+        assertFalse(valid, "isValid 2");
     }
 
     /** Test case. */
@@ -94,7 +98,8 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0x73);
 
         assertNotNull(chr, "getCharacter 4, char is null");
-        assertEquals(Integer.valueOf(0), chr.combining, "getCharacter 4");
+        final Integer expected = Integer.valueOf(0);
+        assertEquals(expected, chr.combining, "getCharacter 4");
     }
 
     /** Test case. */
@@ -130,8 +135,10 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0xA8);
 
         assertNotNull(chr, "getCharacter 7, char is null");
-        assertArrayEquals(new Integer[]{Integer.valueOf(0x0020), Integer.valueOf(0x0308)},
-                chr.getDecompMappingCodePoints(), "getCharacter 7");
+        final Integer spaceInt = Integer.valueOf(0x0020);
+        final Integer diaeresisInt = Integer.valueOf(0x0308);
+        final Integer[] codePoints = chr.getDecompMappingCodePoints();
+        assertArrayEquals(new Integer[]{spaceInt, diaeresisInt}, codePoints, "getCharacter 7");
     }
 
     /** Test case. */
@@ -143,7 +150,8 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0x0031);
 
         assertNotNull(chr, "getCharacter 8, char is null");
-        assertEquals(Integer.valueOf(1), chr.decimal, "getCharacter 8");
+        final Integer expected = Integer.valueOf(1);
+        assertEquals(expected, chr.decimal, "getCharacter 8");
     }
 
     /** Test case. */
@@ -155,7 +163,8 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0x00B2);
 
         assertNotNull(chr, "getCharacter 9, char is null");
-        assertEquals(Integer.valueOf(2), chr.digit, "getCharacter 9");
+        final Integer expected = Integer.valueOf(2);
+        assertEquals(expected, chr.digit, "getCharacter 9");
     }
 
     /** Test case. */
@@ -167,7 +176,8 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0x2150);
 
         assertNotNull(chr, "getCharacter 10, char is null");
-        assertEquals(Double.valueOf(1.0 / 7.0), chr.numeric, "getCharacter 10");
+        final Double expected = Double.valueOf(1.0 / 7.0);
+        assertEquals(expected, chr.numeric, "getCharacter 10");
     }
 
     /** Test case. */
@@ -215,7 +225,8 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0x6E);
 
         assertNotNull(chr, "getCharacter 14, char is null");
-        assertEquals(Integer.valueOf(0x4E), chr.uppercase, "getCharacter 14");
+        final Integer expected = Integer.valueOf(0x4E);
+        assertEquals(expected, chr.uppercase, "getCharacter 14");
     }
 
     /** Test case. */
@@ -227,7 +238,8 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0x52);
 
         assertNotNull(chr, "getCharacter 15, char is null");
-        assertEquals(Integer.valueOf(0x72), chr.lowercase, "getCharacter 15");
+        final Integer expected = Integer.valueOf(0x72);
+        assertEquals(expected, chr.lowercase, "getCharacter 15");
     }
 
     /** Test case. */
@@ -239,7 +251,8 @@ final class TestUnicodeCharacterSet {
         final UnicodeCharacter chr = UnicodeCharacterSet.getInstance().getCharacter(0x6E);
 
         assertNotNull(chr, "getCharacter 16, char is null");
-        assertEquals(Integer.valueOf(0x4E), chr.titlecase, "getCharacter 16");
+        final Integer expected = Integer.valueOf(0x4E);
+        assertEquals(expected, chr.titlecase, "getCharacter 16");
     }
 
     /** Test case. */
@@ -247,9 +260,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("toUppercase from lowercase")
     void testToUppercase1() {
 
-        final int cp = UnicodeCharacterSet.getInstance().toUppercase('n');
+        final int cp = UnicodeCharacterSet.getInstance().toUppercase((int) 'n');
 
-        assertEquals('N', cp, "toUppercase 1");
+        assertEquals((int) 'N', cp, "toUppercase 1");
     }
 
     /** Test case. */
@@ -257,9 +270,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("toUppercase from uppercase")
     void testToUppercase2() {
 
-        final int cp = UnicodeCharacterSet.getInstance().toUppercase('N');
+        final int cp = UnicodeCharacterSet.getInstance().toUppercase((int) 'N');
 
-        assertEquals('N', cp, "toUppercase 2");
+        assertEquals((int) 'N', cp, "toUppercase 2");
     }
 
     /** Test case. */
@@ -267,9 +280,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("toUppercase from digit")
     void testToUppercase3() {
 
-        final int cp = UnicodeCharacterSet.getInstance().toUppercase('1');
+        final int cp = UnicodeCharacterSet.getInstance().toUppercase((int) '1');
 
-        assertEquals('1', cp, "toUppercase 3");
+        assertEquals((int) '1', cp, "toUppercase 3");
     }
 
     /** Test case. */
@@ -287,9 +300,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("toLowercase from uppercase")
     void testToLowercase1() {
 
-        final int cp = UnicodeCharacterSet.getInstance().toLowercase('N');
+        final int cp = UnicodeCharacterSet.getInstance().toLowercase((int) 'N');
 
-        assertEquals('n', cp, "toLowercase 1");
+        assertEquals((int) 'n', cp, "toLowercase 1");
     }
 
     /** Test case. */
@@ -297,9 +310,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("toLowercase from lowercase")
     void testToLowercase2() {
 
-        final int cp = UnicodeCharacterSet.getInstance().toLowercase('n');
+        final int cp = UnicodeCharacterSet.getInstance().toLowercase((int) 'n');
 
-        assertEquals('n', cp, "toLowercase 2");
+        assertEquals((int) 'n', cp, "toLowercase 2");
     }
 
     /** Test case. */
@@ -307,9 +320,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("toLowercase from digit")
     void testToLowercase3() {
 
-        final int cp = UnicodeCharacterSet.getInstance().toLowercase('1');
+        final int cp = UnicodeCharacterSet.getInstance().toLowercase((int) '1');
 
-        assertEquals('1', cp, "toLowercase 3");
+        assertEquals((int) '1', cp, "toLowercase 3");
     }
 
     /** Test case. */
@@ -347,9 +360,9 @@ final class TestUnicodeCharacterSet {
     @DisplayName("toTitlecase from uppercase")
     void testToTitlecase3() {
 
-        final int cp = UnicodeCharacterSet.getInstance().toTitlecase('N');
+        final int cp = UnicodeCharacterSet.getInstance().toTitlecase((int) 'N');
 
-        assertEquals('N', cp, "toTitlecase 3");
+        assertEquals((int) 'N', cp, "toTitlecase 3");
     }
 
     /** Test case. */

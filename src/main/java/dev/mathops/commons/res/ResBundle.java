@@ -56,6 +56,18 @@ import java.util.Locale;
 public class ResBundle extends ResBundleBase {
 
     /**
+     * Constructs a new {@code ResBundle} with the "Locale.US" locale.
+     *
+     * @param messages an array with dimensions [N][2] of {@code String} key/message pairs
+     */
+    protected ResBundle(final String[][] messages) {
+
+        super();
+
+        addMessages(Locale.US, messages);
+    }
+
+    /**
      * Constructs a new {@code ResBundle}.
      *
      * @param locale   the locale under which to register the first block of messages
@@ -76,7 +88,8 @@ public class ResBundle extends ResBundleBase {
      */
     public final String getMsg(final String key) {
 
-        return getMsg(key, Locale.getDefault());
+        final Locale defaultLocale = Locale.getDefault();
+        return getMsg(key, defaultLocale);
     }
 
     /**
@@ -89,7 +102,8 @@ public class ResBundle extends ResBundleBase {
      */
     public final String formatMsg(final String key, final Object... arguments) {
 
-        return formatMsg(key, Locale.getDefault(), arguments);
+        final Locale defaultLocale = Locale.getDefault();
+        return formatMsg(key, defaultLocale, arguments);
     }
 
     /**
@@ -103,7 +117,8 @@ public class ResBundle extends ResBundleBase {
      */
     private String formatMsg(final String key, final Locale locale, final Object... arguments) {
 
-        return MessageFormat.format(getMsg(key, locale), arguments);
+        final String msg = getMsg(key, locale);
+        return MessageFormat.format(msg, arguments);
     }
 
     /**

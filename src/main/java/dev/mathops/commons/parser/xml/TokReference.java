@@ -9,19 +9,19 @@ public final class TokReference extends AbstractXmlToken {
      * the string this reference represents (using {@code String} rather than character allows for Unicode values in the
      * range above 0xFFFF).
      */
-    private String value;
+    private String value = null;
 
     /**
      * Constructs a new {@code TokReference}.
      *
-     * @param theContent the content this token belongs to
-     * @param theStart   the index of the '&' character
-     * @param theEnd     the index after the ';' character
+     * @param theContent    the content this token belongs to
+     * @param theStart      the index of the '&' character
+     * @param theEnd        the index after the ';' character
      * @param theLineNumber the line number of the start of the span
      * @param theColumn     the column of the start of the span
      */
-    TokReference(final XmlContent theContent, final int theStart, final int theEnd,
-                 final int theLineNumber, final int theColumn) {
+    TokReference(final XmlContent theContent, final int theStart, final int theEnd, final int theLineNumber,
+                 final int theColumn) {
 
         super(theContent, theStart, theEnd, theLineNumber, theColumn);
     }
@@ -54,7 +54,12 @@ public final class TokReference extends AbstractXmlToken {
     @Override
     public void validate() {
 
-        this.value = XmlEscaper.unescape(getContent().substring(getStart(), getEnd()));
+        final int start = getStart();
+        final int end = getEnd();
+        final XmlContent content = getContent();
+        final String substring = content.substring(start, end);
+
+        this.value = XmlEscaper.unescape(substring);
     }
 
     /**

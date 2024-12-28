@@ -46,7 +46,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.normalizeBlockName(TEST_STRING_1);
 
-        assertEquals(norm, TEST_STRING_NORM, "NormalizeBlockName 1");
+        assertEquals(TEST_STRING_NORM, norm, "NormalizeBlockName 1");
     }
 
     /** Test case. */
@@ -56,7 +56,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.normalizeBlockName(TEST_STRING_2);
 
-        assertEquals(norm, TEST_STRING_NORM, "NormalizeBlockName 2");
+        assertEquals(TEST_STRING_NORM, norm, "NormalizeBlockName 2");
     }
 
     /** Test case. */
@@ -66,7 +66,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.normalizeBlockName(TEST_STRING_3);
 
-        assertEquals(norm, TEST_STRING_NORM, "NormalizeBlockName 3");
+        assertEquals(TEST_STRING_NORM, norm, "NormalizeBlockName 3");
     }
 
     /** Test case. */
@@ -76,7 +76,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.normalizeBlockName(TEST_STRING_4);
 
-        assertEquals(norm, TEST_STRING_NORM, "NormalizeBlockName 4");
+        assertEquals(TEST_STRING_NORM, norm, "NormalizeBlockName 4");
     }
 
     /** Test case. */
@@ -86,7 +86,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.stripSpaces(TEST_STRING_1);
 
-        assertEquals(norm, TEST_STRING_1, "StripSpaces 1");
+        assertEquals(TEST_STRING_1, norm, "StripSpaces 1");
     }
 
     /** Test case. */
@@ -96,7 +96,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.stripSpaces(TEST_STRING_2);
 
-        assertEquals(norm, TEST_STRING_2, "StripSpaces 2");
+        assertEquals(TEST_STRING_2, norm, "StripSpaces 2");
     }
 
     /** Test case. */
@@ -106,7 +106,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.stripSpaces(TEST_STRING_3);
 
-        assertEquals(norm, TEST_STRING_3, "StripSpaces 3");
+        assertEquals(TEST_STRING_3, norm, "StripSpaces 3");
     }
 
     /** Test case. */
@@ -116,7 +116,7 @@ final class TestUnicodeBlocks {
 
         final String norm = UnicodeBlocks.stripSpaces(TEST_STRING_4);
 
-        assertEquals(norm, TEST_STRING_NORM, "StripSpaces 4");
+        assertEquals(TEST_STRING_NORM, norm, "StripSpaces 4");
     }
 
     /** Test case. */
@@ -124,8 +124,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: Basic Latin character in 'basiclatin'")
     void testIsInBlock1() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x7F,
-                UnicodeBlocks.normalizeBlockName(BASIC_LATIN));
+        final String normalized = UnicodeBlocks.normalizeBlockName(BASIC_LATIN);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x7F, normalized);
 
         assertTrue(inBlock, "IsInBlock 1");
     }
@@ -135,7 +135,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: Basic Latin character in 'BasicLatin'")
     void testIsInBlock2() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x7F, UnicodeBlocks.stripSpaces(BASIC_LATIN));
+        final String stripped = UnicodeBlocks.stripSpaces(BASIC_LATIN);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x7F, stripped);
 
         assertTrue(inBlock, "IsInBlock 2");
     }
@@ -145,8 +146,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: Supplemental Latin character in 'basiclatin'")
     void testIsInBlock3() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80,
-                UnicodeBlocks.normalizeBlockName(BASIC_LATIN));
+        final String normalized = UnicodeBlocks.normalizeBlockName(BASIC_LATIN);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80, normalized);
 
         assertFalse(inBlock, "IsInBlock 3");
     }
@@ -156,7 +157,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: Supplemental Latin character in 'BasicLatin'")
     void testIsInBlock4() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80, UnicodeBlocks.stripSpaces(BASIC_LATIN));
+        final String stripped = UnicodeBlocks.stripSpaces(BASIC_LATIN);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80, stripped);
 
         assertFalse(inBlock, "IsInBlock 4");
     }
@@ -166,8 +168,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: least Supplemental Latin character in 'latin1supplement'")
     void testIsInBlock5() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80,
-                UnicodeBlocks.normalizeBlockName(LATIN_1_SUPPLEMENT));
+        final String normalized = UnicodeBlocks.normalizeBlockName(LATIN_1_SUPPLEMENT);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80, normalized);
 
         assertTrue(inBlock, "IsInBlock 5");
     }
@@ -177,8 +179,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: least Supplemental Latin character in 'Latin-1Supplement'")
     void testIsInBlock6() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80,
-                UnicodeBlocks.stripSpaces(LATIN_1_SUPPLEMENT));
+        final String stripped = UnicodeBlocks.stripSpaces(LATIN_1_SUPPLEMENT);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x80, stripped);
 
         assertTrue(inBlock, "IsInBlock 6");
     }
@@ -188,8 +190,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: greatest Supplemental Latin character in 'latin1supplement'")
     void testIsInBlock7() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0xFF,
-                UnicodeBlocks.normalizeBlockName(LATIN_1_SUPPLEMENT));
+        final String normalized = UnicodeBlocks.normalizeBlockName(LATIN_1_SUPPLEMENT);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0xFF, normalized);
 
         assertTrue(inBlock, "IsInBlock 7");
     }
@@ -199,8 +201,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: greatest Supplemental Latin character in 'Latin-1Supplement'")
     void testIsInBlock8() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0xFF,
-                UnicodeBlocks.stripSpaces(LATIN_1_SUPPLEMENT));
+        final String stripped = UnicodeBlocks.stripSpaces(LATIN_1_SUPPLEMENT);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0xFF, stripped);
 
         assertTrue(inBlock, "IsInBlock 8");
     }
@@ -210,8 +212,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: beyond Supplemental Latin character in 'latin1supplement'")
     void testIsInBlock9() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x100,
-                UnicodeBlocks.normalizeBlockName(LATIN_1_SUPPLEMENT));
+        final String normalized = UnicodeBlocks.normalizeBlockName(LATIN_1_SUPPLEMENT);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x100, normalized);
 
         assertFalse(inBlock, "IsInBlock 9");
     }
@@ -221,8 +223,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: beyond Supplemental Latin character in 'Latin-1Supplement'")
     void testIsInBlock10() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x100,
-                UnicodeBlocks.stripSpaces(LATIN_1_SUPPLEMENT));
+        final String stripped = UnicodeBlocks.stripSpaces(LATIN_1_SUPPLEMENT);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x100, stripped);
 
         assertFalse(inBlock, "IsInBlock 10");
     }
@@ -232,8 +234,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: least private character in 'supplementaryprivateuseareab'")
     void testIsInBlock11() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x100000,
-                UnicodeBlocks.normalizeBlockName(PRIVATE));
+        final String normalized = UnicodeBlocks.normalizeBlockName(PRIVATE);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x100000, normalized);
 
         assertTrue(inBlock, "IsInBlock 11");
     }
@@ -243,8 +245,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: least private character in 'SupplementaryPrivateUseAreaB'")
     void testIsInBlock12() {
 
-        final boolean inBlock =
-                UnicodeBlocks.getInstance().isInBlock(0x100000, UnicodeBlocks.stripSpaces(PRIVATE));
+        final String stripped = UnicodeBlocks.stripSpaces(PRIVATE);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x100000, stripped);
 
         assertTrue(inBlock, "IsInBlock 12");
     }
@@ -254,8 +256,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: greatest private character in 'supplementaryprivateuseareab'")
     void testIsInBlock13() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x10FFFF,
-                UnicodeBlocks.normalizeBlockName(PRIVATE));
+        final String normalized = UnicodeBlocks.normalizeBlockName(PRIVATE);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x10FFFF, normalized);
 
         assertTrue(inBlock, "IsInBlock 13");
     }
@@ -265,8 +267,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: greatest private character in 'SupplementaryPrivateUseAreaB'")
     void testIsInBlock14() {
 
-        final boolean inBlock =
-                UnicodeBlocks.getInstance().isInBlock(0x10FFFF, UnicodeBlocks.stripSpaces(PRIVATE));
+        final String stripped = UnicodeBlocks.stripSpaces(PRIVATE);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x10FFFF, stripped);
 
         assertTrue(inBlock, "IsInBlock 14");
     }
@@ -276,8 +278,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: beyond private character in 'supplementaryprivateuseareab'")
     void testIsInBlock15() {
 
-        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x110000,
-                UnicodeBlocks.normalizeBlockName(PRIVATE));
+        final String normalized = UnicodeBlocks.normalizeBlockName(PRIVATE);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x110000, normalized);
 
         assertFalse(inBlock, "IsInBlock 15");
     }
@@ -287,8 +289,8 @@ final class TestUnicodeBlocks {
     @DisplayName("isInBlock: beyond private character in 'SupplementaryPrivateUseAreaB'")
     void testIsInBlock16() {
 
-        final boolean inBlock =
-                UnicodeBlocks.getInstance().isInBlock(0x110000, UnicodeBlocks.stripSpaces(PRIVATE));
+        final String stripped = UnicodeBlocks.stripSpaces(PRIVATE);
+        final boolean inBlock = UnicodeBlocks.getInstance().isInBlock(0x110000, stripped);
 
         assertFalse(inBlock, "IsInBlock 16");
     }

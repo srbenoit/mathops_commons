@@ -17,8 +17,12 @@ final class TestSimpleBuilder {
     @DisplayName("String value after concat()")
     void test001() {
 
-        final String str = SimpleBuilder.concat("A", Integer.valueOf(1), Character.valueOf('B'), Double.valueOf(2.0),
-                Boolean.TRUE, Boolean.FALSE, null, "foo".toCharArray());
+        final Integer int1 = Integer.valueOf(1);
+        final Character charb = Character.valueOf('B');
+        final Double double2 = Double.valueOf(2.0);
+        final char[] fooChars = "foo".toCharArray();
+
+        final String str = SimpleBuilder.concat("A", int1, charb, double2, Boolean.TRUE, Boolean.FALSE, null, fooChars);
 
         assertEquals("A1B2.0truefalsefoo", str, "Expected concat() to be 'A1B2.0truefalsefoo' (" + str + ")");
     }

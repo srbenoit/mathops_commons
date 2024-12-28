@@ -51,7 +51,8 @@ public enum ClassList {
                 // Log.info(" Trying URL " + url);
 
                 if (url.toString().startsWith("file:")) {
-                    scanFilename(url.getFile(), root, list, loader);
+                    final String file = url.getFile();
+                    scanFilename(file, root, list, loader);
                 } else {
                     scanUrl(url, root, list, loader);
                 }
@@ -94,19 +95,22 @@ public enum ClassList {
                 }
             }
 
-            try (final JarInputStream jis = new JarInputStream(new ByteArrayInputStream(out.toByteArray()))) {
+            final byte[] byteArray = out.toByteArray();
+            try (final JarInputStream jis = new JarInputStream(new ByteArrayInputStream(byteArray))) {
 
                 JarEntry entry = jis.getNextJarEntry();
 
                 while (entry != null) {
-                    if (entry.getName().endsWith(CLASS_FILE_EXT)) {
-                        processClass(entry.getName(), path, loader, list);
+                    final String name = entry.getName();
+                    if (name.endsWith(CLASS_FILE_EXT)) {
+                        processClass(name, path, loader, list);
                     }
                     entry = jis.getNextJarEntry();
                 }
             }
         } catch (final IOException ex) {
-            Log.warning(Res.fmt(Res.CANT_DOWNLOAD_JAR, url), ex);
+            final String message = Res.fmt(Res.CANT_DOWNLOAD_JAR, url);
+            Log.warning(message, ex);
         }
     }
 
@@ -127,7 +131,8 @@ public enum ClassList {
             final File file = new File(filename);
 
             if (file.isDirectory()) {
-                recurseDirectory(file.getAbsolutePath(), file, path, loader, list);
+                final String absolutePath = file.getAbsolutePath();
+                recurseDirectory(absolutePath, file, path, loader, list);
             }
         }
     }
@@ -153,7 +158,8 @@ public enum ClassList {
                     String absPath = file.getAbsolutePath();
 
                     if (absPath.startsWith(root)) {
-                        absPath = absPath.substring(root.length() + 1);
+                        final int length = root.length();
+                        absPath = absPath.substring(length + 1);
                     }
 
                     final String entry = absPath.replace(File.separatorChar, '.');
@@ -192,7 +198,8 @@ public enum ClassList {
                     }
                 }
             } catch (final IOException ex) {
-                Log.warning(Res.fmt(Res.CANT_INSTANTIATE_JAR, cleaned), ex);
+                final String message = Res.fmt(Res.CANT_INSTANTIATE_JAR, cleaned);
+                Log.warning(message, ex);
             }
         }
     }
@@ -208,16 +215,21 @@ public enum ClassList {
     private static void processClass(final String filename, final String path, final ClassLoader loader,
                                      final Collection<? super Class<?>> list) {
 
-        final String cleaned = filename.substring(0, filename.length() - CLASS_FILE_EXT.length()).replace('/', '.');
+        final int length = filename.length();
+        final int extLength = CLASS_FILE_EXT.length();
+        final String cleaned = filename.substring(0, length - extLength).replace('/', '.');
 
         // Classes not in the search path are ignored.
         if (cleaned.startsWith(path)) {
             try {
-                list.add(Class.forName(cleaned, false, loader));
+                final Class<?> cls = Class.forName(cleaned, false, loader);
+                list.add(cls);
             } catch (final ClassNotFoundException nfe) {
-                Log.warning(Res.fmt(Res.CLASS_NOT_FOUND, cleaned));
+                final String message = Res.fmt(Res.CLASS_NOT_FOUND, cleaned);
+                Log.warning(message);
             } catch (final NoClassDefFoundError ex) {
-                Log.warning(Res.fmt(Res.CLASS_NOT_DEF, cleaned));
+                final String message = Res.fmt(Res.CLASS_NOT_DEF, cleaned);
+                Log.warning(message);
             }
         }
     }

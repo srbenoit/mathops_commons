@@ -28,6 +28,30 @@ public final class LogSettings {
     /** Common string. */
     private static final String NONE = "NONE";
 
+    /** Name of a logging level. */
+    private static final String SEVERE_LVL = "SEVERE";
+
+    /** Name of a logging level. */
+    private static final String WARNING_LVL = "WARNING";
+
+    /** Name of a logging level. */
+    private static final String INFO_LVL = "INFO";
+
+    /** Name of a logging level. */
+    private static final String CONFIG_LVL = "CONFIG";
+
+    /** Name of a logging level. */
+    private static final String ENTERING_LVL = "ENTERING";
+
+    /** Name of a logging level. */
+    private static final String EXITING_LVL = "EXITING";
+
+    /** Name of a logging level. */
+    private static final String FINE_LVL = "FINE";
+
+    /** Name of a logging level. */
+    private static final String FINEST_LVL = "FINEST";
+
     /** The log level name. */
     private String logLevelName;
 
@@ -56,7 +80,7 @@ public final class LogSettings {
     private boolean append;
 
     /** A flag indicating at least one setting has changed since last load or save. */
-    private boolean dirty;
+    private boolean dirty = false;
 
     /**
      * Constructs a new {@code LogSettings}, which loads existing configuration data.
@@ -139,14 +163,14 @@ public final class LogSettings {
                 this.logLevelName = NONE;
             } else {
                 final HtmlBuilder htm = new HtmlBuilder(30);
-                boolean comma = addToList(masked, LogBase.SEVERE_BIT, LogBase.SEVERE_LVL, false, htm);
-                comma = addToList(masked, LogBase.WARNING_BIT, LogBase.WARNING_LVL, comma, htm);
-                comma = addToList(masked, LogBase.INFO_BIT, LogBase.INFO_LVL, comma, htm);
-                comma = addToList(masked, LogBase.CONFIG_BIT, LogBase.CONFIG_LVL, comma, htm);
-                comma = addToList(masked, LogBase.ENTERING_BIT, LogBase.ENTERING_LVL, comma, htm);
-                comma = addToList(masked, LogBase.EXITING_BIT, LogBase.EXITING_LVL, comma, htm);
-                comma = addToList(masked, LogBase.FINE_BIT, LogBase.FINE_LVL, comma, htm);
-                addToList(masked, LogBase.FINEST_BIT, LogBase.FINEST_LVL, comma, htm);
+                boolean comma = addToList(masked, LogBase.SEVERE_BIT, SEVERE_LVL, false, htm);
+                comma = addToList(masked, LogBase.WARNING_BIT, WARNING_LVL, comma, htm);
+                comma = addToList(masked, LogBase.INFO_BIT, INFO_LVL, comma, htm);
+                comma = addToList(masked, LogBase.CONFIG_BIT, CONFIG_LVL, comma, htm);
+                comma = addToList(masked, LogBase.ENTERING_BIT, ENTERING_LVL, comma, htm);
+                comma = addToList(masked, LogBase.EXITING_BIT, EXITING_LVL, comma, htm);
+                comma = addToList(masked, LogBase.FINE_BIT, FINE_LVL, comma, htm);
+                addToList(masked, LogBase.FINEST_BIT, FINEST_LVL, comma, htm);
 
                 this.logLevelName = htm.toString();
             }
@@ -282,7 +306,7 @@ public final class LogSettings {
             throw new IllegalArgumentException(msg);
         }
 
-        final int char0 = theFilenameBase.charAt(0);
+        final int char0 = (int) theFilenameBase.charAt(0);
         if (VALID_1.indexOf(char0) == -1) {
             final String msg = Res.get(Res.FNAME_CHAR1);
             throw new IllegalArgumentException(msg);
@@ -291,7 +315,7 @@ public final class LogSettings {
         for (int i = 1; i < length; ++i) {
             final char chr = theFilenameBase.charAt(i);
 
-            if (VALID_2.indexOf(chr) == -1) {
+            if (VALID_2.indexOf((int) chr) == -1) {
                 final String charStr = Character.toString(chr);
                 final String msg = Res.fmt(Res.FNAME_CHAR1, charStr);
                 throw new IllegalArgumentException(msg);
@@ -502,21 +526,21 @@ public final class LogSettings {
 
         final int lvls;
 
-        if (LogBase.SEVERE_LVL.equalsIgnoreCase(test)) {
+        if (SEVERE_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.SEVERE_BIT;
-        } else if (LogBase.WARNING_LVL.equalsIgnoreCase(test)) {
+        } else if (WARNING_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.WARNING_BIT;
-        } else if (LogBase.INFO_LVL.equalsIgnoreCase(test)) {
+        } else if (INFO_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.INFO_BIT;
-        } else if (LogBase.CONFIG_LVL.equalsIgnoreCase(test)) {
+        } else if (CONFIG_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.CONFIG_BIT;
-        } else if (LogBase.ENTERING_LVL.equalsIgnoreCase(test)) {
+        } else if (ENTERING_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.ENTERING_BIT;
-        } else if (LogBase.EXITING_LVL.equalsIgnoreCase(test)) {
+        } else if (EXITING_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.EXITING_BIT;
-        } else if (LogBase.FINE_LVL.equalsIgnoreCase(test)) {
+        } else if (FINE_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.FINE_BIT;
-        } else if (LogBase.FINEST_LVL.equalsIgnoreCase(test)) {
+        } else if (FINEST_LVL.equalsIgnoreCase(test)) {
             lvls = LogBase.FINEST_BIT;
         } else {
             final String msg = Res.fmt(Res.SETTINGS_BAD_LEVEL, test);

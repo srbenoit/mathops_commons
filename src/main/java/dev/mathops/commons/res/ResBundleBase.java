@@ -42,16 +42,19 @@ class ResBundleBase {
     protected final void addMessages(final Locale locale, final String[][] messages) {
 
         if (locale == null) {
-            throw new IllegalArgumentException(Res.get(Res.NULL_LOCALE));
+            final String msg = Res.get(Res.NULL_LOCALE);
+            throw new IllegalArgumentException(msg);
         }
         if (messages == null) {
-            throw new IllegalArgumentException(Res.get(Res.BAD_ARRAY));
+            final String msg = Res.get(Res.BAD_ARRAY);
+            throw new IllegalArgumentException(msg);
         }
 
         // Validate message array before allocating a map
         for (final String[] message : messages) {
             if (message == null || message.length != 2 || message[0] == null || message[1] == null) {
-                throw new IllegalArgumentException(Res.get(Res.BAD_ARRAY));
+                final String msg = Res.get(Res.BAD_ARRAY);
+                throw new IllegalArgumentException(msg);
             }
         }
 
@@ -126,15 +129,14 @@ class ResBundleBase {
         Locale match = null;
 
         for (final Locale loc : this.messageMap.keySet()) {
-            if (loc.getLanguage().equals(defLoc.getLanguage())) {
+            final String defaultLanguage = defLoc.getLanguage();
+            if (loc.getLanguage().equals(defaultLanguage)) {
 
-                if (loc.getCountry() == null) {
-                    if (defLoc.getCountry() == null) {
-                        match = loc;
-                        break;
-                    }
-                } else if (loc.getCountry().equals(defLoc.getCountry()) &&
-                        matches(loc.getVariant(), defLoc.getVariant())) {
+                final String defaultCountry = defLoc.getCountry();
+                final String locVariant = loc.getVariant();
+                final String defaultVariant = defLoc.getVariant();
+
+                if (loc.getCountry().equals(defaultCountry) && Objects.equals(locVariant, defaultVariant)) {
                     match = loc;
                     break;
                 }
@@ -155,8 +157,11 @@ class ResBundleBase {
         Locale match = null;
 
         for (final Locale loc : this.messageMap.keySet()) {
-            if (loc.getLanguage().equals(defLoc.getLanguage()) && matches(loc.getCountry(), defLoc.getCountry())) {
+            final String defaultLanguage = defLoc.getLanguage();
+            final String country = loc.getCountry();
+            final String defaultCountry = defLoc.getCountry();
 
+            if (loc.getLanguage().equals(defaultLanguage) && Objects.equals(country, defaultCountry)) {
                 match = loc;
                 break;
             }
@@ -176,7 +181,8 @@ class ResBundleBase {
         Locale match = null;
 
         for (final Locale loc : this.messageMap.keySet()) {
-            if (loc.getLanguage().equals(defLoc.getLanguage())) {
+            final String defaultLanguage = defLoc.getLanguage();
+            if (loc.getLanguage().equals(defaultLanguage)) {
                 match = loc;
                 break;
             }
@@ -196,7 +202,8 @@ class ResBundleBase {
         Locale match = null;
 
         for (final Locale loc : this.messageMap.keySet()) {
-            if (ENGLISH.equals(loc.getLanguage())) {
+            final String language = loc.getLanguage();
+            if (ENGLISH.equals(language)) {
                 match = loc;
                 break;
             }
@@ -210,19 +217,5 @@ class ResBundleBase {
         }
 
         return match;
-    }
-
-    /**
-     * Tests whether two strings match - they can either both be {@code null}. or both have the same non-{@code null}
-     * value.
-     *
-     * @param arg1 the first string
-     * @param arg2 the second string
-     * @return {@code true} if the strings match; {@code false} if not
-     */
-    private static boolean matches(final String arg1, final String arg2) {
-
-        // TODO: Deprecate this, replace instances with the following
-        return Objects.equals(arg1, arg2);
     }
 }

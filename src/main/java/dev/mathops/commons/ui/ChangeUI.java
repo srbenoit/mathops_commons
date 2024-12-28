@@ -8,6 +8,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 /**
  * A convenience class to house the static code to change to the Nimbus UI.
  */
+@Deprecated
 public final class ChangeUI {
 
     /**
@@ -21,12 +22,14 @@ public final class ChangeUI {
     /**
      * Sets the UI to the Nimbus UI.
      */
+    @Deprecated
     public static void changeUI() {
 
         final UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
         UIManager.LookAndFeelInfo selected = null;
         for (final UIManager.LookAndFeelInfo test : lafs) {
-            if ("Nimbus".equals(test.getName())) {
+            final String name = test.getName();
+            if ("Nimbus".equals(name)) {
                 selected = test;
                 break;
             }
@@ -34,7 +37,8 @@ public final class ChangeUI {
 
         if (selected != null) {
             try {
-                UIManager.setLookAndFeel(selected.getClassName());
+                final String className = selected.getClassName();
+                UIManager.setLookAndFeel(className);
             } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException
                            | UnsupportedLookAndFeelException ex) {
                 Log.warning(ex);

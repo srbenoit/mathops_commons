@@ -24,8 +24,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager2;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +32,13 @@ import java.util.List;
  * each of the four edges. They will then "stack" from the edge toward the center, as if a sequence of nested containers
  * with {@code BorderLayout} layouts were created.
  */
-public class StackedBorderLayout implements LayoutManager2, Serializable {
+public class StackedBorderLayout implements LayoutManager2 {
 
     /** The horizontal gaps between components. */
-    private int hgap;
+    private final int hgap;
 
     /** The vertical gaps between components. */
-    private int vgap;
+    private final int vgap;
 
     /** Constant to specify components location to be the north portion of the border layout. */
     private final List<Component> north;
@@ -55,7 +53,7 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
     private final List<Component> south;
 
     /** Constant to specify components location to be the center portion of the border layout. */
-    private Component center;
+    private Component center = null;
 
     /** The north layout constraint (top of container). */
     public static final String NORTH = "North";
@@ -71,10 +69,6 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
 
     /** The center layout constraint (middle of container). */
     public static final String CENTER = "Center";
-
-    /** Version for serialization. */
-    @Serial
-    private static final long serialVersionUID = 2893764923587345431L;
 
     /**
      * Constructs a new stacked border layout with no gaps between components.
@@ -114,17 +108,6 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
     }
 
     /**
-     * Sets the horizontal gap between components.
-     *
-     * @param theHorizontalGap the horizontal gap between components
-     * @since 1.1
-     */
-    public final void setHgap(final int theHorizontalGap) {
-
-        this.hgap = theHorizontalGap;
-    }
-
-    /**
      * Returns the vertical gap between components.
      *
      * @return the vertical gap between components
@@ -133,17 +116,6 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
     public final int getVgap() {
 
         return this.vgap;
-    }
-
-    /**
-     * Sets the vertical gap between components.
-     *
-     * @param theVerticalGap the vertical gap between components
-     * @since 1.1
-     */
-    public final void setVgap(final int theVerticalGap) {
-
-        this.vgap = theVerticalGap;
     }
 
     /**
@@ -244,34 +216,34 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
         synchronized (parent.getTreeLock()) {
             final Dimension dim = new Dimension(0, 0);
 
-            for (final Component c : this.east) {
-                final Dimension d = c.getMinimumSize();
-                dim.width += d.width + this.hgap;
-                dim.height = Math.max(d.height, dim.height);
+            for (final Component component : this.east) {
+                final Dimension minSize = component.getMinimumSize();
+                dim.width += minSize.width + this.hgap;
+                dim.height = Math.max(minSize.height, dim.height);
             }
 
-            for (final Component c : this.west) {
-                final Dimension d = c.getMinimumSize();
-                dim.width += d.width + this.hgap;
-                dim.height = Math.max(d.height, dim.height);
+            for (final Component component : this.west) {
+                final Dimension minSize = component.getMinimumSize();
+                dim.width += minSize.width + this.hgap;
+                dim.height = Math.max(minSize.height, dim.height);
             }
 
             if (this.center != null) {
-                final Dimension d = this.center.getMinimumSize();
-                dim.width += d.width;
-                dim.height = Math.max(d.height, dim.height);
+                final Dimension minSize = this.center.getMinimumSize();
+                dim.width += minSize.width;
+                dim.height = Math.max(minSize.height, dim.height);
             }
 
-            for (final Component c : this.north) {
-                final Dimension d = c.getMinimumSize();
-                dim.width = Math.max(d.width, dim.width);
-                dim.height += d.height + this.vgap;
+            for (final Component component : this.north) {
+                final Dimension minSize = component.getMinimumSize();
+                dim.width = Math.max(minSize.width, dim.width);
+                dim.height += minSize.height + this.vgap;
             }
 
-            for (final Component c : this.south) {
-                final Dimension d = c.getMinimumSize();
-                dim.width = Math.max(d.width, dim.width);
-                dim.height += d.height + this.vgap;
+            for (final Component component : this.south) {
+                final Dimension minSize = component.getMinimumSize();
+                dim.width = Math.max(minSize.width, dim.width);
+                dim.height += minSize.height + this.vgap;
             }
 
             final Insets insets = parent.getInsets();
@@ -298,31 +270,31 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
         synchronized (parent.getTreeLock()) {
             final Dimension dim = new Dimension(0, 0);
 
-            for (final Component c : this.east) {
-                final Dimension d = c.getPreferredSize();
-                dim.width += d.width + this.hgap;
-                dim.height = Math.max(d.height, dim.height);
+            for (final Component component : this.east) {
+                final Dimension prefSize = component.getPreferredSize();
+                dim.width += prefSize.width + this.hgap;
+                dim.height = Math.max(prefSize.height, dim.height);
             }
 
-            for (final Component c : this.west) {
-                final Dimension d = c.getPreferredSize();
-                dim.width += d.width + this.hgap;
-                dim.height = Math.max(d.height, dim.height);
+            for (final Component component : this.west) {
+                final Dimension prefSize = component.getPreferredSize();
+                dim.width += prefSize.width + this.hgap;
+                dim.height = Math.max(prefSize.height, dim.height);
             }
             if (this.center != null) {
-                final Dimension d = this.center.getPreferredSize();
-                dim.width += d.width;
-                dim.height = Math.max(d.height, dim.height);
+                final Dimension prefSize = this.center.getPreferredSize();
+                dim.width += prefSize.width;
+                dim.height = Math.max(prefSize.height, dim.height);
             }
-            for (final Component c : this.north) {
-                final Dimension d = c.getPreferredSize();
-                dim.width = Math.max(d.width, dim.width);
-                dim.height += d.height + this.vgap;
+            for (final Component component : this.north) {
+                final Dimension prefSize = component.getPreferredSize();
+                dim.width = Math.max(prefSize.width, dim.width);
+                dim.height += prefSize.height + this.vgap;
             }
-            for (final Component c : this.south) {
-                final Dimension d = c.getPreferredSize();
-                dim.width = Math.max(d.width, dim.width);
-                dim.height += d.height + this.vgap;
+            for (final Component component : this.south) {
+                final Dimension prefSize = component.getPreferredSize();
+                dim.width = Math.max(prefSize.width, dim.width);
+                dim.height += prefSize.height + this.vgap;
             }
 
             final Insets insets = parent.getInsets();
@@ -400,32 +372,36 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
             int left = insets.left;
             int right = parent.getWidth() - insets.right;
 
-            for (final Component c : this.north) {
-                c.setSize(right - left, c.getHeight());
-                final Dimension d = c.getPreferredSize();
-                c.setBounds(left, top, right - left, d.height);
-                top += d.height + this.vgap;
+            for (final Component component : this.north) {
+                final int componentHeight = component.getHeight();
+                component.setSize(right - left, componentHeight);
+                final Dimension prefSize = component.getPreferredSize();
+                component.setBounds(left, top, right - left, prefSize.height);
+                top += prefSize.height + this.vgap;
             }
 
-            for (final Component c : this.south) {
-                c.setSize(right - left, c.getHeight());
-                final Dimension d = c.getPreferredSize();
-                c.setBounds(left, bottom - d.height, right - left, d.height);
-                bottom -= d.height + this.vgap;
+            for (final Component component : this.south) {
+                final int componentHeight = component.getHeight();
+                component.setSize(right - left, componentHeight);
+                final Dimension prefSize = component.getPreferredSize();
+                component.setBounds(left, bottom - prefSize.height, right - left, prefSize.height);
+                bottom -= prefSize.height + this.vgap;
             }
 
-            for (final Component c : this.east) {
-                c.setSize(c.getWidth(), bottom - top);
-                final Dimension d = c.getPreferredSize();
-                c.setBounds(right - d.width, top, d.width, bottom - top);
-                right -= d.width + this.hgap;
+            for (final Component component : this.east) {
+                final int componentWidth = component.getWidth();
+                component.setSize(componentWidth, bottom - top);
+                final Dimension prefSize = component.getPreferredSize();
+                component.setBounds(right - prefSize.width, top, prefSize.width, bottom - top);
+                right -= prefSize.width + this.hgap;
             }
 
-            for (final Component c : this.west) {
-                c.setSize(c.getWidth(), bottom - top);
-                final Dimension d = c.getPreferredSize();
-                c.setBounds(left, top, d.width, bottom - top);
-                left += d.width + this.hgap;
+            for (final Component component : this.west) {
+                final int componentWidth = component.getWidth();
+                component.setSize(componentWidth, bottom - top);
+                final Dimension prefSize = component.getPreferredSize();
+                component.setBounds(left, top, prefSize.width, bottom - top);
+                left += prefSize.width + this.hgap;
             }
 
             if (this.center != null) {
@@ -442,7 +418,12 @@ public class StackedBorderLayout implements LayoutManager2, Serializable {
     @Override
     public final String toString() {
 
-        return SimpleBuilder.concat(getClass().getName(), "[hgap=",
-                Integer.toString(this.hgap), ",vgap=", Integer.toString(this.vgap), "]");
+        final Class<? extends StackedBorderLayout> cls = getClass();
+        final String className = cls.getName();
+
+        final String hGapStr = Integer.toString(this.hgap);
+        final String vGapStr = Integer.toString(this.vgap);
+
+        return SimpleBuilder.concat(className, "[hgap=", hGapStr, ",vgap=", vGapStr, "]");
     }
 }

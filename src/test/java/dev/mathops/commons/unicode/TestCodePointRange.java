@@ -19,7 +19,7 @@ final class TestCodePointRange {
 
         final CodePointRange range = new CodePointRange(100, 200);
 
-        assertEquals(range.min, 100, "Constructor 1");
+        assertEquals(100, range.min, "Constructor 1");
     }
 
     /** Test case. */
@@ -29,7 +29,7 @@ final class TestCodePointRange {
 
         final CodePointRange range = new CodePointRange(100, 200);
 
-        assertEquals(range.max, 200, "Constructor 2");
+        assertEquals(200, range.max, "Constructor 2");
     }
 
     /** Test case. */
@@ -39,7 +39,8 @@ final class TestCodePointRange {
 
         final CodePointRange range = new CodePointRange(100, 200);
 
-        assertFalse(range.isInRange(99), "IsInRange 1");
+        final boolean inRange = range.isInRange(99);
+        assertFalse(inRange, "IsInRange 1");
     }
 
     /** Test case. */
@@ -49,7 +50,8 @@ final class TestCodePointRange {
 
         final CodePointRange range = new CodePointRange(100, 200);
 
-        assertTrue(range.isInRange(100), "IsInRange 2");
+        final boolean inRange = range.isInRange(100);
+        assertTrue(inRange, "IsInRange 2");
     }
 
     /** Test case. */
@@ -59,7 +61,8 @@ final class TestCodePointRange {
 
         final CodePointRange range = new CodePointRange(100, 200);
 
-        assertTrue(range.isInRange(200), "IsInRange 3");
+        final boolean inRange = range.isInRange(200);
+        assertTrue(inRange, "IsInRange 3");
     }
 
     /** Test case. */
@@ -69,6 +72,7 @@ final class TestCodePointRange {
 
         final CodePointRange range = new CodePointRange(100, 200);
 
-        assertFalse(range.isInRange(201), "IsInRange 4");
+        final boolean inRange = range.isInRange(201);
+        assertFalse(inRange, "IsInRange 4");
     }
 }

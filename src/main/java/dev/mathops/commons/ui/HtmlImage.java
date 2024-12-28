@@ -35,7 +35,7 @@ public final class HtmlImage {
     private final double pointSize;
 
     /** The cached PNG file representation of the image. */
-    private byte[] png;
+    private byte[] png = null;
 
     /** Alt text. */
     private final String alt;
@@ -55,7 +55,6 @@ public final class HtmlImage {
         this.img = theImg;
         this.vOffset = theVOffset;
         this.pointSize = thePointSize;
-        this.png = null;
         this.alt = theAlt;
     }
 
@@ -67,17 +66,17 @@ public final class HtmlImage {
     private byte[] toPng() {
 
         if (this.png == null) {
-            final Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("png");
+            final Iterator<ImageWriter> iterator = ImageIO.getImageWritersByFormatName("png");
 
-            if (iter.hasNext()) {
-                final ImageWriter writer = iter.next();
+            if (iterator.hasNext()) {
+                final ImageWriter writer = iterator.next();
 
-                try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                     final Closeable stream = new MemoryCacheImageOutputStream(baos)) {
+                try (final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                     final Closeable stream = new MemoryCacheImageOutputStream(out)) {
 
                     writer.setOutput(stream);
                     writer.write(this.img);
-                    this.png = baos.toByteArray();
+                    this.png = out.toByteArray();
                 } catch (final IOException ex) {
                     Log.warning(ex);
                 }
@@ -97,14 +96,19 @@ public final class HtmlImage {
     public String toImg(final double overScale) {
 
         final HtmlBuilder xml = new HtmlBuilder(2000);
-        final byte[] base64 = Base64.encode(toPng()).getBytes(StandardCharsets.UTF_8);
+        final byte[] data = toPng();
+        final byte[] base64 = Base64.encode(data).getBytes(StandardCharsets.UTF_8);
 
         final double scale = 1.0 / this.pointSize / overScale;
 
-        xml.add("<img style='vertical-align:baseline;margin-bottom:",
-                Double.toString(this.vOffset / this.pointSize), "em;width:",
-                Double.toString((double) this.img.getWidth() * scale), "em;height:",
-                Double.toString((double) this.img.getHeight() * scale), "em;' src='data:image/png;base64,",
+        final String marginBottomStr = Double.toString(this.vOffset / this.pointSize);
+
+        final int imgWidth = this.img.getWidth();
+        final int imgHeight = this.img.getHeight();
+        final String widthStr = Double.toString((double) imgWidth * scale);
+        final String heightStr = Double.toString((double) imgHeight * scale);
+        xml.add("<img style='vertical-align:baseline;margin-bottom:", marginBottomStr, "em;width:", widthStr,
+                "em;height:", heightStr, "em;' src='data:image/png;base64,",
                 new String(base64, StandardCharsets.UTF_8));
 
         if (this.alt != null) {

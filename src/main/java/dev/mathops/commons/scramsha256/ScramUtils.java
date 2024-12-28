@@ -148,8 +148,9 @@ enum ScramUtils {
 
             final byte[] keyXorIpad = new byte[64];
             final byte[] keyXorOpad = new byte[64];
-            System.arraycopy(actualKey, 0, keyXorIpad, 0, Math.min(64, actualKey.length));
-            System.arraycopy(actualKey, 0, keyXorOpad, 0, Math.min(64, actualKey.length));
+            final int usedKeyLength = Math.min(64, actualKey.length);
+            System.arraycopy(actualKey, 0, keyXorIpad, 0, usedKeyLength);
+            System.arraycopy(actualKey, 0, keyXorOpad, 0, usedKeyLength);
             for (int i = 0; i < 64; ++i) {
                 keyXorIpad[i] = (byte) ((int) keyXorIpad[i] ^ 0x36);
                 keyXorOpad[i] = (byte) ((int) keyXorOpad[i] ^ 0x5C);
@@ -176,28 +177,28 @@ enum ScramUtils {
     /**
      * Computes the "HI" iterated hash of a string with a salt and iteration count.
      *
-     * @param stringBytes the string to hash
-     * @param salt        the salt
-     * @param iterCount   the iteration count
+     * @param stringBytes    the string to hash
+     * @param salt           the salt
+     * @param iterationCount the iteration count
      * @return the iterated hash
      */
-    static byte[] hi(final byte[] stringBytes, final byte[] salt, final int iterCount) {
+    static byte[] hi(final byte[] stringBytes, final byte[] salt, final int iterationCount) {
 
         final byte[] u1str = new byte[salt.length + 4];
         System.arraycopy(salt, 0, u1str, 0, salt.length);
-        u1str[salt.length] = (byte) (iterCount >> 24);
-        u1str[salt.length + 1] = (byte) (iterCount >> 16);
-        u1str[salt.length + 2] = (byte) (iterCount >> 8);
-        u1str[salt.length + 3] = (byte) iterCount;
+        u1str[salt.length] = (byte) (iterationCount >> 24);
+        u1str[salt.length + 1] = (byte) (iterationCount >> 16);
+        u1str[salt.length + 2] = (byte) (iterationCount >> 8);
+        u1str[salt.length + 3] = (byte) iterationCount;
 
         final byte[] hi = new byte[32];
 
-        final byte[][] u = new byte[iterCount][];
+        final byte[][] u = new byte[iterationCount][];
 
         u[0] = hmac_sha_256(stringBytes, u1str);
         System.arraycopy(u[0], 0, hi, 0, 32);
 
-        for (int i = 1; i < iterCount; ++i) {
+        for (int i = 1; i < iterationCount; ++i) {
             u[i] = hmac_sha_256(stringBytes, u[i - 1]);
 
             for (int j = 0; j < 32; ++j) {

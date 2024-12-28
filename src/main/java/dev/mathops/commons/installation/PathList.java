@@ -1,7 +1,7 @@
-package dev.mathops.commons;
+package dev.mathops.commons.installation;
 
+import dev.mathops.commons.CoreConstants;
 import dev.mathops.commons.builder.HtmlBuilder;
-import dev.mathops.commons.installation.Installations;
 import dev.mathops.commons.log.Log;
 
 import java.io.File;
@@ -12,10 +12,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
 
 /**
  * A class to read and store the list of path names where files are stored.
@@ -29,10 +29,10 @@ public final class PathList {
     private static final String EQUALS = "=";
 
     /** Left brace character. */
-    private static final String LBRACE = "{";
+    private static final String LEFT_BRACE = "{";
 
     /** Right brace character. */
-    private static final String RBRACE = "}";
+    private static final String RIGHT_BRACE = "}";
 
     /** Object on which to synchronize creation of singleton instance. */
     private static final Object SYNCH = new Object();
@@ -44,7 +44,7 @@ public final class PathList {
     private static PathList instance = null;
 
     /** The base installation directory. */
-    public final File baseDir;
+    private final File baseDir;
 
     /** A map from a path enumeration to the corresponding path. */
     private final Map<EPath, File> paths;
@@ -59,7 +59,7 @@ public final class PathList {
         super();
 
         this.baseDir = theBaseDir;
-        this.paths = new TreeMap<>();
+        this.paths = new EnumMap<>(EPath.class);
 
         final Properties defaults = loadDefaults();
 
@@ -70,12 +70,18 @@ public final class PathList {
             try (final InputStream input = new FileInputStream(file)) {
                 props.load(input);
             } catch (final IOException ex) {
-                Log.warning(Res.fmt(Res.PATH_LIST_READ_ERR, file.getAbsolutePath()), ex.getMessage());
+                final String absolutePath = file.getAbsolutePath();
+                final String errMsg = Res.fmt(Res.PATH_LIST_READ_ERR, absolutePath);
+                final String msg = ex.getMessage();
+                Log.warning(errMsg, msg);
             }
         }
 
         for (final EPath path : EPath.values()) {
-            this.paths.put(path, makeFile(props.getProperty(path.key)));
+            final String key = path.getKey();
+            final String value = props.getProperty(key);
+            final File propsFile = makeFile(value);
+            this.paths.put(path, propsFile);
         }
     }
 
@@ -100,19 +106,21 @@ public final class PathList {
 
         final EPath[] values = EPath.values();
         for (final EPath value : values) {
-            String defPath = value.defaultPath;
+            String defPath = value.getDefaultPath();
 
             if (defPath != null) {
                 // See if there is a replacement string, and apply it
                 for (final EPath ePath : values) {
-                    final String replacement = defaults.getProperty(ePath.key);
+                    final String key = ePath.getKey();
+                    final String replacement = defaults.getProperty(key);
                     if (replacement != null) {
-                        final String str = LBRACE + ePath.key + RBRACE;
+                        final String str = LEFT_BRACE + key + RIGHT_BRACE;
                         defPath = defPath.replace(str, replacement);
                     }
                 }
 
-                defaults.setProperty(value.key, defPath);
+                final String valueKey = value.getKey();
+                defaults.setProperty(valueKey, defPath);
             }
         }
 
@@ -142,8 +150,8 @@ public final class PathList {
             if (instance == null) {
                 instance = new PathList(Installations.DEF_BASE_DIR);
             }
+            return instance;
         }
-        return instance;
     }
 
     /**
@@ -154,29 +162,28 @@ public final class PathList {
      */
     private File makeFile(final String path) {
 
-        final File result;
+        String actualPath = path;
+        File result = null;
 
-        if (path == null) {
-            result = null;
-        } else {
-            String str = path;
+        if (actualPath != null) {
             final EPath[] values = EPath.values();
             for (final EPath value : values) {
                 final File replacement = this.paths.get(value);
                 if (replacement != null) {
-                    final String testStr = LBRACE + value.key + RBRACE;
-                    str = str.replace(testStr, normalize(replacement));
+                    final String testStr = LEFT_BRACE + value.getKey() + RIGHT_BRACE;
+                    final String normalized = normalize(replacement);
+                    actualPath = actualPath.replace(testStr, normalized);
                 }
             }
 
-            result = new File(str);
+            result = new File(actualPath);
         }
 
         return result;
     }
 
     /**
-     * Generates the normalize path of a file, which is an absolute path using '/' as a file separator.
+     * Generates the normalized path of a file, which is an absolute path using '/' as a file separator.
      *
      * @param file the file
      * @return the normalized path, of the form "/a/b/c/name"
@@ -187,16 +194,27 @@ public final class PathList {
         File parent = file.getParentFile();
 
         if (parent != null) {
-            final StringBuilder str = new StringBuilder(50);
+            final StringBuilder builder = new StringBuilder(50);
             while (parent != null) {
-                str.setLength(0);
-                str.append(parent.getName()).append(CoreConstants.SLASH).append(path);
-                path = str.toString();
+                builder.setLength(0);
+                final String parentName = parent.getName();
+                builder.append(parentName).append(CoreConstants.SLASH).append(path);
+                path = builder.toString();
                 parent = parent.getParentFile();
             }
         }
 
         return path;
+    }
+
+    /**
+     * Retrieves the base directory.
+     *
+     * @return the base directory
+     */
+    public File getBaseDir() {
+
+        return this.baseDir;
     }
 
     /**
@@ -219,16 +237,21 @@ public final class PathList {
     public void setPaths(final Map<EPath, ? extends File> newPaths) {
 
         if (newPaths.get(EPath.BASE_DIR) == null) {
-            throw new IllegalArgumentException(Res.get(Res.PATH_LIST_NO_BASE));
+            final String errMsg = Res.get(Res.PATH_LIST_NO_BASE);
+            throw new IllegalArgumentException(errMsg);
         }
 
         this.paths.clear();
         this.paths.putAll(newPaths);
 
-        final HtmlBuilder str = new HtmlBuilder(500);
+        final HtmlBuilder builder = new HtmlBuilder(500);
 
-        str.addln("# Created by ", getClass().getName(), " on ", LocalDateTime.now().format(DATE_FMT));
-        str.addln();
+        final Class<? extends PathList> myClass = getClass();
+        final String myClassName = myClass.getName();
+        final LocalDateTime now = LocalDateTime.now();
+        final String formattedNow = now.format(DATE_FMT);
+        builder.addln("# Created by ", myClassName, " on ", formattedNow);
+        builder.addln();
 
         final EPath[] values = EPath.values();
         for (final EPath value : values) {
@@ -237,22 +260,31 @@ public final class PathList {
             }
             final File theFile = newPaths.get(value);
             if (theFile != null) {
+                final String key = value.getKey();
                 if (theFile.getAbsolutePath().startsWith("C:\\")) {
-                    str.addln(value.key, EQUALS, normalize(theFile));
+                    final String normalized = normalize(theFile);
+                    builder.addln(key, EQUALS, normalized);
                 } else {
-                    str.addln(value.key, EQUALS, theFile.getAbsolutePath());
+                    final String absolutePath = theFile.getAbsolutePath();
+                    builder.addln(key, EQUALS, absolutePath);
                 }
             }
         }
 
-        str.addln();
+        builder.addln();
 
-        final File file = new File(newPaths.get(EPath.BASE_DIR), PATHS_FILE_NAME);
+        final File newBaseDir = newPaths.get(EPath.BASE_DIR);
+        final File file = new File(newBaseDir, PATHS_FILE_NAME);
 
         try (final FileOutputStream output = new FileOutputStream(file)) {
-            output.write(str.toString().getBytes(StandardCharsets.UTF_8));
+            final String str = builder.toString();
+            final byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+            output.write(bytes);
         } catch (final IOException ex) {
-            Log.warning(Res.fmt(Res.PATH_LIST_WRITE_ERR, file.getAbsolutePath()), ex.getMessage());
+            final String absolutePath = file.getAbsolutePath();
+            final String errMsg = Res.fmt(Res.PATH_LIST_WRITE_ERR, absolutePath);
+            final String msg = ex.getMessage();
+            Log.warning(errMsg, msg);
         }
     }
 }

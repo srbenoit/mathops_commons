@@ -39,7 +39,7 @@ public enum FileLoader {
     /** Underscore character. */
     private static final char UNDERSCORE = '_';
 
-    /** An empty string array. */
+    /** An empty string array used when constructing string arrays. */
     private static final String[] EMPTY_STR_ARRAY = new String[0];
 
     /**
@@ -62,18 +62,16 @@ public enum FileLoader {
             final int count = input.read(buffer);
             if (count == len) {
                 result = new String(buffer, StandardCharsets.UTF_8);
-            } else {
-                if (logFail) {
-                    final String filename = file.getName();
-                    final String msg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
-                    Log.warning(msg);
-                }
+            } else if (logFail) {
+                final String filename = file.getName();
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
+                Log.warning(errMsg);
             }
         } catch (final IOException ex) {
             if (logFail) {
                 final String filename = file.getName();
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -96,13 +94,13 @@ public enum FileLoader {
         String result = null;
 
         try (final InputStream input = openInputStream(caller, name, logFail)) {
-            final HtmlBuilder htm = new HtmlBuilder(BUF_SIZE);
-            readStreamAsString(input, htm);
-            result = htm.toString();
+            final HtmlBuilder builder = new HtmlBuilder(BUF_SIZE);
+            readStreamAsString(input, builder);
+            result = builder.toString();
         } catch (final IOException ex) {
             if (logFail) {
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, name);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, name);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -116,8 +114,7 @@ public enum FileLoader {
      * @param builder a {@code HtmlBuilder} to which to add the loaded text from the stream
      * @throws IOException if an error occurred reading from the stream
      */
-    private static void readStreamAsString(final InputStream stream, final HtmlBuilder builder)
-            throws IOException {
+    private static void readStreamAsString(final InputStream stream, final HtmlBuilder builder) throws IOException {
 
         try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
@@ -142,8 +139,8 @@ public enum FileLoader {
         } catch (final IOException ex) {
             if (logFail) {
                 final String filename = file.getName();
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -167,8 +164,8 @@ public enum FileLoader {
             result = readStreamAsLines(input);
         } catch (final IOException ex) {
             if (logFail) {
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, name);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, name);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -215,14 +212,14 @@ public enum FileLoader {
         } catch (final FileNotFoundException ex) {
             if (logFail) {
                 final String filename = file.getName();
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
-                Log.warning(msg);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
+                Log.warning(errMsg);
             }
         } catch (final IOException ex) {
             if (logFail) {
                 final String filename = file.getName();
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -246,8 +243,8 @@ public enum FileLoader {
             result = readStreamAsBytes(input);
         } catch (final IOException ex) {
             if (logFail) {
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, name);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, name);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -270,8 +267,8 @@ public enum FileLoader {
             result = readStreamAsBytes(input, start, end);
         } catch (final IOException ex) {
             final String filename = file.getName();
-            final String msg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
-            Log.warning(msg, ex);
+            final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
+            Log.warning(errMsg, ex);
         }
 
         return result;
@@ -289,13 +286,13 @@ public enum FileLoader {
         final byte[] buffer = new byte[BUF_SIZE];
         final byte[] result;
 
-        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream(BUF_SIZE)) {
+        try (final ByteArrayOutputStream out = new ByteArrayOutputStream(BUF_SIZE)) {
             int count = stream.read(buffer);
             while (count != -1) {
-                baos.write(buffer, 0, count);
+                out.write(buffer, 0, count);
                 count = stream.read(buffer);
             }
-            result = baos.toByteArray();
+            result = out.toByteArray();
         }
 
         return result;
@@ -322,13 +319,13 @@ public enum FileLoader {
         }
 
         try (final ByteArrayOutputStream out = new ByteArrayOutputStream(BUF_SIZE)) {
-            long min = Math.min(remainToRead, buffer.length);
-            int count = stream.read(buffer, 0, (int) min);
+            long numToRead = Math.min(remainToRead, (long) buffer.length);
+            int count = stream.read(buffer, 0, (int) numToRead);
             while (count != -1 && remainToRead > 0L) {
                 out.write(buffer, 0, count);
                 remainToRead = remainToRead - (long) count;
-                min = Math.min(remainToRead, buffer.length);
-                count = stream.read(buffer, 0, (int) min);
+                numToRead = Math.min(remainToRead, (long) buffer.length);
+                count = stream.read(buffer, 0, (int) numToRead);
             }
             result = out.toByteArray();
         }
@@ -352,8 +349,8 @@ public enum FileLoader {
         } catch (final IOException ex) {
             if (logFail) {
                 final String filename = file.getName();
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -377,8 +374,8 @@ public enum FileLoader {
             img = ImageIO.read(input);
         } catch (final IOException ex) {
             if (logFail) {
-                final String msg = Res.fmt(Res.FILE_LOAD_FAIL, path);
-                Log.warning(msg, ex);
+                final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, path);
+                Log.warning(errMsg, ex);
             }
         }
 
@@ -415,8 +412,8 @@ public enum FileLoader {
             } catch (final IOException ex) {
                 if (logFail) {
                     final String path = file2.getAbsolutePath();
-                    final String msg = Res.fmt(Res.FILE_LOAD_FAIL, path);
-                    Log.warning(msg, ex);
+                    final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, path);
+                    Log.warning(errMsg, ex);
                 }
             }
         }
@@ -442,7 +439,7 @@ public enum FileLoader {
     public static Properties loadFileAsProperties(final Class<?> caller, final String base,
                                                   final Properties def, final boolean logFail) {
 
-        Properties res = def;
+        Properties res;
 
         // look for a file qualified with the locale name, then for a file with no qualifications
         final Locale defaultLocale = Locale.getDefault();
@@ -460,9 +457,10 @@ public enum FileLoader {
                 res.load(isr);
             } catch (final IOException ex2) {
                 if (logFail) {
-                    final String msg = Res.fmt(Res.FILE_LOAD_FAIL, base + PROPS_EXT);
-                    Log.warning(msg, ex2);
+                    final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, base + PROPS_EXT);
+                    Log.warning(errMsg, ex2);
                 }
+                res = def;
             }
         }
 
@@ -482,104 +480,35 @@ public enum FileLoader {
     public static InputStream openInputStream(final Class<?> caller, final String name, final boolean logFail)
             throws IOException {
 
-        final String classname = caller.getName();
-        final String path;
-        final int lastDot = classname.lastIndexOf('.');
-        if (lastDot == -1) {
-            path = name;
-        } else {
-            final String packagename = classname.substring(0, lastDot);
-            path = "/" + packagename.replace('.', '/') + "/" + name;
-        }
-
-        // Let the calling class try to locate the resource
         InputStream input = caller.getResourceAsStream(name);
-        if (input == null) {
-            Log.warning("  *** ", caller.getName(), ".getResourceAsStream(", name, ") failed");
-            final ClassLoader loader = caller.getClassLoader();
-            input = loader.getResourceAsStream(name);
-            if (input == null) {
-                Log.warning("  *** ", caller.getName(), ".getClassLoader().getResourceAsStream(", name, ") failed");
-                input = caller.getResourceAsStream(path);
 
-                if (input == null) {
-                    Log.warning("  *** ", caller.getName(), ".getResourceAsStream(", path, ") failed");
-                    input = loader.getResourceAsStream(path);
-                    if (input == null) {
-                        Log.warning("  *** ", caller.getName(), ".getClassLoader().getResourceAsStream(", path, ") failed");
-                    }
-                }
-            }
+        if (input == null) {
+            input = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
         }
 
         if (input == null) {
-            // Could be in a foreign module - let the module classloader try
-            final Module module = caller.getModule();
-            input = module.getResourceAsStream(name);
-            if (input == null) {
-                Log.warning("  *** ", module.getName(), ".getResourceAsStream(", name, ") failed");
-                final ClassLoader loader = module.getClassLoader();
-                input = loader.getResourceAsStream(name);
-                if (input == null) {
-                    Log.warning("  *** ", module.getName(), ".getClassLoader().getResourceAsStream(", name, ") failed");
-                    input = caller.getResourceAsStream(path);
-
-                    if (input == null) {
-                        Log.warning("  *** ", module.getName(), ".getResourceAsStream(", path, ") failed");
-                        input = loader.getResourceAsStream(path);
-                        if (input == null) {
-                            Log.warning("  *** ", module.getName(), ".getClassLoader().getResourceAsStream(", path,
-                                    ") failed");
-                        }
-                    }
-                }
-            }
-        }
-
-        if (input == null) {
-            // Next, let the thread context class loader try
-            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            input = loader.getResourceAsStream(name);
-            if (input == null) {
-                Log.warning("  *** Thread.currentThread().getContextClassLoader().getResourceAsStream(", name, ") failed");
-                input = loader.getResourceAsStream(path);
-                if (input == null) {
-                    Log.warning("  *** Thread.currentThread().getContextClassLoader().getResourceAsStream(", path, ") failed");
-                }
-            }
-        }
-
-        if (input == null) {
-            // Try the system class loader
             input = ClassLoader.getSystemResourceAsStream(name);
-            if (input == null) {
-                Log.warning("  *** ClassLoader.getSystemResourceAsStream(", name, ") failed");
-                input = ClassLoader.getSystemResourceAsStream(path);
-                if (input == null) {
-                    Log.warning("  *** ClassLoader.getSystemResourceAsStream(", path, ") failed");
-                }
-            }
         }
 
         if (input == null) {
             // Last chance - look in the working directory
-            final File file = new File(System.getProperty("user.dir"));
+            final String userDir = System.getProperty("user.dir");
+            final File file = new File(userDir);
 
             try {
-                input = new FileInputStream(new File(file, path));
+                input = new FileInputStream(new File(file, name));
             } catch (final FileNotFoundException ex) {
-                if (logFail) {
-                    final String callerName = caller.getName();
-                    final String msg = Res.fmt(Res.FILE_NOT_FOUND, callerName, name);
-                    Log.fine(msg);
-                }
+                // No action
             }
         }
 
         if (input == null) {
             final String callerName = caller.getName();
-            final String msg = Res.fmt(Res.FILE_NOT_FOUND, callerName, name);
-            throw new IOException(msg);
+            final String errMsg = Res.fmt(Res.FILE_NOT_FOUND, callerName, name);
+            if (logFail) {
+                Log.fine(errMsg);
+            }
+            throw new IOException(errMsg);
         }
 
         return input;

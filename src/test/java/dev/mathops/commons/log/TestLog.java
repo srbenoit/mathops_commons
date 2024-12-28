@@ -75,7 +75,7 @@ final class TestLog {
     /** The seventh log file generated. */
     private static final File FILE07 = new File(DIR, "testlog_007.log");
 
-    /** The eighthl og file generated. */
+    /** The eighth og file generated. */
     private static final File FILE08 = new File(DIR, "testlog_008.log");
 
     /** The ninth log file generated. */
@@ -214,7 +214,8 @@ final class TestLog {
         LoggingSubsystem.getSettings().setLogToConsole(false);
 
         final File file = new File(LOG_DIR, FNAME001);
-        assertFalse(file.exists(), "No logging to files: a log file was created");
+        final boolean exists = file.exists();
+        assertFalse(exists, "No logging to files: a log file was created");
     }
 
     /**
@@ -244,7 +245,8 @@ final class TestLog {
         LoggingSubsystem.getSettings().setLogToConsole(false);
 
         final File file = new File(LOG_DIR, FNAME001);
-        assertFalse(file.exists(), "No logging to files with installation: a log file was created");
+        final boolean exists = file.exists();
+        assertFalse(exists, "No logging to files with installation: a log file was created");
     }
 
     /**
@@ -261,17 +263,38 @@ final class TestLog {
         setLogSettings();
         logMessages();
 
-        assertFalse(FILE01.exists(), "Logging with null installation: file 1 created");
-        assertFalse(FILE02.exists(), "Logging with null installation: file 2 created");
-        assertFalse(FILE03.exists(), "Logging with null installation: file 3 created");
-        assertFalse(FILE04.exists(), "Logging with null installation: file 4 created");
-        assertFalse(FILE05.exists(), "Logging with null installation: file 5 created");
-        assertFalse(FILE06.exists(), "Logging with null installation: file 6 created");
-        assertFalse(FILE07.exists(), "Logging with null installation: file 7 created");
-        assertFalse(FILE08.exists(), "Logging with null installation: file 8 created");
-        assertFalse(FILE09.exists(), "Logging with null installation: file 9 created");
-        assertFalse(FILE10.exists(), "Logging with null installation: file 10 created");
-        assertFalse(FILE11.exists(), "Logging with null installation: file 11 created");
+        final boolean file1Exists = FILE01.exists();
+        assertFalse(file1Exists, "Logging with null installation: file 1 created");
+
+        final boolean file2exists = FILE02.exists();
+        assertFalse(file2exists, "Logging with null installation: file 2 created");
+
+        final boolean file3exists = FILE03.exists();
+        assertFalse(file3exists, "Logging with null installation: file 3 created");
+
+        final boolean file4exists = FILE04.exists();
+        assertFalse(file4exists, "Logging with null installation: file 4 created");
+
+        final boolean file5exists = FILE05.exists();
+        assertFalse(file5exists, "Logging with null installation: file 5 created");
+
+        final boolean file6exists = FILE06.exists();
+        assertFalse(file6exists, "Logging with null installation: file 6 created");
+
+        final boolean file7exists = FILE07.exists();
+        assertFalse(file7exists, "Logging with null installation: file 7 created");
+
+        final boolean files8exists = FILE08.exists();
+        assertFalse(files8exists, "Logging with null installation: file 8 created");
+
+        final boolean file9exists = FILE09.exists();
+        assertFalse(file9exists, "Logging with null installation: file 9 created");
+
+        final boolean file10exists = FILE10.exists();
+        assertFalse(file10exists, "Logging with null installation: file 10 created");
+
+        final boolean file11exists = FILE11.exists();
+        assertFalse(file11exists, "Logging with null installation: file 11 created");
     }
 
     /**
@@ -289,25 +312,46 @@ final class TestLog {
         setLogSettings();
         logMessages();
 
-        assertTrue(FILE01.exists(), "Logging with installation: file 1 not created");
-        assertTrue(FILE02.exists(), "Logging with installation: file 2 not created");
-        assertTrue(FILE03.exists(), "Logging with installation: file 3 not created");
-        assertTrue(FILE04.exists(), "Logging with installation: file 4 not created");
-        assertTrue(FILE05.exists(), "Logging with installation: file 5 not created");
-        assertTrue(FILE06.exists(), "Logging with installation: file 6 not created");
-        assertTrue(FILE07.exists(), "Logging with installation: file 7 not created");
-        assertTrue(FILE08.exists(), "Logging with installation: file 8 not created");
-        assertTrue(FILE09.exists(), "Logging with installation: file 9 not created");
-        assertTrue(FILE10.exists(), "Logging with installation: file 10 not created");
-        assertFalse(FILE11.exists(), "Logging with installation: file 11 created");
+        final boolean file1exists = FILE01.exists();
+        assertTrue(file1exists, "Logging with installation: file 1 not created");
 
-        assertEquals(MSG11 + CoreConstants.CRLF, getFile(FILE01), "Logging with installation: file 1 contents");
+        final boolean file2exists = FILE02.exists();
+        assertTrue(file2exists, "Logging with installation: file 2 not created");
+
+        final boolean file3exists = FILE03.exists();
+        assertTrue(file3exists, "Logging with installation: file 3 not created");
+
+        final boolean file4exists = FILE04.exists();
+        assertTrue(file4exists, "Logging with installation: file 4 not created");
+
+        final boolean file5exists = FILE05.exists();
+        assertTrue(file5exists, "Logging with installation: file 5 not created");
+
+        final boolean file6exists = FILE06.exists();
+        assertTrue(file6exists, "Logging with installation: file 6 not created");
+
+        final boolean file7exists = FILE07.exists();
+        assertTrue(file7exists, "Logging with installation: file 7 not created");
+
+        final boolean file8exists = FILE08.exists();
+        assertTrue(file8exists, "Logging with installation: file 8 not created");
+
+        final boolean file9exists = FILE09.exists();
+        assertTrue(file9exists, "Logging with installation: file 9 not created");
+
+        final boolean file10exists = FILE10.exists();
+        assertTrue(file10exists, "Logging with installation: file 10 not created");
+
+        final boolean file11exists = FILE11.exists();
+        assertFalse(file11exists, "Logging with installation: file 11 created");
+
+        final String file1 = getFile(FILE01);
+        assertEquals(MSG11 + CoreConstants.CRLF, file1, "Logging with installation: file 1 contents");
 
         final String str2 = getFile(FILE02);
-        if (!checkDate(str2)) {
+        if (isDateInvalid(str2)) {
             fail("Logging with installation: file 2 date");
         }
-
 
         final String expect1 = WARN + MSG10 + TRACE;
         final int expect1Len = expect1.length();
@@ -316,54 +360,65 @@ final class TestLog {
         System.out.println("*** " + expect1);
         System.out.println("*** " + str2);
 
-        assertTrue(str2Len >= expect1Len, "Logging with installation: file 2 content len");
-        assertEquals(expect1, str2.substring(45, 45 + 3 + MSG10.length() + TRACE.length()),
-                "Logging with installation: file 2 contents");
+        final int msg10Len = MSG10.length();
+        final int traceLen = TRACE.length();
 
-        assertEquals(MSG09 + CoreConstants.CRLF, getFile(FILE03), "Logging with installation: file 3 contents");
-        assertEquals(MSG08 + CoreConstants.CRLF, getFile(FILE04), "Logging with installation: file 4 contents");
+        assertTrue(str2Len >= expect1Len, "Logging with installation: file 2 content len");
+        final String actual1 = str2.substring(45, 45 + 3 + msg10Len + traceLen);
+        assertEquals(expect1, actual1, "Logging with installation: file 2 contents");
+
+        final String file03 = getFile(FILE03);
+        assertEquals(MSG09 + CoreConstants.CRLF, file03, "Logging with installation: file 3 contents");
+        final String file04 = getFile(FILE04);
+        assertEquals(MSG08 + CoreConstants.CRLF, file04, "Logging with installation: file 4 contents");
 
         final String str5 = getFile(FILE05);
-        if (!checkDate(str5)) {
+        if (isDateInvalid(str5)) {
             fail("Logging with installation: file 5 date");
         }
-        assertEquals(EXIT + MSG07 + TRACE, str5.substring(45, 45 + 3 + MSG07.length() + TRACE.length()),
-                "Logging with installation: file 5 contents");
+        final int msg07len = MSG07.length();
+        final String actual2 = str5.substring(45, 45 + 3 + msg07len + traceLen);
+        assertEquals(EXIT + MSG07 + TRACE, actual2, "Logging with installation: file 5 contents");
 
         final String str6 = getFile(FILE06);
-        if (!checkDate(str6)) {
+        if (isDateInvalid(str6)) {
             fail("Logging with installation: file 6 date");
         }
-        assertEquals(ENTER + MSG06 + TRACE, str6.substring(45, 45 + 3 + MSG06.length() + TRACE.length()),
-                "Logging with installation: file 6 contents");
+        final int msg06len = MSG06.length();
+        final String actual3 = str6.substring(45, 45 + 3 + msg06len + traceLen);
+        assertEquals(ENTER + MSG06 + TRACE, actual3, "Logging with installation: file 6 contents");
 
         final String str7 = getFile(FILE07);
-        if (!checkDate(str7)) {
+        if (isDateInvalid(str7)) {
             fail("Logging with installation: file 7 date");
         }
-        assertEquals(CONFIG + MSG05 + TRACE, str7.substring(45, 45 + 3 + MSG05.length() + TRACE.length()),
-                "Logging with installation: file 7 contents");
+        final int msg05len = MSG05.length();
+        final String actual4 = str7.substring(45, 45 + 3 + msg05len + traceLen);
+        assertEquals(CONFIG + MSG05 + TRACE, actual4, "Logging with installation: file 7 contents");
 
         final String str8 = getFile(FILE08);
-        if (!checkDate(str8)) {
+        if (isDateInvalid(str8)) {
             fail("Logging with installation: file 8 date");
         }
-        assertEquals(INFO + MSG04 + TRACE, str8.substring(45, 45 + 3 + MSG04.length() + TRACE.length()),
-                "Logging with installation: file 8 contents");
+        final int msg04len = MSG04.length();
+        final String actual5 = str8.substring(45, 45 + 3 + msg04len + traceLen);
+        assertEquals(INFO + MSG04 + TRACE, actual5, "Logging with installation: file 8 contents");
 
         final String str9 = getFile(FILE09);
-        if (!checkDate(str9)) {
+        if (isDateInvalid(str9)) {
             fail("Logging with installation: file 9 date");
         }
-        assertEquals(WARN + MSG03 + TRACE, str9.substring(45, 45 + 3 + MSG03.length() + TRACE.length()),
-                "Logging with installation: file 9 contents");
+        final int msg03len = MSG03.length();
+        final String actual6 = str9.substring(45, 45 + 3 + msg03len + traceLen);
+        assertEquals(WARN + MSG03 + TRACE, actual6, "Logging with installation: file 9 contents");
 
         final String str10 = getFile(FILE10);
-        if (!checkDate(str10)) {
+        if (isDateInvalid(str10)) {
             fail("Logging with installation: file 10 date");
         }
-        assertEquals(SEVERE + MSG02 + TRACE, str10.substring(45, 45 + 3 + MSG02.length() + TRACE.length()),
-                "Logging with installation: file 10 contents");
+        final int msg02len = MSG02.length();
+        final String actual7 = str10.substring(45, 45 + 3 + msg02len + traceLen);
+        assertEquals(SEVERE + MSG02 + TRACE, actual7, "Logging with installation: file 10 contents");
 
         deleteAll();
     }
@@ -384,15 +439,20 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Logging of severe: file 1 not created");
-        assertFalse(FILE02.exists(), "Logging of severe: file 2 created");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Logging of severe: file 1 not created");
+
+        final boolean file02exists = FILE02.exists();
+        assertFalse(file02exists, "Logging of severe: file 2 created");
 
         final String str1 = getFile(FILE01);
-        if (!checkDate(str1)) {
+        if (isDateInvalid(str1)) {
             fail("Logging of severe: file 1 date");
         }
-        assertEquals(SEVERE + MSG02 + TRACE, str1.substring(45, 45 + 3 + MSG02.length() + TRACE.length()),
-                "Logging of severe: file 1 content");
+        final int msg02len = MSG02.length();
+        final int traceLen = TRACE.length();
+        final String actual = str1.substring(45, 45 + 3 + msg02len + traceLen);
+        assertEquals(SEVERE + MSG02 + TRACE, actual, "Logging of severe: file 1 content");
 
         deleteAll();
     }
@@ -401,7 +461,7 @@ final class TestLog {
      * Tests logging to files of severe and warning messages only.
      */
     @Test
-    @DisplayName("Logging of severe/warning")
+    @DisplayName("Logging of severe, warning")
     void test006() {
 
         deleteAll();
@@ -413,31 +473,44 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Logging of severe/warning: file 1 not created");
-        assertTrue(FILE02.exists(), "Logging of severe/warning: file 2 not created");
-        assertTrue(FILE03.exists(), "Logging of severe/warning: file 3 not created");
-        assertFalse(FILE04.exists(), "Logging of severe/warning: file 4 created");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Logging of severe, warning: file 1 not created");
+
+        final boolean file02exists = FILE02.exists();
+        assertTrue(file02exists, "Logging of severe, warning: file 2 not created");
+
+        final boolean file03exists = FILE03.exists();
+        assertTrue(file03exists, "Logging of severe, warning: file 3 not created");
+
+        final boolean file04exists = FILE04.exists();
+        assertFalse(file04exists, "Logging of severe, warning: file 4 created");
 
         final String str1 = getFile(FILE01);
-        if (!checkDate(str1)) {
-            fail("Logging of severe/warning: file 1 date");
+        if (isDateInvalid(str1)) {
+            fail("Logging of severe, warning: file 1 date");
         }
-        assertEquals(WARN + MSG10 + TRACE, str1.substring(45, 45 + 3 + MSG10.length() + TRACE.length()),
-                "Logging of severe/warning: file 1 content");
+
+        final int traceLen = TRACE.length();
+
+        final int msg10len = MSG10.length();
+        final String actual1 = str1.substring(45, 45 + 3 + msg10len + traceLen);
+        assertEquals(WARN + MSG10 + TRACE, actual1, "Logging of severe, warning: file 1 content");
 
         final String str2 = getFile(FILE02);
-        if (!checkDate(str2)) {
-            fail("Logging of severe/warning: file 2 date");
+        if (isDateInvalid(str2)) {
+            fail("Logging of severe, warning: file 2 date");
         }
-        assertEquals(WARN + MSG03 + TRACE, str2.substring(45, 45 + 3 + MSG03.length() + TRACE.length()),
-                "Logging of severe/warning: file 2 content");
+        final int msg03len = MSG03.length();
+        final String actual2 = str2.substring(45, 45 + 3 + msg03len + traceLen);
+        assertEquals(WARN + MSG03 + TRACE, actual2, "Logging of severe, warning: file 2 content");
 
         final String str3 = getFile(FILE03);
-        if (!checkDate(str3)) {
+        if (isDateInvalid(str3)) {
             fail("Logging of severe/warning: file 3 date");
         }
-        assertEquals(SEVERE + MSG02 + TRACE, str3.substring(45, 45 + 3 + MSG02.length() + TRACE.length()),
-                "Logging of severe/warning: file 3 content");
+        final int msg02len = MSG02.length();
+        final String actual3 = str3.substring(45, 45 + 3 + msg02len + traceLen);
+        assertEquals(SEVERE + MSG02 + TRACE, actual3, "Logging of severe, warning: file 3 content");
 
         deleteAll();
     }
@@ -458,16 +531,23 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Logging of info: file 1 not created");
-        assertFalse(FILE02.exists(), "Logging of info: file 2 not created");
-        assertFalse(FILE03.exists(), "Logging of info: file 3 created");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Logging of info: file 1 not created");
+
+        final boolean file02exists = FILE02.exists();
+        assertFalse(file02exists, "Logging of info: file 2 not created");
+
+        final boolean file03exists = FILE03.exists();
+        assertFalse(file03exists, "Logging of info: file 3 created");
 
         final String str1 = getFile(FILE01);
-        if (!checkDate(str1)) {
+        if (isDateInvalid(str1)) {
             fail("Logging of info: file 1 date");
         }
-        assertEquals(INFO + MSG04 + TRACE, str1.substring(45, 45 + 3 + MSG04.length() + TRACE.length()),
-                "Logging of info: file 1 content");
+        final int traceLen = TRACE.length();
+        final int msg04len = MSG04.length();
+        final String actual = str1.substring(45, 45 + 3 + msg04len + traceLen);
+        assertEquals(INFO + MSG04 + TRACE, actual, "Logging of info: file 1 content");
 
         deleteAll();
     }
@@ -476,7 +556,7 @@ final class TestLog {
      * Tests logging to files of info and config messages only.
      */
     @Test
-    @DisplayName("Logging of info/config")
+    @DisplayName("Logging of info, config")
     void test008() {
 
         deleteAll();
@@ -488,23 +568,33 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Logging of info/config: file 1 not created");
-        assertTrue(FILE02.exists(), "Logging of info/config: file 2 not created");
-        assertFalse(FILE03.exists(), "Logging of info/config: file 3 not created");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Logging of info, config: file 1 not created");
+
+        final boolean file02exists = FILE02.exists();
+        assertTrue(file02exists, "Logging of info, config: file 2 not created");
+
+        final boolean file03exiss = FILE03.exists();
+        assertFalse(file03exiss, "Logging of info, config: file 3 not created");
 
         final String str1 = getFile(FILE01);
-        if (!checkDate(str1)) {
-            fail("Logging of info/config: file 1 date");
+        if (isDateInvalid(str1)) {
+            fail("Logging of info, config: file 1 date");
         }
-        assertEquals(CONFIG + MSG05 + TRACE, str1.substring(45, 45 + 3 + MSG05.length() + TRACE.length()),
-                "Logging of info/config: file 1 content");
+
+        final int traceLen = TRACE.length();
+
+        final int msg05len = MSG05.length();
+        final String actual1 = str1.substring(45, 45 + 3 + msg05len + traceLen);
+        assertEquals(CONFIG + MSG05 + TRACE, actual1, "Logging of info, config: file 1 content");
 
         final String str2 = getFile(FILE02);
-        if (!checkDate(str2)) {
-            fail("Logging of info/config: file 2 date");
+        if (isDateInvalid(str2)) {
+            fail("Logging of info, config: file 2 date");
         }
-        assertEquals(INFO + MSG04 + TRACE, str2.substring(45, 45 + 3 + MSG04.length() + TRACE.length()),
-                "Logging of info/config: file 2 content");
+        final int msg04len = MSG04.length();
+        final String actual2 = str2.substring(45, 45 + 3 + msg04len + traceLen);
+        assertEquals(INFO + MSG04 + TRACE, actual2, "Logging of info, config: file 2 content");
 
         deleteAll();
     }
@@ -525,15 +615,20 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Logging of entering: file 1 not created");
-        assertFalse(FILE02.exists(), "Logging of entering: file 2 created");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Logging of entering: file 1 not created");
+
+        final boolean file02exists = FILE02.exists();
+        assertFalse(file02exists, "Logging of entering: file 2 created");
 
         final String str1 = getFile(FILE01);
-        if (!checkDate(str1)) {
+        if (isDateInvalid(str1)) {
             fail("Logging of entering: file 1 date");
         }
-        assertEquals(ENTER + MSG06 + TRACE, str1.substring(45, 45 + 3 + MSG06.length() + TRACE.length()),
-                "Logging of entering: file 1 content");
+        final int traceLen = TRACE.length();
+        final int msg06len = MSG06.length();
+        final String actual = str1.substring(45, 45 + 3 + msg06len + traceLen);
+        assertEquals(ENTER + MSG06 + TRACE, actual, "Logging of entering: file 1 content");
 
         deleteAll();
     }
@@ -542,7 +637,7 @@ final class TestLog {
      * Tests logging to files of entering and exiting messages only.
      */
     @Test
-    @DisplayName("Logging of entering/exiting")
+    @DisplayName("Logging of entering, exiting")
     void test010() {
 
         deleteAll();
@@ -554,23 +649,31 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Log entering/exiting: File 1 exists");
-        assertTrue(FILE02.exists(), "Log entering/exiting: File 2 exists");
-        assertFalse(FILE03.exists(), "Log entering/exiting: File 3 does not exist");
+        final boolean fiole01exists = FILE01.exists();
+        assertTrue(fiole01exists, "Log entering, exiting: File 1 exists");
+
+        final boolean file02exists = FILE02.exists();
+        assertTrue(file02exists, "Log entering, exiting: File 2 exists");
+
+        final boolean file03exists = FILE03.exists();
+        assertFalse(file03exists, "Log entering, exiting: File 3 does not exist");
 
         final String str1 = getFile(FILE01);
-        if (!checkDate(str1)) {
-            fail("Log entering/exiting: File 1 log record date mismatch");
+        if (isDateInvalid(str1)) {
+            fail("Log entering, exiting: File 1 log record date mismatch");
         }
-        assertEquals(EXIT + MSG07 + TRACE, str1.substring(45, 45 + 3 + MSG07.length() + TRACE.length()),
-                "Log entering/exiting: File 1 content");
+        final int traceLen = TRACE.length();
+        final int msg07Len = MSG07.length();
+        final String actual1 = str1.substring(45, 45 + 3 + msg07Len + traceLen);
+        assertEquals(EXIT + MSG07 + TRACE, actual1, "Log entering, exiting: File 1 content");
 
         final String str2 = getFile(FILE02);
-        if (!checkDate(str2)) {
-            fail("Log entering/exiting: File 2 log record date mismatch");
+        if (isDateInvalid(str2)) {
+            fail("Log entering,exiting: File 2 log record date mismatch");
         }
-        assertEquals(ENTER + MSG06 + TRACE, str2.substring(45, 45 + 3 + MSG06.length() + TRACE.length()),
-                "Log entering/exiting: File 2 content");
+        final int msg06Len = MSG06.length();
+        final String actual2 = str2.substring(45, 45 + 3 + msg06Len + traceLen);
+        assertEquals(ENTER + MSG06 + TRACE, actual2, "Log entering, exiting: File 2 content");
 
         deleteAll();
     }
@@ -591,16 +694,32 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Log fine: File 1 exists");
-        assertTrue(FILE02.exists(), "Log fine: File 2 exists");
-        assertTrue(FILE03.exists(), "Log fine: File 3 exists");
-        assertTrue(FILE04.exists(), "Log fine: File 4 exists");
-        assertFalse(FILE05.exists(), "Log fine: File 5 does not exist");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Log fine: File 1 exists");
 
-        assertEquals(MSG11 + CoreConstants.CRLF, getFile(FILE01), "Log fine: File 1 content");
-        assertEquals(MSG09 + CoreConstants.CRLF, getFile(FILE02), "Log fine: File 2 content");
-        assertEquals(MSG08 + CoreConstants.CRLF, getFile(FILE03), "Log fine: File 3 content");
-        assertEquals(MSG01 + CoreConstants.CRLF, getFile(FILE04), "Log fine: File 4 content");
+        final boolean file02exists = FILE02.exists();
+        assertTrue(file02exists, "Log fine: File 2 exists");
+
+        final boolean file03exists = FILE03.exists();
+        assertTrue(file03exists, "Log fine: File 3 exists");
+
+        final boolean file04exists = FILE04.exists();
+        assertTrue(file04exists, "Log fine: File 4 exists");
+
+        final boolean file05exists = FILE05.exists();
+        assertFalse(file05exists, "Log fine: File 5 does not exist");
+
+        final String file01 = getFile(FILE01);
+        assertEquals(MSG11 + CoreConstants.CRLF, file01, "Log fine: File 1 content");
+
+        final String file02 = getFile(FILE02);
+        assertEquals(MSG09 + CoreConstants.CRLF, file02, "Log fine: File 2 content");
+
+        final String file03 = getFile(FILE03);
+        assertEquals(MSG08 + CoreConstants.CRLF, file03, "Log fine: File 3 content");
+
+        final String file04 = getFile(FILE04);
+        assertEquals(MSG01 + CoreConstants.CRLF, file04, "Log fine: File 4 content");
 
         deleteAll();
     }
@@ -609,7 +728,7 @@ final class TestLog {
      * Tests logging to files of fine and finest messages only.
      */
     @Test
-    @DisplayName("Logging of fine/finest")
+    @DisplayName("Logging of fine, finest")
     void test012() {
 
         deleteAll();
@@ -621,16 +740,32 @@ final class TestLog {
 
         logMessages();
 
-        assertTrue(FILE01.exists(), "Log fine/finest: File 1 exists");
-        assertTrue(FILE02.exists(), "Log fine/finest: File 2 exists");
-        assertTrue(FILE03.exists(), "Log fine/finest: File 3 exists");
-        assertTrue(FILE04.exists(), "Log fine/finest: File 4 exists");
-        assertFalse(FILE05.exists(), "Log fine/finest: File 5 does not exist");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Log fine, finest: File 1 exists");
 
-        assertEquals(MSG11 + CoreConstants.CRLF, getFile(FILE01), "Log fine/finest: File 1 content");
-        assertEquals(MSG09 + CoreConstants.CRLF, getFile(FILE02), "Log fine/finest: File 2 content");
-        assertEquals(MSG08 + CoreConstants.CRLF, getFile(FILE03), "Log fine/finest: File 3 content");
-        assertEquals(MSG01 + CoreConstants.CRLF, getFile(FILE04), "Log fine/finest: File 4 content");
+        final boolean file02exists = FILE02.exists();
+        assertTrue(file02exists, "Log fine, finest: File 2 exists");
+
+        final boolean file03exists = FILE03.exists();
+        assertTrue(file03exists, "Log fine, finest: File 3 exists");
+
+        final boolean file04exists = FILE04.exists();
+        assertTrue(file04exists, "Log fine, finest: File 4 exists");
+
+        final boolean file05exists = FILE05.exists();
+        assertFalse(file05exists, "Log fine, finest: File 5 does not exist");
+
+        final String file01 = getFile(FILE01);
+        assertEquals(MSG11 + CoreConstants.CRLF, file01, "Log fine, finest: File 1 content");
+
+        final String file02 = getFile(FILE02);
+        assertEquals(MSG09 + CoreConstants.CRLF, file02, "Log fine, finest: File 2 content");
+
+        final String file03 = getFile(FILE03);
+        assertEquals(MSG08 + CoreConstants.CRLF, file03, "Log fine, finest: File 3 content");
+
+        final String file04 = getFile(FILE04);
+        assertEquals(MSG01 + CoreConstants.CRLF, file04, "Log fine, finest: File 4 content");
 
         deleteAll();
     }
@@ -726,17 +861,39 @@ final class TestLog {
      * @param charSeq the character sequence to test
      * @return {@code true} if the string starts with a valid date format; {@code false} if not
      */
-    private static boolean checkDate(final CharSequence charSeq) {
+    private static boolean isDateInvalid(final CharSequence charSeq) {
 
-        return Character.isDigit(charSeq.charAt(0))
-                && Character.isDigit(charSeq.charAt(1)) && charSeq.charAt(2) == '/'
-                && Character.isDigit(charSeq.charAt(3)) && Character.isDigit(charSeq.charAt(4))
-                && charSeq.charAt(5) == ' ' && Character.isDigit(charSeq.charAt(6))
-                && Character.isDigit(charSeq.charAt(7)) && charSeq.charAt(8) == ':'
-                && Character.isDigit(charSeq.charAt(9)) && Character.isDigit(charSeq.charAt(10))
-                && charSeq.charAt(11) == ':' && Character.isDigit(charSeq.charAt(12))
-                && Character.isDigit(charSeq.charAt(13)) && charSeq.charAt(14) == '.'
-                && Character.isDigit(charSeq.charAt(15)) && Character.isDigit(charSeq.charAt(16))
-                && Character.isDigit(charSeq.charAt(17));
+        final char ch0 = charSeq.charAt(0);
+        final char ch1 = charSeq.charAt(1);
+        final char ch3 = charSeq.charAt(3);
+        final char ch4 = charSeq.charAt(4);
+        final char ch6 = charSeq.charAt(6);
+        final char ch7 = charSeq.charAt(7);
+        final char ch9 = charSeq.charAt(9);
+        final char ch10 = charSeq.charAt(10);
+        final char ch12 = charSeq.charAt(12);
+        final char ch13 = charSeq.charAt(13);
+        final char ch15 = charSeq.charAt(15);
+        final char ch16 = charSeq.charAt(16);
+        final char ch17 = charSeq.charAt(17);
+
+        return !(Character.isDigit(ch0)
+               && Character.isDigit(ch1)
+               && (int) charSeq.charAt(2) == (int) '/'
+               && Character.isDigit(ch3)
+               && Character.isDigit(ch4)
+               && (int) charSeq.charAt(5) == (int) ' '
+               && Character.isDigit(ch6)
+               && Character.isDigit(ch7)
+               && (int) charSeq.charAt(8) == (int) ':'
+               && Character.isDigit(ch9)
+               && Character.isDigit(ch10)
+               && (int) charSeq.charAt(11) == (int) ':'
+               && Character.isDigit(ch12)
+               && Character.isDigit(ch13)
+               && (int) charSeq.charAt(14) == (int) '.'
+               && Character.isDigit(ch15)
+               && Character.isDigit(ch16)
+               && Character.isDigit(ch17));
     }
 }

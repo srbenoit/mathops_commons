@@ -22,13 +22,13 @@ final class TokXmlDecl extends AbstractXmlToken {
     private static final String NO_STR = "no";
 
     /** The version number of the XML declaration. */
-    private String versionNum;
+    private String versionNum = null;
 
     /** The specified encoding. */
-    private String encoding;
+    private String encoding = null;
 
     /** The specified standalone setting. */
-    private Boolean standalone;
+    private Boolean standalone = null;
 
     /**
      * Constructs a new {@code TokXmlDecl}.
@@ -43,10 +43,6 @@ final class TokXmlDecl extends AbstractXmlToken {
                final int theLineNumber, final int theColumn) {
 
         super(theContent, theStart, theEnd, theLineNumber, theColumn);
-
-        this.versionNum = null;
-        this.encoding = null;
-        this.standalone = null;
     }
 
     /**
@@ -87,13 +83,13 @@ final class TokXmlDecl extends AbstractXmlToken {
     @Override
     public String toString() {
 
-        final HtmlBuilder str = printContent("XmlDecl: ");
+        final HtmlBuilder builder = printContent("XmlDecl: ");
 
-        printValue(this.versionNum, "Version", str);
-        printValue(this.encoding, "Encoding", str);
-        printValue(this.standalone, "Standalone", str);
+        printValue(this.versionNum, "Version", builder);
+        printValue(this.encoding, "Encoding", builder);
+        printValue(this.standalone, "Standalone", builder);
 
-        return str.toString();
+        return builder.toString();
     }
 
     /**
@@ -113,17 +109,20 @@ final class TokXmlDecl extends AbstractXmlToken {
 
         int pos = parseVersion();
 
-        if (pos < (getEnd() - 2) && content.get(pos) == 'e') {
-            pos = skipWhitespace(parseEncoding(pos));
+        if (pos < (getEnd() - 2) && (int) content.get(pos) == (int) 'e') {
+            final int parsed = parseEncoding(pos);
+            pos = skipWhitespace(parsed);
         }
 
-        if (pos < (getEnd() - 2) && content.get(pos) == 's') {
-            pos = skipWhitespace(parseStandalone(pos));
+        if (pos < (getEnd() - 2) && (int) content.get(pos) == (int) 's') {
+            final int parsed = parseStandalone(pos);
+            pos = skipWhitespace(parsed);
         }
 
         if (pos != getEnd() - 2) {
-            throw new ParsingException(getStart(), getStart() + START_LEN,
-                    Res.get(Res.BAD_XML_DECL));
+            final int start = getStart();
+            final String message = Res.get(Res.BAD_XML_DECL);
+            throw new ParsingException(start, start + START_LEN, message);
         }
     }
 
@@ -148,20 +147,24 @@ final class TokXmlDecl extends AbstractXmlToken {
 
         final XmlContent content = getContent();
 
-        int pos = validateString(content, "version",
-                skipWhitespace(getStart() + START_LEN + 1), true);
+        final int start = getStart();
+        final int afterSpace = skipWhitespace(start + START_LEN + 1);
+        int pos = validateString(content, "version", afterSpace, true);
 
         final char quot = content.get(pos);
-        final int match = indexOf(quot, pos + 1, getEnd());
+        final int end = getEnd();
+        final int match = indexOf(quot, pos + 1, end);
 
-        if (XmlChars.isQuote(quot) && match != -1 && XmlChars.isDigit(content.get(pos + 1))
-                && content.get(pos + 2) == '.') {
+        final char nextChar = content.get(pos + 1);
+        if (XmlChars.isQuote((int) quot) && match != -1 && XmlChars.isDigit((int) nextChar)
+            && (int) content.get(pos + 2) == (int) '.') {
 
             for (int i = pos + MINOR_VER_OFFSET; i < match; ++i) {
                 final char test = content.get(i);
 
-                if (!XmlChars.isDigit(test)) {
-                    throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+                if (!XmlChars.isDigit((int) test)) {
+                    final String message = Res.get(Res.BAD_XML_DECL);
+                    throw new ParsingException(this, message);
                 }
             }
 
@@ -169,7 +172,8 @@ final class TokXmlDecl extends AbstractXmlToken {
 
             pos = skipWhitespace(match + 1);
         } else {
-            throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+            final String message = Res.get(Res.BAD_XML_DECL);
+            throw new ParsingException(this, message);
         }
 
         return pos;
@@ -188,35 +192,42 @@ final class TokXmlDecl extends AbstractXmlToken {
         final int pos = validateString(content, "encoding", start, true);
 
         final char quot = content.get(pos);
-        final int match = indexOf(quot, pos + 1, getEnd());
+        final int end = getEnd();
+        final int match = indexOf(quot, pos + 1, end);
 
-        if (match == -1 || !XmlChars.isQuote(quot)) {
-            throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+        if (match == -1 || !XmlChars.isQuote((int) quot)) {
+            final String message = Res.get(Res.BAD_XML_DECL);
+            throw new ParsingException(this, message);
         }
 
         boolean valid = true;
 
-        if (XmlChars.isEncodingChar1(content.get(pos + 1))) {
+        final char chr = content.get(pos + 1);
+        if (XmlChars.isEncodingChar1(chr)) {
 
             for (int i = pos + 2; i < match; ++i) {
                 final char test = content.get(i);
 
                 if (!XmlChars.isEncodingChar2(test)) {
-                    Log.warning(Res.fmt(Res.BAD_ENCCHAR, Character.toString(content.get(i))));
+                    final String testStr = Character.toString(test);
+                    final String message = Res.fmt(Res.BAD_ENCCHAR, testStr);
+                    Log.warning(message);
                     valid = false;
-
                     break;
                 }
             }
         } else {
-            Log.warning(Res.fmt(Res.BAD_ENCCHAR1, Character.toString(content.get(quot + 1))));
+            final String chrStr = Character.toString(chr);
+            final String message = Res.fmt(Res.BAD_ENCCHAR1, chrStr);
+            Log.warning(message);
             valid = false;
         }
 
         if (valid) {
             this.encoding = content.substring(pos + 1, match);
         } else {
-            throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+            final String message = Res.get(Res.BAD_XML_DECL);
+            throw new ParsingException(this, message);
         }
 
         return skipWhitespace(match + 1);
@@ -235,9 +246,10 @@ final class TokXmlDecl extends AbstractXmlToken {
         int pos = validateString(content, "standalone", start, true);
 
         final char quot = content.get(pos);
-        final int match = indexOf(quot, pos + 1, getEnd());
+        final int end = getEnd();
+        final int match = indexOf(quot, pos + 1, end);
 
-        if (XmlChars.isQuote(quot) && match != -1) {
+        if (XmlChars.isQuote((int) quot) && match != -1) {
             final String sub = content.substring(pos + 1, match);
 
             if (YES_STR.equals(sub)) {
@@ -245,12 +257,14 @@ final class TokXmlDecl extends AbstractXmlToken {
             } else if (NO_STR.equals(sub)) {
                 this.standalone = Boolean.FALSE;
             } else {
-                throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+                final String message = Res.get(Res.BAD_XML_DECL);
+                throw new ParsingException(this, message);
             }
 
             pos = skipWhitespace(match + 1);
         } else {
-            throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+            final String message = Res.get(Res.BAD_XML_DECL);
+            throw new ParsingException(this, message);
         }
 
         return pos;
@@ -272,19 +286,23 @@ final class TokXmlDecl extends AbstractXmlToken {
     private int validateString(final XmlContent content, final CharSequence test, final int start,
                                final boolean equals) throws ParsingException {
 
-        for (int i = 0; i < test.length(); ++i) {
-            if (content.get(start + i) != test.charAt(i)) {
-                throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+        final int testLen = test.length();
+
+        for (int i = 0; i < testLen; ++i) {
+            if ((int) content.get(start + i) != (int) test.charAt(i)) {
+                final String message = Res.get(Res.BAD_XML_DECL);
+                throw new ParsingException(this, message);
             }
         }
 
-        int pos = skipWhitespace(start + test.length());
+        int pos = skipWhitespace(start + testLen);
 
         if (equals) {
-            if (content.get(pos) == '=') {
+            if ((int) content.get(pos) == (int) '=') {
                 pos = skipWhitespace(pos + 1);
             } else {
-                throw new ParsingException(this, Res.get(Res.BAD_XML_DECL));
+                final String message = Res.get(Res.BAD_XML_DECL);
+                throw new ParsingException(this, message);
             }
         }
 

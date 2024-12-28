@@ -174,7 +174,8 @@ public final class UnicodeCharacter {
         this.digit = fields[DIGIT_IDX].isEmpty() ? null : Integer.valueOf(fields[DIGIT_IDX]);
 
         this.numeric = parseDouble(fields[NUMERIC_IDX]);
-        this.mirrored = Boolean.valueOf(TRUE_STR.equals(fields[MIRRORED_IDX]));
+        final boolean isTrueStr = TRUE_STR.equals(fields[MIRRORED_IDX]);
+        this.mirrored = Boolean.valueOf(isTrueStr);
         this.oldName = fields[OLD_NAME_IDX];
         this.comment = fields[COMMENT_IDX];
         this.uppercase = parseInteger(fields[UPPERCASE_IDX]);
@@ -195,15 +196,18 @@ public final class UnicodeCharacter {
         Double result = null;
 
         if (!str.isEmpty()) {
-            final int slash = str.indexOf('/');
+            final int slash = str.indexOf((int) '/');
             final double numer;
             final double denom;
             if (slash == -1) {
                 numer = Double.parseDouble(str);
                 denom = 1.0;
             } else {
-                denom = Double.parseDouble(str.substring(slash + 1));
-                numer = Double.parseDouble(str.substring(0, slash));
+                final String numerStr = str.substring(0, slash);
+                numer = Double.parseDouble(numerStr);
+
+                final String denomStr = str.substring(slash + 1);
+                denom = Double.parseDouble(denomStr);
             }
 
             result = Double.valueOf(numer / denom);

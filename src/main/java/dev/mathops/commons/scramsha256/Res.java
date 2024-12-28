@@ -38,7 +38,7 @@ final class Res extends ResBundle {
     static final String CF_NO_RANDOM = key(8);
 
     /** A resource key. */
-    static final String CF_BAD_MESSAGE = key(8);
+    static final String CF_BAD_MESSAGE = key(9);
 
     //
 

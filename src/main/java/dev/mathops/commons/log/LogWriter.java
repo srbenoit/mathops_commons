@@ -31,7 +31,7 @@ public final class LogWriter extends LogEntryList {
     private final LogSettings settings;
 
     /** The current log file. */
-    private File curFile;
+    private File curFile = null;
 
     /**
      * Constructs a new {@code LogWriter}.
@@ -43,7 +43,6 @@ public final class LogWriter extends LogEntryList {
         this.sysout = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         this.settings = LoggingSubsystem.getSettings();
-        this.curFile = null;
 
         if (LoggingSubsystem.getInstallation() != null && this.settings.isLogToFiles()) {
             final File logDir = determineLogDir();
@@ -127,7 +126,7 @@ public final class LogWriter extends LogEntryList {
                 }
 
                 if (this.settings.getLogFileSizeLimit() > 0
-                        && this.curFile.length() > (long) this.settings.getLogFileSizeLimit()) {
+                    && this.curFile.length() > (long) this.settings.getLogFileSizeLimit()) {
                     rotateLogs();
                 }
             }
@@ -144,7 +143,7 @@ public final class LogWriter extends LogEntryList {
                 final File logDir = determineLogDir();
                 final String filenameBase = this.settings.getFilenameBase();
                 final int logFileCount = this.settings.getLogFileCount();
-                final String error = LogRotator.rotateLogs(logDir, filenameBase, logFileCount, this.curFile);
+                final String error = LogRotator.rotateLogs(logDir, filenameBase, (long) logFileCount, this.curFile);
 
                 if (error != null) {
                     // Turn off file logging to prevent infinite loop when logging error
@@ -174,12 +173,14 @@ public final class LogWriter extends LogEntryList {
             if (path != null && !path.isEmpty()) {
                 final char chr0 = path.charAt(0);
 
-                if (chr0 == '/' || chr0 == '\\') {
+                if ((int) chr0 == (int) '/' || (int) chr0 == (int) '\\') {
                     result = new File(path);
-                } else if (path.length() > 1 && chr0 >= 'A' && chr0 <= 'Z' && path.charAt(1) == ':') {
+                } else if (path.length() > 1 && (int) chr0 >= (int) 'A' && (int) chr0 <= (int) 'Z'
+                           && (int) path.charAt(1) == (int) ':') {
                     result = new File(path);
                 } else {
-                    result = new File(installation.baseDir, path);
+                    final File baseDir = installation.getBaseDir();
+                    result = new File(baseDir, path);
                 }
 
                 if (!result.exists() && !result.mkdirs()) {

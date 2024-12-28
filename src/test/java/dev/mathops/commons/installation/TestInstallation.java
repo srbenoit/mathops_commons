@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -55,13 +56,15 @@ final class TestInstallation {
 
         try (final FileOutputStream pw = new FileOutputStream(new File(TEST_BASE_DIR2,
                 Installations.DEF_CFG_FILE_NAME))) {
-            pw.write(("ccc=ddd" + CoreConstants.CRLF).getBytes(StandardCharsets.UTF_8));
+            final byte[] bytes = ("ccc=ddd" + CoreConstants.CRLF).getBytes(StandardCharsets.UTF_8);
+            pw.write(bytes);
         } catch (final IOException ex) {
             Log.warning(ex);
         }
 
         try (final FileOutputStream pw = new FileOutputStream(new File(TEST_BASE_DIR3, TEST_CFG_FILE))) {
-            pw.write(("z=y" + CoreConstants.CRLF).getBytes(StandardCharsets.UTF_8));
+            final byte[] bytes = ("z=y" + CoreConstants.CRLF).getBytes(StandardCharsets.UTF_8);
+            pw.write(bytes);
         } catch (final IOException ex) {
             Log.warning(ex);
         }
@@ -134,7 +137,8 @@ final class TestInstallation {
         // Base directory that exists, but missing config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR1, TEST_CFG_FILE);
 
-        assertEquals(TEST_BASE_DIR1, installation.baseDir, "testInstallationGet 3");
+        final File baseDir = installation.getBaseDir();
+        assertEquals(TEST_BASE_DIR1, baseDir, "testInstallationGet 3");
     }
 
     /**
@@ -147,7 +151,8 @@ final class TestInstallation {
         // Base directory that exists, but missing config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR1, null);
 
-        assertEquals(Installations.DEF_CFG_FILE_NAME, installation.cfgFile, "testInstallationGet 4");
+        final String cfgFile = installation.getCfgFile();
+        assertEquals(Installations.DEF_CFG_FILE_NAME, cfgFile, "testInstallationGet 4");
     }
 
     /**
@@ -160,7 +165,8 @@ final class TestInstallation {
         // Base directory that exists, but missing config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR1, TEST_CFG_FILE);
 
-        assertFalse(installation.isLoaded(), "testInstallationGet 5");
+        final boolean loaded = installation.isLoaded();
+        assertFalse(loaded, "testInstallationGet 5");
     }
 
     /**
@@ -186,7 +192,8 @@ final class TestInstallation {
         // Base directory that exists and uses standard config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR2, null);
 
-        assertEquals(TEST_BASE_DIR2, installation.baseDir, "testInstallationGet 7");
+        final File baseDir = installation.getBaseDir();
+        assertEquals(TEST_BASE_DIR2, baseDir, "testInstallationGet 7");
     }
 
     /**
@@ -199,7 +206,8 @@ final class TestInstallation {
         // Base directory that exists and uses standard config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR2, null);
 
-        assertEquals(Installations.DEF_CFG_FILE_NAME, installation.cfgFile, "testInstallationGet 8");
+        final String cfgFile = installation.getCfgFile();
+        assertEquals(Installations.DEF_CFG_FILE_NAME, cfgFile, "testInstallationGet 8");
     }
 
     /**
@@ -212,7 +220,8 @@ final class TestInstallation {
         // Base directory that exists and uses standard config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR2, null);
 
-        assertTrue(installation.isLoaded(), "testInstallationGet 9");
+        final boolean loaded = installation.isLoaded();
+        assertTrue(loaded, "testInstallationGet 9");
     }
 
     /**
@@ -224,7 +233,7 @@ final class TestInstallation {
 
         // Base directory that exists and uses standard config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR2, null);
-        final String prop = installation.properties.getProperty("ccc");
+        final String prop = installation.getProperties().getProperty("ccc");
 
         assertEquals("ddd", prop, "testInstallationGet 12");
     }
@@ -252,7 +261,8 @@ final class TestInstallation {
         // Base directory that exists and uses nonstandard config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR3, TEST_CFG_FILE);
 
-        assertEquals(TEST_BASE_DIR3, installation.baseDir, "testInstallationGet 14");
+        final File baseDir = installation.getBaseDir();
+        assertEquals(TEST_BASE_DIR3, baseDir, "testInstallationGet 14");
     }
 
     /**
@@ -265,7 +275,8 @@ final class TestInstallation {
         // Base directory that exists and uses nonstandard config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR3, TEST_CFG_FILE);
 
-        assertEquals(TEST_CFG_FILE, installation.cfgFile, "testInstallationGet 15");
+        final String cfgFile = installation.getCfgFile();
+        assertEquals(TEST_CFG_FILE, cfgFile, "testInstallationGet 15");
     }
 
     /**
@@ -278,7 +289,8 @@ final class TestInstallation {
         // Base directory that exists and uses nonstandard config file
         final Installation installation = Installations.get().getInstallation(TEST_BASE_DIR3, TEST_CFG_FILE);
 
-        assertTrue(installation.isLoaded(), "testInstallationGet 16");
+        final boolean loaded = installation.isLoaded();
+        assertTrue(loaded, "testInstallationGet 16");
     }
 
     /**
@@ -291,7 +303,7 @@ final class TestInstallation {
         // Base directory that exists and uses nonstandard config file
         final Installation installation =
                 Installations.get().getInstallation(TEST_BASE_DIR3, TEST_CFG_FILE);
-        final String prop = installation.properties.getProperty("z");
+        final String prop = installation.getProperties().getProperty("z");
 
         assertEquals("y", prop, "testInstallationGet 19");
     }
@@ -324,7 +336,7 @@ final class TestInstallation {
         Installations.setMyInstallation(inst);
 
         final Installation installation = Installations.getMyInstallation();
-        assertEquals(inst, installation, "testThreadLocal 2");
+        assertSame(inst, installation, "testThreadLocal 2");
     }
 
     /**

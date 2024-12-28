@@ -1,17 +1,17 @@
 package dev.mathops.commons.parser.xml;
 
 /**
- * A token that represents a CDATA block declaration, beginning with <![CDATA[ and ending with ]]>, which may contain
- * any characters except the sequence ']]>'.
+ * A token that represents a CDATA block declaration, beginning with &lt;![CDATA[ and ending with ]]&gt;, which may
+ * contain any characters except the sequence ']]&gt;'.
  */
 public final class TokCData extends AbstractXmlToken {
 
     /**
      * Constructs a new {@code TokCData}.
      *
-     * @param theContent the content this token belongs to
-     * @param theStart   the index of the '<' character
-     * @param theEnd     the index after '>' character
+     * @param theContent    the content this token belongs to
+     * @param theStart      the index of the '<' character
+     * @param theEnd        the index after '>' character
      * @param theLineNumber the line number of the start of the span
      * @param theColumn     the column of the start of the span
      */

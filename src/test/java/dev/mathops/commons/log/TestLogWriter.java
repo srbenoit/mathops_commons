@@ -92,9 +92,11 @@ final class TestLogWriter {
     static void runBeforeClass() {
 
         // Store the current log settings, so we can restore after the test
-        savedSettings = new LogSettings(LoggingSubsystem.getSettings());
+        final LogSettings settings = LoggingSubsystem.getSettings();
+        savedSettings = new LogSettings(settings);
 
-        final File tempDir = new File(System.getProperty("java.io.tmpdir"));
+        final String tmpDirProperty = System.getProperty("java.io.tmpdir");
+        final File tempDir = new File(tmpDirProperty);
         installDir = new File(tempDir, "zircon_temp_inst");
         if (installDir.exists() || installDir.mkdirs()) {
 
@@ -109,12 +111,14 @@ final class TestLogWriter {
             builder.addln("log-file-name-base=zircon");
 
             try (final FileOutputStream fw = new FileOutputStream(new File(installDir, "installation.properties"))) {
-                fw.write(builder.toString().getBytes(StandardCharsets.UTF_8));
+                final byte[] bytes = builder.toString().getBytes(StandardCharsets.UTF_8);
+                fw.write(bytes);
             } catch (final IOException ex) {
                 Log.warning(ex);
             }
         } else {
-            Log.warning("Unable to create ", installDir.getAbsolutePath());
+            final String absolutePath = installDir.getAbsolutePath();
+            Log.warning("Unable to create ", absolutePath);
         }
     }
 
@@ -131,12 +135,14 @@ final class TestLogWriter {
             if (files != null) {
                 for (final File file : files) {
                     if (file.exists() && !file.delete()) {
-                        Log.warning("Failed to delete ", file.getAbsolutePath());
+                        final String absolutePath = file.getAbsolutePath();
+                        Log.warning("Failed to delete ", absolutePath);
                     }
                 }
             }
             if (!installDir.delete()) {
-                Log.warning("Unable to delete ", installDir.getAbsolutePath());
+                final String absolutePath = installDir.getAbsolutePath();
+                Log.warning("Unable to delete ", absolutePath);
             }
         }
     }
@@ -149,16 +155,17 @@ final class TestLogWriter {
     void test001() {
 
         final LogWriter writer = new LogWriter();
+        final LogSettings settings = writer.getSettings();
 
         writer.writeConsole("Log to console: This should be the first line", false);
         writer.writeConsole(", with a newline", true);
-        writer.getSettings().setLogToConsole(false);
+        settings.setLogToConsole(false);
         writer.writeConsole("Log to console: This should NOT appear", true);
-        writer.getSettings().setLogToConsole(true);
+        settings.setLogToConsole(true);
         writer.writeConsole("Log to console: This should be the second line", false);
         writer.writeConsole(", with a linefeed", true);
 
-        assertNotNull(writer.getSettings(), "Always succeeds");
+        assertNotNull(settings, "Always succeeds");
     }
 
     /**
@@ -172,29 +179,44 @@ final class TestLogWriter {
 
         writer.getSettings().setLogToConsole(false);
         writer.startList(5);
-        assertEquals(0, writer.getNumInList(), "Log to list: list did not start empty");
+        final int count1 = writer.getNumInList();
+        assertEquals(0, count1, "Log to list: list did not start empty");
         writer.writeMessage(LINE1, true);
-        assertEquals(1, writer.getNumInList(), "Log to list: bad list size after 1 message");
+        final int count2 = writer.getNumInList();
+        assertEquals(1, count2, "Log to list: bad list size after 1 message");
         writer.writeMessage(LINE2, true);
-        assertEquals(2, writer.getNumInList(), "Log to list: bad list size after 2 messages");
+        final int count3 = writer.getNumInList();
+        assertEquals(2, count3, "Log to list: bad list size after 2 messages");
         writer.writeMessage(LINE3, true);
-        assertEquals(3, writer.getNumInList(), "Log to list: bad list size after 3 messages");
+        final int count4 = writer.getNumInList();
+        assertEquals(3, count4, "Log to list: bad list size after 3 messages");
         writer.writeMessage(LINE4, true);
-        assertEquals(4, writer.getNumInList(), "Log to list: bad list size after 4 messages");
+        final int count5 = writer.getNumInList();
+        assertEquals(4, count5, "Log to list: bad list size after 4 messages");
         writer.writeMessage(LINE5, true);
-        assertEquals(5, writer.getNumInList(), "Log to list: bad list size after 5 messages");
+        final int count6 = writer.getNumInList();
+        assertEquals(5, count6, "Log to list: bad list size after 5 messages");
         writer.addToList(LINE6);
-        assertEquals(5, writer.getNumInList(), "Log to list: bad list size after 6 messages");
+        final int count7 = writer.getNumInList();
+        assertEquals(5, count7, "Log to list: bad list size after 6 messages");
         writer.stopList();
-        assertEquals(5, writer.getNumInList(), "Log to list: bad list size after stopping");
+        final int count8 = writer.getNumInList();
+        assertEquals(5, count8, "Log to list: bad list size after stopping");
 
-        assertEquals(LINE2, writer.getListMessage(0).message, "Log to list: list message 1 content");
-        assertEquals(LINE3, writer.getListMessage(1).message, "Log to list: list message 2 content");
-        assertEquals(LINE4, writer.getListMessage(2).message, "Log to list: list message 3 content");
-        assertEquals(LINE5, writer.getListMessage(3).message, "Log to list: list message 4 content");
-        assertEquals(LINE6, writer.getListMessage(4).message, "Log to list: list message 5 content");
+        final String msg0 = writer.getListMessage(0).message;
+        final String msg1 = writer.getListMessage(1).message;
+        final String msg2 = writer.getListMessage(2).message;
+        final String msg3 = writer.getListMessage(3).message;
+        final String msg4 = writer.getListMessage(4).message;
+
+        assertEquals(LINE2, msg0, "Log to list: list message 1 content");
+        assertEquals(LINE3, msg1, "Log to list: list message 2 content");
+        assertEquals(LINE4, msg2, "Log to list: list message 3 content");
+        assertEquals(LINE5, msg3, "Log to list: list message 4 content");
+        assertEquals(LINE6, msg4, "Log to list: list message 5 content");
         writer.clearList();
-        assertEquals(0, writer.getNumInList(), "Log to list: bad list size after clearing");
+        final int count9 = writer.getNumInList();
+        assertEquals(0, count9, "Log to list: bad list size after clearing");
     }
 
     /**
@@ -247,39 +269,81 @@ final class TestLogWriter {
         final File log10 = new File(logDir, "testlog_010.log");
         final File log11 = new File(logDir, "testlog_011.log");
 
-        assertTrue(log01.exists(), "Log to files: log file 1 did not exist");
-        assertTrue(log02.exists(), "Log to files: log file 2 did not exist");
-        assertTrue(log03.exists(), "Log to files: log file 3 did not exist");
-        assertTrue(log04.exists(), "Log to files: log file 4 did not exist");
-        assertTrue(log05.exists(), "Log to files: log file 5 did not exist");
-        assertTrue(log06.exists(), "Log to files: log file 6 did not exist");
-        assertTrue(log07.exists(), "Log to files: log file 7 did not exist");
-        assertTrue(log08.exists(), "Log to files: log file 8 did not exist");
-        assertTrue(log09.exists(), "Log to files: log file 9 did not exist");
-        assertTrue(log10.exists(), "Log to files: log file 10 did not exist");
-        assertFalse(log11.exists(), "Log to files: log file 11 exists");
+        final boolean exists01 = log01.exists();
+        final boolean exists02 = log02.exists();
+        final boolean exists03 = log03.exists();
+        final boolean exists04 = log04.exists();
+        final boolean exists05 = log05.exists();
+        final boolean exists06 = log06.exists();
+        final boolean exists07 = log07.exists();
+        final boolean exists08 = log08.exists();
+        final boolean exists09 = log09.exists();
+        final boolean exists10 = log10.exists();
+        final boolean exists11 = log11.exists();
 
-        assertEquals(MSG11 + CoreConstants.CRLF, getFile(log01), "Log to files: log file 1 content");
-        assertEquals(MSG10 + CoreConstants.CRLF, getFile(log02), "Log to files: log file 2 content");
-        assertEquals(MSG09 + CoreConstants.CRLF, getFile(log03), "Log to files: log file 3 content");
-        assertEquals(MSG08 + CoreConstants.CRLF, getFile(log04), "Log to files: log file 4 content");
-        assertEquals(MSG07 + CoreConstants.CRLF, getFile(log05), "Log to files: log file 5 content");
-        assertEquals(MSG06 + CoreConstants.CRLF, getFile(log06), "Log to files: log file 6 content");
-        assertEquals(MSG05 + CoreConstants.CRLF, getFile(log07), "Log to files: log file 7 content");
-        assertEquals(MSG04 + CoreConstants.CRLF, getFile(log08), "Log to files: log file 8 content");
-        assertEquals(MSG03 + CoreConstants.CRLF, getFile(log09), "Log to files: log file 9 content");
-        assertEquals(MSG02 + CoreConstants.CRLF, getFile(log10), "Log to files: log file 10 content");
+        assertTrue(exists01, "Log to files: log file 1 did not exist");
+        assertTrue(exists02, "Log to files: log file 2 did not exist");
+        assertTrue(exists03, "Log to files: log file 3 did not exist");
+        assertTrue(exists04, "Log to files: log file 4 did not exist");
+        assertTrue(exists05, "Log to files: log file 5 did not exist");
+        assertTrue(exists06, "Log to files: log file 6 did not exist");
+        assertTrue(exists07, "Log to files: log file 7 did not exist");
+        assertTrue(exists08, "Log to files: log file 8 did not exist");
+        assertTrue(exists09, "Log to files: log file 9 did not exist");
+        assertTrue(exists10, "Log to files: log file 10 did not exist");
+        assertFalse(exists11, "Log to files: log file 11 exists");
 
-        assertTrue(!log01.exists() || log01.delete(), "Log to files: delete 1");
-        assertTrue(!log02.exists() || log02.delete(), "Log to files: delete 2");
-        assertTrue(!log03.exists() || log03.delete(), "Log to files: delete 3");
-        assertTrue(!log04.exists() || log04.delete(), "Log to files: delete 4");
-        assertTrue(!log05.exists() || log05.delete(), "Log to files: delete 5");
-        assertTrue(!log06.exists() || log06.delete(), "Log to files: delete 6");
-        assertTrue(!log07.exists() || log07.delete(), "Log to files: delete 7");
-        assertTrue(!log08.exists() || log08.delete(), "Log to files: delete 8");
-        assertTrue(!log09.exists() || log09.delete(), "Log to files: delete 9");
-        assertTrue(!log10.exists() || log10.delete(), "Log to files: delete 10");
+        final String file01 = getFile(log01);
+        final String file02 = getFile(log02);
+        final String file03 = getFile(log03);
+        final String file04 = getFile(log04);
+        final String file05 = getFile(log05);
+        final String file06 = getFile(log06);
+        final String file07 = getFile(log07);
+        final String file08 = getFile(log08);
+        final String file09 = getFile(log09);
+        final String file10 = getFile(log10);
+
+        assertEquals(MSG11 + CoreConstants.CRLF, file01, "Log to files: log file 1 content");
+        assertEquals(MSG10 + CoreConstants.CRLF, file02, "Log to files: log file 2 content");
+        assertEquals(MSG09 + CoreConstants.CRLF, file03, "Log to files: log file 3 content");
+        assertEquals(MSG08 + CoreConstants.CRLF, file04, "Log to files: log file 4 content");
+        assertEquals(MSG07 + CoreConstants.CRLF, file05, "Log to files: log file 5 content");
+        assertEquals(MSG06 + CoreConstants.CRLF, file06, "Log to files: log file 6 content");
+        assertEquals(MSG05 + CoreConstants.CRLF, file07, "Log to files: log file 7 content");
+        assertEquals(MSG04 + CoreConstants.CRLF, file08, "Log to files: log file 8 content");
+        assertEquals(MSG03 + CoreConstants.CRLF, file09, "Log to files: log file 9 content");
+        assertEquals(MSG02 + CoreConstants.CRLF, file10, "Log to files: log file 10 content");
+
+        final boolean test01 = !log01.exists() || log01.delete();
+        assertTrue(test01, "Log to files: delete 1");
+
+        final boolean test02 = !log02.exists() || log02.delete();
+        assertTrue(test02, "Log to files: delete 2");
+
+        final boolean test03 = !log03.exists() || log03.delete();
+        assertTrue(test03, "Log to files: delete 3");
+
+        final boolean test04 = !log04.exists() || log04.delete();
+        assertTrue(test04, "Log to files: delete 4");
+
+        final boolean test05 = !log05.exists() || log05.delete();
+        assertTrue(test05, "Log to files: delete 5");
+
+        final boolean test06 = !log06.exists() || log06.delete();
+        assertTrue(test06, "Log to files: delete 6");
+
+        final boolean test07 = !log07.exists() || log07.delete();
+        assertTrue(test07, "Log to files: delete 7");
+
+        final boolean test08 = !log08.exists() || log08.delete();
+        assertTrue(test08, "Log to files: delete 8");
+
+        final boolean test09 = !log09.exists() || log09.delete();
+        assertTrue(test09, "Log to files: delete 9");
+
+        final boolean test10 = !log10.exists() || log10.delete();
+        assertTrue(test10, "Log to files: delete 10");
     }
 
     /**
@@ -292,10 +356,11 @@ final class TestLogWriter {
      */
     private static String getFile(final File file) {
 
-        String result;
+        String result = null;
 
         try (final InputStream input = new FileInputStream(file)) {
-            final HtmlBuilder builder = new HtmlBuilder((int) file.length());
+            final long length = file.length();
+            final HtmlBuilder builder = new HtmlBuilder((int) length);
 
             try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
                 for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
@@ -305,7 +370,7 @@ final class TestLogWriter {
 
             result = builder.toString();
         } catch (final IOException ex) {
-            result = null;
+            // No action
         }
 
         return result;

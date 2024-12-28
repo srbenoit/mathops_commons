@@ -19,7 +19,8 @@ final class TestBuilder {
 
         final HtmlBuilder htm = new HtmlBuilder(100);
 
-        assertEquals(0, htm.length(), "Expected length to be zero");
+        final int length = htm.length();
+        assertEquals(0, length, "Expected length to be zero");
     }
 
     /**
@@ -32,7 +33,8 @@ final class TestBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.appendChar('x');
 
-        assertEquals(1, htm.length(), "Expected length to be 1");
+        final int length = htm.length();
+        assertEquals(1, length, "Expected length to be 1");
     }
 
     /**
@@ -45,7 +47,8 @@ final class TestBuilder {
         final HtmlBuilder htm = new HtmlBuilder(100);
         htm.appendChar('x');
 
-        assertEquals('x', htm.charAt(0), "Expected charAt(0) to be 'x'");
+        final char actual = htm.charAt(0);
+        assertEquals('x', actual, "Expected charAt(0) to be 'x'");
     }
 
     /**
@@ -59,7 +62,8 @@ final class TestBuilder {
         htm.appendChar('x');
         htm.reset();
 
-        assertEquals(0, htm.length(), "Expected reset length to be zero");
+        final int length = htm.length();
+        assertEquals(0, length, "Expected reset length to be zero");
     }
 
     /**
@@ -75,7 +79,8 @@ final class TestBuilder {
         htm.appendChar('z');
         htm.truncate(2);
 
-        assertEquals(2, htm.length(), "Expected truncated length to be 2");
+        final int length = htm.length();
+        assertEquals(2, length, "Expected truncated length to be 2");
     }
 
     /**
@@ -91,7 +96,8 @@ final class TestBuilder {
         htm.appendChar('z');
         htm.truncate(1);
 
-        assertEquals('x', htm.charAt(0), "Expected truncated charAt(0) to be 'x'");
+        final char actual = htm.charAt(0);
+        assertEquals('x', actual, "Expected truncated charAt(0) to be 'x'");
     }
 
     /**
@@ -106,6 +112,7 @@ final class TestBuilder {
         htm.appendChar('y');
         htm.appendChar('z');
 
-        assertEquals("xyz", htm.toString(), "Expected toString() to be 'xyz'");
+        final String actual = htm.toString();
+        assertEquals("xyz", actual, "Expected toString() to be 'xyz'");
     }
 }

@@ -59,8 +59,9 @@ public final class ServerFinalMessage {
 
         this.serverFinal = new byte[63];
         System.arraycopy(this.serverSig, 0, this.serverFinal, 0, 32);
-        this.serverFinal[32] = CoreConstants.COMMA_CHAR;
-        System.arraycopy(this.token.getBytes(StandardCharsets.UTF_8), 0, this.serverFinal, 33, 30);
+        this.serverFinal[32] = (byte) CoreConstants.COMMA_CHAR;
+        final byte[] tokenBytes = this.token.getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(tokenBytes, 0, this.serverFinal, 33, 30);
 
         this.base64 = Base64.getEncoder().encode(this.serverFinal);
     }
@@ -81,8 +82,8 @@ public final class ServerFinalMessage {
         this.error = theError.getBytes(StandardCharsets.UTF_8);
 
         this.serverFinal = new byte[this.error.length + 2];
-        this.serverFinal[0] = 'e';
-        this.serverFinal[1] = '=';
+        this.serverFinal[0] = (byte) 'e';
+        this.serverFinal[1] = (byte) '=';
         System.arraycopy(this.serverFinal, 2, this.error, 0, this.error.length);
 
         this.base64 = Base64.getEncoder().encode(this.serverFinal);
@@ -104,18 +105,17 @@ public final class ServerFinalMessage {
         this.error = ScramUtils.ZERO_BYTES;
 
         final int len = this.serverFinal.length;
-        if (len > 2 && this.serverFinal[0] == 'e' && this.serverFinal[1] == '=') {
+        if (len > 2 && (int) this.serverFinal[0] == (int) 'e' && (int) this.serverFinal[1] == (int) '=') {
             // This was a "server-error" message, so fail
             final String msg = new String(this.serverFinal, 2, len - 2, StandardCharsets.UTF_8);
             throw new IllegalArgumentException(msg);
         }
 
         if (this.serverFinal.length != 63) {
-            throw new IllegalArgumentException("server-final message had invalid length: " +
-                                               this.serverFinal.length);
+            throw new IllegalArgumentException("server-final message had invalid length: " + this.serverFinal.length);
         }
 
-        if ((int) this.serverFinal[32] != CoreConstants.COMMA_CHAR) {
+        if ((int) this.serverFinal[32] != (int) CoreConstants.COMMA_CHAR) {
             throw new IllegalArgumentException("server-final message had invalid delimiters");
         }
 

@@ -105,7 +105,8 @@ final class TestFileLoader {
         final File file = File.createTempFile(PREFIX, SUFFIX);
 
         try (final FileOutputStream writer = new FileOutputStream(file)) {
-            writer.write(TEST_STRING_1.getBytes(StandardCharsets.UTF_8));
+            final byte[] bytes = TEST_STRING_1.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes);
         }
 
         final String str = FileLoader.loadFileAsString(file, false);
@@ -121,7 +122,7 @@ final class TestFileLoader {
 
         final String str = FileLoader.loadFileAsString(TestFileLoader.class, TXT_FILENAME, false);
 
-        assertEquals(TEST_TXT_FILE + CoreConstants.CRLF + HAS_2_LINES + CoreConstants.CRLF, str, 
+        assertEquals(TEST_TXT_FILE + CoreConstants.CRLF + HAS_2_LINES + CoreConstants.CRLF, str,
                 "loadFileAsString() class-relative file content");
     }
 
@@ -158,15 +159,20 @@ final class TestFileLoader {
         final File file = File.createTempFile(PREFIX, SUFFIX);
 
         try (final FileOutputStream writer = new FileOutputStream(file)) {
-            writer.write(TEST_STRING_1.getBytes(StandardCharsets.UTF_8));
-            writer.write(CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8));
-            writer.write(TEST_STRING_2.getBytes(StandardCharsets.UTF_8));
+            final byte[] bytes1 = TEST_STRING_1.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes1);
+
+            final byte[] bytes2 = CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes2);
+
+            final byte[] bytes3 = TEST_STRING_2.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes3);
         }
 
         final String[] lines = FileLoader.loadFileAsLines(file, false);
         deleteFile(file);
 
-        assertEquals(lines.length, 2, "loadFileAsLines() file line count");
+        assertEquals(2, lines.length, "loadFileAsLines() file line count");
     }
 
     /**
@@ -181,9 +187,14 @@ final class TestFileLoader {
         final File file = File.createTempFile(PREFIX, SUFFIX);
 
         try (final FileOutputStream writer = new FileOutputStream(file)) {
-            writer.write(TEST_STRING_1.getBytes(StandardCharsets.UTF_8));
-            writer.write(CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8));
-            writer.write(TEST_STRING_2.getBytes(StandardCharsets.UTF_8));
+            final byte[] bytes1 = TEST_STRING_1.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes1);
+
+            final byte[] bytes2 = CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes2);
+
+            final byte[] bytes3 = TEST_STRING_2.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes3);
         }
 
         final String[] lines = FileLoader.loadFileAsLines(file, false);
@@ -204,9 +215,14 @@ final class TestFileLoader {
         final File file = File.createTempFile(PREFIX, SUFFIX);
 
         try (final FileOutputStream writer = new FileOutputStream(file)) {
-            writer.write(TEST_STRING_1.getBytes(StandardCharsets.UTF_8));
-            writer.write(CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8));
-            writer.write(TEST_STRING_2.getBytes(StandardCharsets.UTF_8));
+            final byte[] bytes1 = TEST_STRING_1.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes1);
+
+            final byte[] bytes2 = CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes2);
+
+            final byte[] bytes3 = TEST_STRING_2.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes3);
         }
 
         final String[] lines = FileLoader.loadFileAsLines(file, false);
@@ -260,8 +276,7 @@ final class TestFileLoader {
     @DisplayName("loadFileAsLines(class, file, false) for nonexistent file")
     void test012() {
 
-        final String[] lines =
-                FileLoader.loadFileAsLines(TestFileLoader.class, NONEXIST_FILENAME, false);
+        final String[] lines = FileLoader.loadFileAsLines(TestFileLoader.class, NONEXIST_FILENAME, false);
 
         assertNull(lines, "loadFileAsLines() nonexistent class-relative file");
     }
@@ -277,14 +292,15 @@ final class TestFileLoader {
 
         final File file = File.createTempFile(PREFIX, SUFFIX);
 
+        final byte[] bytes = TEST_STRING_1.getBytes(StandardCharsets.UTF_8);
         try (final FileOutputStream writer = new FileOutputStream(file)) {
-            writer.write(TEST_STRING_1.getBytes(StandardCharsets.UTF_8));
+            writer.write(bytes);
         }
 
         final byte[] loaded = FileLoader.loadFileAsBytes(file, false);
         deleteFile(file);
 
-        assertArrayEquals(TEST_STRING_1.getBytes(StandardCharsets.UTF_8), loaded, "loadFileAsBytes() file content");
+        assertArrayEquals(bytes, loaded, "loadFileAsBytes() file content");
     }
 
     /** Test case. */
@@ -294,7 +310,7 @@ final class TestFileLoader {
 
         final byte[] loaded = FileLoader.loadFileAsBytes(TestFileLoader.class, TXT_FILENAME, false);
         final byte[] expect = (TEST_TXT_FILE + CoreConstants.CRLF + HAS_2_LINES
-                + CoreConstants.CRLF).getBytes(StandardCharsets.UTF_8);
+                               + CoreConstants.CRLF).getBytes(StandardCharsets.UTF_8);
 
         assertArrayEquals(expect, loaded, "loadFileAsBytes() class-relative file content");
     }
@@ -345,7 +361,9 @@ final class TestFileLoader {
 
         for (int x = 0; x < 10; ++x) {
             for (int y = 0; y < 10; ++y) {
-                assertEquals(img.getRGB(x, y), data.getRGB(x, y), "loadFileAsImage() file content");
+                final int imageRgb = img.getRGB(x, y);
+                final int dataRgb = data.getRGB(x, y);
+                assertEquals(imageRgb, dataRgb, "loadFileAsImage() file content");
             }
         }
     }
@@ -361,7 +379,9 @@ final class TestFileLoader {
 
         for (int x = 0; x < 10; ++x) {
             for (int y = 0; y < 10; ++y) {
-                assertEquals(img.getRGB(x, y), data.getRGB(x, y), "loadFileAsImage() class-relative file content");
+                final int imageRgb = img.getRGB(x, y);
+                final int dataRgb = data.getRGB(x, y);
+                assertEquals(imageRgb, dataRgb, "loadFileAsImage() class-relative file content");
             }
         }
     }
@@ -399,14 +419,7 @@ final class TestFileLoader {
         final Path dirPath = Files.createTempDirectory(PREFIX);
         final File dir = dirPath.toFile();
 
-        final File file = new File(dir, "test_en.properties");
-
-        try (final FileOutputStream writer = new FileOutputStream(file)) {
-            writer.write("property1=Do not run with scissors".getBytes(StandardCharsets.UTF_8));
-            writer.write(CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8));
-            writer.write("property2=The quick brown fox jumped over the lazy dog".getBytes(StandardCharsets.UTF_8));
-            writer.write(CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8));
-        }
+        final File file = getEnglishFile(dir);
 
         final Locale current = Locale.getDefault();
         Locale.setDefault(Locale.ENGLISH);
@@ -414,8 +427,36 @@ final class TestFileLoader {
         Locale.setDefault(current);
         deleteFile(file);
 
-        assertEquals(ADVICE, data.getProperty(PROPERTY_1_NAME), PROP_VALUE);
-        assertEquals(QBF, data.getProperty(PROPERTY_2_NAME), PROP_VALUE);
+        final String property1 = data.getProperty(PROPERTY_1_NAME);
+        assertEquals(ADVICE, property1, PROP_VALUE);
+
+        final String property2 = data.getProperty(PROPERTY_2_NAME);
+        assertEquals(QBF, property2, PROP_VALUE);
+    }
+
+    /**
+     * Loads the English properties file.
+     *
+     * @throws IOException if there is an error loading the file
+     */
+    private static File getEnglishFile(final File dir) throws IOException {
+
+        final File file = new File(dir, "test_en.properties");
+
+        try (final FileOutputStream writer = new FileOutputStream(file)) {
+            final byte[] bytes1 = "property1=Do not run with scissors".getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes1);
+
+            final byte[] bytes2 = CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes2);
+
+            final byte[] bytes3 = "property2=The quick brown fox jumped over the lazy dog".getBytes(
+                    StandardCharsets.UTF_8);
+            writer.write(bytes3);
+
+            writer.write(bytes2);
+        }
+        return file;
     }
 
     /**
@@ -430,28 +471,50 @@ final class TestFileLoader {
         final Path dirPath = Files.createTempDirectory(PREFIX);
         final File dir = dirPath.toFile();
 
-        final File file = new File(dir, "test_es.properties");
-
-        try (final FileOutputStream writer = new FileOutputStream(file)) {
-            writer.write(("property1=" + SPADVICE).getBytes(StandardCharsets.UTF_8));
-            writer.write(CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8));
-            writer.write(("property2=" + SPQBF).getBytes(StandardCharsets.UTF_8));
-            writer.write(CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8));
-        }
+        final File file = getSpanishFile(dir);
 
         final Locale current = Locale.getDefault();
-        Locale.setDefault(new Locale(LOCALE_SPAIN));
+        final Locale spainLocale = Locale.of(LOCALE_SPAIN);
+        Locale.setDefault(spainLocale);
 
-        Log.info(FileLoader.loadFileAsString(file, false));
+        final String fileContents = FileLoader.loadFileAsString(file, false);
+        Log.info(fileContents);
 
         final Properties data = FileLoader.loadFileAsProperties(dir, PROPERTIES_BASE, false);
-        Log.info(data.toString());
+        final String dataStr = data.toString();
+        Log.info(dataStr);
 
         Locale.setDefault(current);
         deleteFile(file);
 
-        assertEquals(SPADVICE, data.getProperty(PROPERTY_1_NAME), SP_PROP_VALUE);
-        assertEquals(SPQBF, data.getProperty(PROPERTY_2_NAME), SP_PROP_VALUE);
+        final String property1 = data.getProperty(PROPERTY_1_NAME);
+        assertEquals(SPADVICE, property1, SP_PROP_VALUE);
+        final String property2 = data.getProperty(PROPERTY_2_NAME);
+        assertEquals(SPQBF, property2, SP_PROP_VALUE);
+    }
+
+    /**
+     * Loads the Spanish properties file.
+     *
+     * @throws IOException if there is an error loading the file
+     */
+    private static File getSpanishFile(final File dir) throws IOException {
+
+        final File file = new File(dir, "test_es.properties");
+
+        try (final FileOutputStream writer = new FileOutputStream(file)) {
+            final byte[] bytes1 = ("property1=" + SPADVICE).getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes1);
+
+            final byte[] bytes2 = CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes2);
+
+            final byte[] bytes3 = ("property2=" + SPQBF).getBytes(StandardCharsets.UTF_8);
+            writer.write(bytes3);
+
+            writer.write(bytes2);
+        }
+        return file;
     }
 
     /** Test case. */
@@ -460,13 +523,16 @@ final class TestFileLoader {
     void test023() {
 
         final Locale current = Locale.getDefault();
-        Locale.setDefault(new Locale("en"));
+        final Locale englishLocale = Locale.of("en");
+        Locale.setDefault(englishLocale);
         final Properties data = FileLoader.loadFileAsProperties(TestFileLoader.class, PROPERTIES_BASE,
                 new Properties(), false);
         Locale.setDefault(current);
 
-        assertEquals(ADVICE, data.getProperty(PROPERTY_1_NAME), CR_PROP_VALUE);
-        assertEquals(QBF, data.getProperty(PROPERTY_2_NAME), CR_PROP_VALUE);
+        final String property1 = data.getProperty(PROPERTY_1_NAME);
+        assertEquals(ADVICE, property1, CR_PROP_VALUE);
+        final String property2 = data.getProperty(PROPERTY_2_NAME);
+        assertEquals(QBF, property2, CR_PROP_VALUE);
     }
 
     /** Test case. */
@@ -475,15 +541,18 @@ final class TestFileLoader {
     void test024() {
 
         final Locale current = Locale.getDefault();
-        Locale.setDefault(new Locale(LOCALE_SPAIN));
+        final Locale spainLocale = Locale.of(LOCALE_SPAIN);
+        Locale.setDefault(spainLocale);
         final Properties data = FileLoader.loadFileAsProperties(TestFileLoader.class, PROPERTIES_BASE,
                 new Properties(), false);
         Locale.setDefault(current);
 
-        Log.info("From property file: ", data.getProperty(PROPERTY_2_NAME));
+        final String property2 = data.getProperty(PROPERTY_2_NAME);
+        Log.info("From property file: ", property2);
 
-        assertEquals(SPADVICE, data.getProperty(PROPERTY_1_NAME), SP_CR_PROP_VALUE);
-        assertEquals(SPQBF, data.getProperty(PROPERTY_2_NAME), SP_CR_PROP_VALUE);
+        final String property1 = data.getProperty(PROPERTY_1_NAME);
+        assertEquals(SPADVICE, property1, SP_CR_PROP_VALUE);
+        assertEquals(SPQBF, property2, SP_CR_PROP_VALUE);
     }
 
     /** Test case. */
@@ -491,7 +560,8 @@ final class TestFileLoader {
     @DisplayName("loadFileAsProperties(file, base, false) nonexistent path")
     void test025() {
 
-        final File file = new File(System.getProperty("user.home"), "sadfsaerefasdfsad");
+        final String userHome = System.getProperty("user.home");
+        final File file = new File(userHome, "sadfsaerefasdfsad");
         final Properties data = FileLoader.loadFileAsProperties(file, BOGUS, false);
 
         assertNull(data, "loadFileAsProperties() nonexistent path");
@@ -523,7 +593,8 @@ final class TestFileLoader {
             Log.warning("Failed to create directory");
         }
 
-        final Properties data = FileLoader.loadFileAsProperties(file.getParentFile(), BOGUS, false);
+        final File parentFile = file.getParentFile();
+        final Properties data = FileLoader.loadFileAsProperties(parentFile, BOGUS, false);
 
         assertNull(data, "loadFileAsProperties() nonexistent file");
     }

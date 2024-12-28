@@ -11,7 +11,7 @@ enum XmlChars {
     ;
 
     /** The ranges of characters valid as the first character of an encoding. */
-    private static final int[][] ENCODING_1 = {{'A', 'Z'}, {'a', 'z'},};
+    private static final int[][] ENCODING_1 = {{(int) 'A', (int) 'Z'}, {(int) 'a', (int) 'z'},};
 
     /** A Unicode code point. */
     private static final int SPACE = 0x20;
@@ -85,12 +85,13 @@ enum XmlChars {
      */
     static boolean isNameStartChar(final int codePoint) {
 
-        final int[][] ranges = {{'A', 'Z'}, {'a', 'z'}, {0xC0, 0xD6}, {0xD8, 0xF6}, {0xF8, 0x2FF},
-                {0x370, 0x37D}, {0x37F, 0x1FFF}, {0x200C, 0x200D}, {0x2070, 0x218F}, {0x2C00, 0x2FEF},
+        final int[][] ranges = {{(int) 'A', (int) 'Z'}, {(int) 'a', (int) 'z'}, {0xC0, 0xD6}, {0xD8, 0xF6},
+                {0xF8, 0x2FF}, {0x370, 0x37D}, {0x37F, 0x1FFF}, {0x200C, 0x200D}, {0x2070, 0x218F}, {0x2C00, 0x2FEF},
                 {0x3001, 0xD7FF}, {0xF900, 0xFDCF}, {0xFDF0, 0xFFFD}, {0x10000, 0xEFFFF},};
 
-        return codePoint == ':' || codePoint == '_' || UnicodeCharacterSet.getInstance().getCharacter(codePoint) != null
-                && isInRanges(codePoint, ranges);
+        return codePoint == (int) ':' || codePoint == (int) '_' ||
+               (UnicodeCharacterSet.getInstance().getCharacter(codePoint) != null
+                && isInRanges(codePoint, ranges));
     }
 
     /**
@@ -101,10 +102,10 @@ enum XmlChars {
      */
     static boolean isNameChar(final int codePoint) {
 
-        final int[][] ranges = {{'0', '9'}, {0x300, 0x36f}, {0x203F, 0x2040}};
+        final int[][] ranges = {{(int) '0', (int) '9'}, {0x300, 0x36f}, {0x203F, 0x2040}};
 
-        return codePoint == '-' || codePoint == '.' || codePoint == MIDDLE_DOT || isNameStartChar(codePoint)
-                || UnicodeCharacterSet.getInstance().getCharacter(codePoint) != null && isInRanges(codePoint, ranges);
+        return codePoint == (int) '-' || codePoint == (int) '.' || codePoint == MIDDLE_DOT || isNameStartChar(codePoint)
+               || (UnicodeCharacterSet.getInstance().getCharacter(codePoint) != null && isInRanges(codePoint, ranges));
     }
 
     /**
@@ -115,7 +116,7 @@ enum XmlChars {
      */
     static boolean isEncodingChar1(final char chr) {
 
-        return isInRanges(chr, ENCODING_1);
+        return isInRanges((int) chr, ENCODING_1);
     }
 
     /**
@@ -126,7 +127,7 @@ enum XmlChars {
      */
     static boolean isEncodingChar2(final char chr) {
 
-        return isEncodingChar1(chr) || isDigit(chr) || "._-".indexOf(chr) != -1;
+        return isEncodingChar1(chr) || isDigit((int) chr) || "._-".indexOf((int) chr) != -1;
     }
 
     /**
@@ -137,7 +138,7 @@ enum XmlChars {
      */
     static boolean isQuote(final int codePoint) {
 
-        return codePoint == '\'' || codePoint == '\"';
+        return codePoint == (int) '\'' || codePoint == (int) '\"';
     }
 
     /**
@@ -148,7 +149,7 @@ enum XmlChars {
      */
     static boolean isDigit(final int codePoint) {
 
-        final int[][] ranges = {{'0', '9'}};
+        final int[][] ranges = {{(int) '0', (int) '9'}};
 
         return isInRanges(codePoint, ranges);
     }
@@ -161,7 +162,7 @@ enum XmlChars {
      */
     static boolean isHex(final int codePoint) {
 
-        final int[][] ranges = {{'a', 'f'}, {'A', 'F'}};
+        final int[][] ranges = {{(int) 'a', (int) 'f'}, {(int) 'A', (int) 'F'}};
 
         return isDigit(codePoint) || isInRanges(codePoint, ranges);
     }
@@ -191,10 +192,5 @@ enum XmlChars {
         }
 
         return isInRanges;
-    }
-
-    public static void main(final String... args) {
-
-        Log.info(isChar('x'));
     }
 }

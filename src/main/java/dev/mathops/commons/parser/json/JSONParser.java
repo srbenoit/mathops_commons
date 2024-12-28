@@ -71,26 +71,27 @@ public enum JSONParser {
 
         final Object result;
 
-        if (ch == '{') {
+        if ((int) ch == (int) '{') {
             result = scanObject(chars, range);
-        } else if (ch == '[') {
+        } else if ((int) ch == (int) '[') {
             result = scanArray(chars, range);
-        } else if (ch == '"') {
+        } else if ((int) ch == (int) '"') {
             result = scanString(chars, range);
         } else {
             final int pos = range[1];
             final int end = range[2];
 
-            if (end >= pos + 4 && chars[pos] == 't' && chars[pos + 1] == 'r'
-                    && chars[pos + 2] == 'u' && chars[pos + 3] == 'e') {
+            if (end >= pos + 4 && (int) chars[pos] == (int) 't' && (int) chars[pos + 1] == (int) 'r'
+                && (int) chars[pos + 2] == (int) 'u' && (int) chars[pos + 3] == (int) 'e') {
                 result = Boolean.TRUE;
                 range[1] += 4;
-            } else if (end >= pos + 5 && chars[pos] == 'f' && chars[pos + 1] == 'a'
-                    && chars[pos + 2] == 'l' && chars[pos + 3] == 's' && chars[pos + 4] == 'e') {
+            } else if (end >= pos + 5 && (int) chars[pos] == (int) 'f' && (int) chars[pos + 1] == (int) 'a'
+                       && (int) chars[pos + 2] == (int) 'l' && (int) chars[pos + 3] == (int) 's'
+                       && (int) chars[pos + 4] == (int) 'e') {
                 result = Boolean.FALSE;
                 range[1] += 5;
-            } else if (end >= pos + 4 && chars[pos] == 'n' && chars[pos + 1] == 'u'
-                    && chars[pos + 2] == 'l' && chars[pos + 3] == 'l') {
+            } else if (end >= pos + 4 && (int) chars[pos] == (int) 'n' && (int) chars[pos + 1] == (int) 'u'
+                       && (int) chars[pos + 2] == (int) 'l' && (int) chars[pos + 3] == (int) 'l') {
                 result = NullValue.INSTANCE;
                 range[1] += 4;
             } else {
@@ -131,13 +132,13 @@ public enum JSONParser {
 
         final JSONObject object = new JSONObject();
 
-        if (chars[range[1]] == '}') {
+        if ((int) chars[range[1]] == (int) '}') {
             // Empty object
             ++range[1];
         } else {
             scanMembers(chars, range, object);
 
-            if (range[1] < range[2] && chars[range[1]] == '}') {
+            if (range[1] < range[2] && (int) chars[range[1]] == (int) '}') {
                 // Proper termination
                 ++range[1];
             } else {
@@ -169,7 +170,7 @@ public enum JSONParser {
 
         scanMember(chars, range, target);
 
-        while (range[1] < range[2] && chars[range[1]] == CoreConstants.COMMA_CHAR) {
+        while (range[1] < range[2] && (int) chars[range[1]] == (int) CoreConstants.COMMA_CHAR) {
             ++range[1];
             scanMember(chars, range, target);
         }
@@ -204,12 +205,13 @@ public enum JSONParser {
             throw new ParsingException(range[1] - 1, range[2],
                     "JSON data ended when expecting ':' after object member name.");
         }
-        if (chars[range[1]] != ':') {
+        if ((int) chars[range[1]] != (int) ':') {
             throw new ParsingException(range[1], range[1] + 1, "Expected ':' after object member name.");
         }
         ++range[1];
 
-        target.setProperty(name, scanElement(chars, range));
+        final Object value = scanElement(chars, range);
+        target.setProperty(name, value);
     }
 
     /**
@@ -226,8 +228,7 @@ public enum JSONParser {
      * @return the parsed array
      * @throws ParsingException if parsing failed
      */
-    private static Object[] scanArray(final char[] chars, final int[] range)
-            throws ParsingException {
+    private static Object[] scanArray(final char[] chars, final int[] range) throws ParsingException {
 
         ++range[1];
         scanWs(chars, range);
@@ -237,7 +238,7 @@ public enum JSONParser {
 
         final Object[] array;
 
-        if (chars[range[1]] == ']') {
+        if ((int) chars[range[1]] == (int) ']') {
             // Empty array
             array = ZERO_LEN_OBJ_ARR;
             ++range[1];
@@ -248,7 +249,7 @@ public enum JSONParser {
                 throw new ParsingException(range[1] - 1, range[2], "Missing closing ']' after array.");
             }
 
-            if (chars[range[1]] == ']') {
+            if ((int) chars[range[1]] == (int) ']') {
                 ++range[1];
             } else {
                 throw new ParsingException(range[1] - 1, range[2], "Missing closing ']' after object.");
@@ -281,9 +282,10 @@ public enum JSONParser {
         final Collection<Object> list = new ArrayList<>(10);
         list.add(elem);
 
-        while (range[1] < range[2] && chars[range[1]] == CoreConstants.COMMA_CHAR) {
+        while (range[1] < range[2] && (int) chars[range[1]] == (int) CoreConstants.COMMA_CHAR) {
             ++range[1];
-            list.add(scanElement(chars, range));
+            final Object value = scanElement(chars, range);
+            list.add(value);
         }
 
         return list.toArray();
@@ -302,8 +304,7 @@ public enum JSONParser {
      * @return the scanned element (on successful return, range[1] will hold the position after the scanned element)
      * @throws ParsingException if parsing failed
      */
-    private static Object scanElement(final char[] chars, final int[] range)
-            throws ParsingException {
+    private static Object scanElement(final char[] chars, final int[] range) throws ParsingException {
 
         scanWs(chars, range);
         if (range[1] == range[2]) {
@@ -334,7 +335,7 @@ public enum JSONParser {
 
         final int start = range[1];
 
-        if (chars[range[1]] != '"') {
+        if ((int) chars[range[1]] != (int) '"') {
             throw new ParsingException(range[1], range[1] + 1, "Expected opening quotation mark on string.");
         }
 
@@ -346,7 +347,7 @@ public enum JSONParser {
                     "JSON data ended when expecting closing quote of string: ["
                             + new String(chars, start, range[1] + 1) + "]");
         }
-        if (chars[range[1]] != '"') {
+        if ((int) chars[range[1]] != (int) '"') {
             throw new ParsingException(range[1], range[1] + 1,
                     "Expected closing quotation mark on string: [" + new String(chars, start, range[1] + 1) + "]");
         }
@@ -374,7 +375,7 @@ public enum JSONParser {
 
         final String result;
 
-        if (chars[range[1]] == '"') {
+        if ((int) chars[range[1]] == (int) '"') {
             result = CoreConstants.EMPTY;
         } else {
             final StringBuilder target = new StringBuilder(20);
@@ -382,7 +383,7 @@ public enum JSONParser {
 
             while (range[1] < end) {
                 final char ch = scanCharacter(chars, range);
-                if (ch == 0) {
+                if ((int) ch == 0) {
                     break;
                 }
                 target.append(ch);
@@ -414,13 +415,13 @@ public enum JSONParser {
 
         char ch = chars[range[1]];
 
-        if (ch == '"') {
-            ch = 0;
-        } else if (ch == '\\') {
+        if ((int) ch == (int) '"') {
+            ch = (char) 0;
+        } else if ((int) ch == (int) '\\') {
             ++range[1];
             ch = scanEscape(chars, range);
-        } else if (ch < 0x20) {
-            ch = 0;
+        } else if ((int) ch < 0x20) {
+            ch = (char) 0;
         } else {
             ++range[1];
         }
@@ -459,7 +460,7 @@ public enum JSONParser {
 
         char ch = chars[pos];
 
-        if (ch == 'u') {
+        if ((int) ch == (int) 'u') {
             if (pos + 4 >= range[2]) {
                 throw new ParsingException(pos - 1, range[2], "Invalid unicode escape in string.");
             }
@@ -480,22 +481,22 @@ public enum JSONParser {
 
             final int uncode = (h1 << 12) + (h2 << 8) + (h3 << 4) + h4;
             ch = (char) uncode;
-        } else if (ch == 'n') {
+        } else if ((int) ch == (int) 'n') {
             ch = '\n';
             ++range[1];
-        } else if (ch == 'r') {
+        } else if ((int) ch == (int) 'r') {
             ch = '\r';
             ++range[1];
-        } else if (ch == 't') {
+        } else if ((int) ch == (int) 't') {
             ch = '\t';
             ++range[1];
-        } else if (ch == 'f') {
+        } else if ((int) ch == (int) 'f') {
             ch = '\f';
             ++range[1];
-        } else if (ch == 'b') {
+        } else if ((int) ch == (int) 'b') {
             ch = '\b';
             ++range[1];
-        } else if (ch == '"' || ch == '\\' || ch == '/') {
+        } else if ((int) ch == (int) '"' || (int) ch == (int) '\\' || (int) ch == (int) '/') {
             ++range[1];
         } else {
             throw new ParsingException(pos - 1, pos, "Invalid escape in string.");
@@ -525,12 +526,12 @@ public enum JSONParser {
 
         final char ch = chars[range[1]];
 
-        if (ch >= '0' && ch <= '9') {
-            result = ch - '0';
-        } else if (ch >= 'a' && ch <= 'f') {
-            result = ch - 'a' + 10;
-        } else if (ch >= 'A' && ch <= 'F') {
-            result = ch - 'A' + 10;
+        if ((int) ch >= (int) '0' && (int) ch <= (int) '9') {
+            result = (int) ch - (int) '0';
+        } else if ((int) ch >= (int) 'a' && (int) ch <= (int) 'f') {
+            result = (int) ch - (int) 'a' + 10;
+        } else if ((int) ch >= (int) 'A' && (int) ch <= (int) 'F') {
+            result = (int) ch - (int) 'A' + 10;
         } else {
             throw new ParsingException(range[1], range[1] + 1, "Invalid hex character");
         }
@@ -588,7 +589,7 @@ public enum JSONParser {
 
         char ch = chars[range[1]];
 
-        if (ch == '-') {
+        if ((int) ch == (int) '-') {
             ++range[1];
             if (range[1] == range[2]) {
                 throw new ParsingException(start, range[2], "JSON data ended within number");
@@ -596,16 +597,13 @@ public enum JSONParser {
             ch = chars[range[1]];
         }
 
-        if (ch == '0') {
+        if ((int) ch == (int) '0') {
             ++range[1];
-        } else if (ch >= '1' && ch <= '9') {
-            ++range[1];
-
-            ch = chars[range[1]];
-            while (isDigit(ch)) {
+        } else if ((int) ch >= (int) '1' && (int) ch <= (int) '9') {
+            do {
                 ++range[1];
                 ch = chars[range[1]];
-            }
+            } while (isDigit(ch));
         } else {
             throw new ParsingException(start, range[1] + 1, "Invalid number");
         }
@@ -627,11 +625,9 @@ public enum JSONParser {
     private static void scanDigits(final char[] chars, final int[] range) throws ParsingException {
 
         if (isDigit(chars[range[1]])) {
-            ++range[1];
-
-            while (range[1] < range[2] && isDigit(chars[range[1]])) {
+            do {
                 ++range[1];
-            }
+            } while (range[1] < range[2] && isDigit(chars[range[1]]));
         } else {
             throw new ParsingException(range[1], range[1] + 1, "Invalid digit");
         }
@@ -655,16 +651,16 @@ public enum JSONParser {
 
         final int start = range[1];
 
-        char ch = chars[range[1]];
+        final char ch = chars[range[1]];
 
-        if (ch == '.') {
+        if ((int) ch == (int) '.') {
             ++range[1];
             if (range[1] == range[2]) {
                 throw new ParsingException(start, range[2], "JSON data ended within number");
             }
 
-            ch = chars[range[1]];
-            if (isDigit(ch)) {
+            final char ch2 = chars[range[1]];
+            if (isDigit(ch2)) {
                 while (range[1] < range[2] && isDigit(chars[range[1]])) {
                     ++range[1];
                 }
@@ -693,7 +689,7 @@ public enum JSONParser {
 
         final char ch = chars[range[1]];
 
-        if (ch == 'E' || ch == 'e') {
+        if ((int) ch == (int) 'E' || (int) ch == (int) 'e') {
             ++range[1];
             scanSign(chars, range);
             scanDigits(chars, range);
@@ -717,7 +713,7 @@ public enum JSONParser {
 
         final char ch = chars[range[1]];
 
-        if (ch == '+' || ch == '-') {
+        if ((int) ch == (int) '+' || (int) ch == (int) '-') {
             ++range[1];
         }
     }
@@ -744,7 +740,7 @@ public enum JSONParser {
      */
     private static boolean isWhitespace(final char ch) {
 
-        return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
+        return (int) ch == (int) ' ' || (int) ch == (int) '\t' || (int) ch == (int) '\r' || (int) ch == (int) '\n';
     }
 
     /**
@@ -755,6 +751,6 @@ public enum JSONParser {
      */
     private static boolean isDigit(final char ch) {
 
-        return ch >= '0' && ch <= '9';
+        return (int) ch >= (int) '0' && (int) ch <= (int) '9';
     }
 }

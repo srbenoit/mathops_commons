@@ -52,7 +52,9 @@ abstract class AbstractXmlToken extends CharSpan implements IXmlToken {
 
         int pos = theStart;
 
-        while (XmlChars.isWhitespace(this.content.get(pos))) {
+        while (true) {
+            final char c = this.content.get(pos);
+            if (!XmlChars.isWhitespace((int) c)) break;
             ++pos;
         }
 
@@ -74,7 +76,7 @@ abstract class AbstractXmlToken extends CharSpan implements IXmlToken {
 
         while (pos < theEnd) {
 
-            if (this.content.get(pos) == theChar) {
+            if ((int) this.content.get(pos) == (int) theChar) {
                 found = pos;
                 break;
             }
@@ -118,33 +120,40 @@ abstract class AbstractXmlToken extends CharSpan implements IXmlToken {
         final int nameEnd = validateName(nameStart, last);
         int pos = skipWhitespace(nameEnd);
 
-        if (this.content.get(pos) != '=') {
-            throw new ParsingException(getStart(), pos,
-                    Res.fmt(Res.MISS_EQ, this.content.substring(getStart(), getEnd())));
+        final int start = getStart();
+        final int end = getEnd();
+
+        if ((int) this.content.get(pos) != (int) '=') {
+            final String substring = this.content.substring(start, end);
+            final String message = Res.fmt(Res.MISS_EQ, substring);
+            throw new ParsingException(start, pos, message);
         }
 
         pos = skipWhitespace(pos + 1);
 
         final char quot = this.content.get(pos);
-        final int match = indexOf(quot, pos + 1, getEnd());
+        final int match = indexOf(quot, pos + 1, end);
 
-        if ((quot == '\'' || quot == '\"') && match != -1) {
+        if (((int) quot == (int) '\'' || (int) quot == (int) '\"') && match != -1) {
             final int valueStart = pos + 1;
             final String name = this.content.substring(nameStart, nameEnd);
 
             final String valueStr = this.content.substring(valueStart, match);
-            if (valueStr.indexOf('<') != -1 || valueStr.indexOf('>') != -1) {
+            if (valueStr.indexOf((int) '<') != -1 || valueStr.indexOf((int) '>') != -1) {
                 this.content.logError(this, "Suspicious '" + name + "' attribute value: " + valueStr);
             }
 
-            attributes.put(name, new Attribute(name, XmlEscaper.unescape(valueStr), nameStart,
-                    nameEnd, valueStart, match, getLineNumber(), getColumn()));
+            final int lineNumber = getLineNumber();
+            final int column = getColumn();
+            final String unescaped = XmlEscaper.unescape(valueStr);
+            attributes.put(name, new Attribute(name, unescaped, nameStart, nameEnd, valueStart, match, lineNumber,
+                    column));
             pos = skipWhitespace(match + 1);
         } else {
-            final int start = Math.max(0, getStart() - 20);
-            throw new ParsingException(getStart(), pos,
-                    Res.fmt(Res.BAD_ATSPEC, this.content.substring(nameStart, nameEnd),
-                            this.content.substring(start, getEnd())));
+            final String substring = this.content.substring(nameStart, nameEnd);
+            final String wholeString = this.content.substring(start, end);
+            final String message = Res.fmt(Res.BAD_ATSPEC, substring, wholeString);
+            throw new ParsingException(start, pos, message);
         }
 
         return pos;
@@ -161,25 +170,29 @@ abstract class AbstractXmlToken extends CharSpan implements IXmlToken {
      */
     private int validateName(final int nameStart, final int last) throws ParsingException {
 
-        boolean valid = XmlChars.isNameStartChar(this.content.get(nameStart));
+        final char startChar = this.content.get(nameStart);
+        boolean valid = XmlChars.isNameStartChar((int) startChar);
         int pos = nameStart + 1;
 
         // Validate and store the name
         while (valid && pos < (last - 1)) {
             final char chr = this.content.get(pos);
 
-            if (XmlChars.isWhitespace(chr) || chr == '=') {
+            if (XmlChars.isWhitespace((int) chr) || (int) chr == (int) '=') {
                 break;
             }
 
-            valid = XmlChars.isNameChar(chr);
+            valid = XmlChars.isNameChar((int) chr);
             ++pos;
         }
 
         if (!valid) {
-            throw new ParsingException(getStart(), pos,
-                    Res.fmt(Res.BAD_ATNAME, this.content.substring(getStart(), getEnd()),
-                            this.content.substring(nameStart, pos)));
+            final int start = getStart();
+            final int end = getEnd();
+            final String wholeString = this.content.substring(start, end);
+            final String substring = this.content.substring(nameStart, pos);
+            final String message = Res.fmt(Res.BAD_ATNAME, wholeString, substring);
+            throw new ParsingException(start, pos, message);
         }
 
         return pos;
@@ -196,7 +209,10 @@ abstract class AbstractXmlToken extends CharSpan implements IXmlToken {
 
         final HtmlBuilder xml = new HtmlBuilder(50);
 
-        xml.add(prefix, this.content.substring(getStart(), getEnd()));
+        final int start = getStart();
+        final int end = getEnd();
+        final String substring = this.content.substring(start, end);
+        xml.add(prefix, substring);
 
         return xml;
     }

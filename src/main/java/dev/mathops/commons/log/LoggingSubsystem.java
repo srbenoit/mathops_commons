@@ -2,6 +2,8 @@ package dev.mathops.commons.log;
 
 import dev.mathops.commons.installation.Installation;
 
+import java.util.Properties;
+
 /**
  * Provides VM-wide control of the logging subsystem. There is a single log flow for the VM. Until an Installation has
  * been set in this class, log messages go solely to the console and all levels of event are logged. Once an
@@ -15,7 +17,7 @@ public final class LoggingSubsystem {
     private static final LoggingSubsystem INSTANCE = new LoggingSubsystem();
 
     /** The installation. */
-    private Installation installation;
+    private Installation installation = null;
 
     /** The log settings. */
     private final LogSettings settings;
@@ -26,7 +28,6 @@ public final class LoggingSubsystem {
     private LoggingSubsystem() {
 
         this.settings = new LogSettings();
-        this.installation = null;
 
         configureSettings(this.settings, null);
     }
@@ -41,7 +42,7 @@ public final class LoggingSubsystem {
     public static void setInstallation(final Installation theInstallation) {
 
         synchronized (INSTANCE) {
-            if (INSTANCE.installation == null) {
+            if (getInstallation() == null) {
                 if (theInstallation != null) {
                     INSTANCE.installation = theInstallation;
                     configureSettings(INSTANCE.settings, theInstallation);
@@ -74,7 +75,12 @@ public final class LoggingSubsystem {
     public static void configureSettings(final LogSettings theSettings,
                                          final Installation theInstallation) {
 
-        theSettings.configure(theInstallation == null ? null : theInstallation.properties);
+        if (theInstallation == null) {
+            theSettings.configure(null);
+        } else {
+            final Properties properties = theInstallation.getProperties();
+            theSettings.configure(properties);
+        }
         theSettings.setDirty(false);
 
         if (!theSettings.isAppend()) {

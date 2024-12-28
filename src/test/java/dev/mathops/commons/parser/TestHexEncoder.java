@@ -34,8 +34,8 @@ final class TestHexEncoder {
     @DisplayName("Encode empty lowercase")
     void testEncodeLower1() {
 
-        assertEquals(HexEncoder.encodeLowercase(ZERO_LEN_BYTE_ARR), CoreConstants.EMPTY,
-                "Encode empty lowercase failed");
+        final String actual = HexEncoder.encodeLowercase(ZERO_LEN_BYTE_ARR);
+        assertEquals(CoreConstants.EMPTY, actual, "Encode empty lowercase failed");
     }
 
     /**
@@ -45,7 +45,8 @@ final class TestHexEncoder {
     @DisplayName("Encode lowercase")
     void testEncodeLower2() {
 
-        assertEquals(HexEncoder.encodeLowercase(TEST_BYTES), TEST_LC_HEX, "Encode lowercase failed");
+        final String actual = HexEncoder.encodeLowercase(TEST_BYTES);
+        assertEquals(TEST_LC_HEX, actual, "Encode lowercase failed");
     }
 
     /**
@@ -55,8 +56,8 @@ final class TestHexEncoder {
     @DisplayName("Encode empty uppercase")
     void testEncodeUpper1() {
 
-        assertEquals(HexEncoder.encodeUppercase(ZERO_LEN_BYTE_ARR), CoreConstants.EMPTY,
-                "Encode empty uppercase failed");
+        final String actual = HexEncoder.encodeUppercase(ZERO_LEN_BYTE_ARR);
+        assertEquals(CoreConstants.EMPTY, actual, "Encode empty uppercase failed");
     }
 
     /**
@@ -66,7 +67,8 @@ final class TestHexEncoder {
     @DisplayName("Encode uppercase")
     void testEncodeUpper2() {
 
-        assertEquals(HexEncoder.encodeUppercase(TEST_BYTES), TEST_UC_HEX, "Encode uppercase failed");
+        final String actual = HexEncoder.encodeUppercase(TEST_BYTES);
+        assertEquals(TEST_UC_HEX, actual, "Encode uppercase failed");
     }
 
     /**
@@ -76,7 +78,8 @@ final class TestHexEncoder {
     @DisplayName("Decode valid empty")
     void testDecode1() {
 
-        assertArrayEquals(HexEncoder.decode(CoreConstants.EMPTY), ZERO_LEN_BYTE_ARR, "Decode valid empty failed");
+        final byte[] decoded = HexEncoder.decode(CoreConstants.EMPTY);
+        assertArrayEquals(ZERO_LEN_BYTE_ARR, decoded, "Decode valid empty failed");
     }
 
     /**
@@ -86,7 +89,8 @@ final class TestHexEncoder {
     @DisplayName("Decode valid lowercase")
     void testDecode2() {
 
-        assertArrayEquals(HexEncoder.decode(TEST_LC_HEX), TEST_BYTES, "Decode valid lowercase failed");
+        final byte[] decoded = HexEncoder.decode(TEST_LC_HEX);
+        assertArrayEquals(TEST_BYTES, decoded, "Decode valid lowercase failed");
     }
 
     /**
@@ -96,7 +100,8 @@ final class TestHexEncoder {
     @DisplayName("Decode valid uppercase")
     void testDecode3() {
 
-        assertArrayEquals(HexEncoder.decode(TEST_UC_HEX), TEST_BYTES, "Decode valid uppercase failed");
+        final byte[] decoded = HexEncoder.decode(TEST_UC_HEX);
+        assertArrayEquals(TEST_BYTES, decoded, "Decode valid uppercase failed");
     }
 
     /**

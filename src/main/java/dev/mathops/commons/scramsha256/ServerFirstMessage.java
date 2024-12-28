@@ -90,21 +90,21 @@ public final class ServerFirstMessage {
         this.error = ScramUtils.ZERO_BYTES;
 
         this.serverFirst = new byte[96];
-        this.serverFirst[0] = 'r';
-        this.serverFirst[1] = '=';
+        this.serverFirst[0] = (byte) 'r';
+        this.serverFirst[1] = (byte) '=';
         System.arraycopy(theClientFirst.cNonce, 0, this.serverFirst, 2, 30);
         System.arraycopy(this.sNonce, 0, this.serverFirst, 32, 30);
-        this.serverFirst[62] = ',';
-        this.serverFirst[63] = 's';
-        this.serverFirst[64] = '=';
+        this.serverFirst[62] = (byte) ',';
+        this.serverFirst[63] = (byte) 's';
+        this.serverFirst[64] = (byte) '=';
         System.arraycopy(this.salt, 0, this.serverFirst, 65, 24);
-        this.serverFirst[89] = ',';
-        this.serverFirst[90] = 'i';
-        this.serverFirst[91] = '=';
-        this.serverFirst[92] = (byte) ('0' + this.iterCount / 1000);
-        this.serverFirst[93] = (byte) ('0' + this.iterCount % 1000 / 100);
-        this.serverFirst[94] = (byte) ('0' + this.iterCount % 100 / 10);
-        this.serverFirst[95] = (byte) ('0' + this.iterCount % 10);
+        this.serverFirst[89] = (byte) ',';
+        this.serverFirst[90] = (byte) 'i';
+        this.serverFirst[91] = (byte) '=';
+        this.serverFirst[92] = (byte) ((int) '0' + this.iterCount / 1000);
+        this.serverFirst[93] = (byte) ((int) '0' + this.iterCount % 1000 / 100);
+        this.serverFirst[94] = (byte) ((int) '0' + this.iterCount % 100 / 10);
+        this.serverFirst[95] = (byte) ((int) '0' + this.iterCount % 10);
 
         this.base64 = Base64.getEncoder().encode(this.serverFirst);
         this.token = CoreConstants.newId(30);
@@ -128,8 +128,8 @@ public final class ServerFirstMessage {
         this.error = theError.getBytes(StandardCharsets.UTF_8);
 
         this.serverFirst = new byte[this.error.length + 2];
-        this.serverFirst[0] = 'e';
-        this.serverFirst[1] = '=';
+        this.serverFirst[0] = (byte) 'e';
+        this.serverFirst[1] = (byte) '=';
         System.arraycopy(this.serverFirst, 2, this.error, 0, this.error.length);
 
         this.base64 = Base64.getEncoder().encode(this.serverFirst);
@@ -158,21 +158,20 @@ public final class ServerFirstMessage {
             this.sNonce = ScramUtils.ZERO_BYTES;
             this.salt = ScramUtils.ZERO_BYTES;
             this.iterCount = 0;
-            this.token = CoreConstants.EMPTY;
         } else {
             if (this.serverFirst.length != 96) {
                 throw new IllegalArgumentException("server-first message had invalid length: "
                                                    + this.serverFirst.length);
             }
 
-            if ((int) this.serverFirst[0] == 'r' && (int) this.serverFirst[1] == '='
-                && (int) this.serverFirst[62] == ',' && (int) this.serverFirst[63] == 's'
-                && (int) this.serverFirst[64] == '=' && (int) this.serverFirst[89] == ','
-                && (int) this.serverFirst[90] == 'i' && (int) this.serverFirst[91] == '='
-                && (int) this.serverFirst[92] >= '0' && (int) this.serverFirst[92] <= '9'
-                && (int) this.serverFirst[93] >= '0' && (int) this.serverFirst[93] <= '9'
-                && (int) this.serverFirst[94] >= '0' && (int) this.serverFirst[94] <= '9'
-                && (int) this.serverFirst[95] >= '0' && (int) this.serverFirst[95] <= '9') {
+            if ((int) this.serverFirst[0] == (int) 'r' && (int) this.serverFirst[1] == (int) '='
+                && (int) this.serverFirst[62] == (int) ',' && (int) this.serverFirst[63] == (int) 's'
+                && (int) this.serverFirst[64] == (int) '=' && (int) this.serverFirst[89] == (int) ','
+                && (int) this.serverFirst[90] == (int) 'i' && (int) this.serverFirst[91] == (int) '='
+                && (int) this.serverFirst[92] >= (int) '0' && (int) this.serverFirst[92] <= (int) '9'
+                && (int) this.serverFirst[93] >= (int) '0' && (int) this.serverFirst[93] <= (int) '9'
+                && (int) this.serverFirst[94] >= (int) '0' && (int) this.serverFirst[94] <= (int) '9'
+                && (int) this.serverFirst[95] >= (int) '0' && (int) this.serverFirst[95] <= (int) '9') {
 
                 // Verify that the client-nonce in the server's message matches ours
                 for (int i = 0; i < 30; ++i) {
@@ -190,16 +189,18 @@ public final class ServerFirstMessage {
             System.arraycopy(this.serverFirst, 32, this.sNonce, 0, 30);
             System.arraycopy(this.serverFirst, 65, this.salt, 0, 24);
 
-            this.iterCount = ((int) this.serverFirst[92] - '0') * 1000 + ((int) this.serverFirst[93] - '0') * 100
-                             + ((int) this.serverFirst[94] - '0') * 10 + (int) this.serverFirst[95] - '0';
+            this.iterCount = ((int) this.serverFirst[92] - (int) '0') * 1000
+                             + ((int) this.serverFirst[93] - (int) '0') * 100
+                             + ((int) this.serverFirst[94] - (int) '0') * 10
+                             + (int) this.serverFirst[95] - (int) '0';
             this.error = ScramUtils.ZERO_BYTES;
 
             if (this.iterCount < 4096) {
                 throw new IllegalArgumentException("server-first message had invalid iteration count: "
                                                    + this.iterCount);
             }
-            this.token = CoreConstants.EMPTY;
         }
+        this.token = CoreConstants.EMPTY;
     }
 
     /**

@@ -9,68 +9,65 @@ import java.util.Locale;
  */
 final class Res extends ResBundle {
 
-    /** An incrementing index for resource keys. */
-    private static int index = 1;
+    /** A resource key. */
+    static final String MISS_ATTR = key(1);
 
     /** A resource key. */
-    static final String MISS_ATTR = key(index++);
+    static final String INT_ERR = key(2);
 
     /** A resource key. */
-    static final String INT_ERR = key(index++);
+    static final String LONG_ERR = key(3);
 
     /** A resource key. */
-    static final String LONG_ERR = key(index++);
+    static final String FLOAT_ERR = key(4);
 
     /** A resource key. */
-    static final String FLOAT_ERR = key(index++);
+    static final String BOOLEAN_ERR = key(5);
 
     /** A resource key. */
-    static final String BOOLEAN_ERR = key(index++);
+    static final String BAD_TAG = key(6);
 
     /** A resource key. */
-    static final String BAD_TAG = key(index++);
+    static final String BAD_ENDTAG = key(7);
 
     /** A resource key. */
-    static final String BAD_ENDTAG = key(index++);
+    static final String MISS_EQ = key(8);
 
     /** A resource key. */
-    static final String MISS_EQ = key(index++);
+    static final String BAD_ATSPEC = key(9);
 
     /** A resource key. */
-    static final String BAD_ATSPEC = key(index++);
+    static final String BAD_ATNAME = key(10);
 
     /** A resource key. */
-    static final String BAD_ATNAME = key(index++);
+    static final String UNSUP_TAG = key(11);
 
     /** A resource key. */
-    static final String UNSUP_TAG = key(index++);
+    static final String BAD_CDATA = key(12);
 
     /** A resource key. */
-    static final String BAD_CDATA = key(index++);
+    static final String BAD_ENCCHAR = key(13);
 
     /** A resource key. */
-    static final String BAD_ENCCHAR = key(index++);
+    static final String BAD_ENCCHAR1 = key(14);
 
     /** A resource key. */
-    static final String BAD_ENCCHAR1 = key(index++);
+    static final String NO_OPEN = key(15);
 
     /** A resource key. */
-    static final String NO_OPEN = key(index++);
+    static final String BAD_CLOSE = key(16);
 
     /** A resource key. */
-    static final String BAD_CLOSE = key(index++);
+    static final String BAD_CHAR = key(17);
 
     /** A resource key. */
-    static final String BAD_CHAR = key(index++);
+    static final String BAD_EOF = key(18);
 
     /** A resource key. */
-    static final String BAD_EOF = key(index++);
+    static final String XML_FILE_FILTER_DESC = key(19);
 
     /** A resource key. */
-    static final String XML_FILE_FILTER_DESC = key(index++);
-
-    /** A resource key. */
-    static final String BAD_XML_DECL = key(index++);
+    static final String BAD_XML_DECL = key(20);
 
     /** The resources - an array of key-values pairs. */
     private static final String[][] EN_US = {

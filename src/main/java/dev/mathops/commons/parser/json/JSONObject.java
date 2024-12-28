@@ -19,7 +19,7 @@ import java.util.Map;
  * <li>{@code null}
  * </ul>
  */
-public class JSONObject {
+public final class JSONObject {
 
     /** Map from property name to value. */
     private final Map<String, Object> properties;
@@ -103,19 +103,19 @@ public class JSONObject {
 
         for (final char ch : source.toCharArray()) {
 
-            if (ch == '\b') {
+            if ((int) ch == (int) '\b') {
                 target.add("\\b");
-            } else if (ch == '\f') {
+            } else if ((int) ch == (int) '\f') {
                 target.add("\\f");
-            } else if (ch == '\n') {
+            } else if ((int) ch == (int) '\n') {
                 target.add("\\n");
-            } else if (ch == '\r') {
+            } else if ((int) ch == (int) '\r') {
                 target.add("\\r");
-            } else if (ch == '\t') {
+            } else if ((int) ch == (int) '\t') {
                 target.add("\\t");
-            } else if (ch == '"') {
+            } else if ((int) ch == (int) '"') {
                 target.add("\\\"");
-            } else if (ch == '\\') {
+            } else if ((int) ch == (int) '\\') {
                 target.add("\\\\");
             } else {
                 target.add(ch);
@@ -139,9 +139,11 @@ public class JSONObject {
                 htm.add(CoreConstants.COMMA_CHAR);
             }
             htm.add('"');
-            escapeJSONString(entry.getKey(), htm);
+            final String key = entry.getKey();
+            escapeJSONString(key, htm);
             htm.add('"').add(':');
-            emitValueCompact(entry.getValue(), htm);
+            final Object value = entry.getValue();
+            emitValueCompact(value, htm);
             comma = true;
         }
         htm.add('}');
@@ -155,39 +157,47 @@ public class JSONObject {
      * @param value the value to emit
      * @param htm   the {@code HtmlBuilder} to which to emit
      */
-    private void emitValueCompact(final Object value, final HtmlBuilder htm) {
+    private static void emitValueCompact(final Object value, final HtmlBuilder htm) {
 
-        if (value instanceof final JSONObject obj) {
-            htm.add(obj.toJSONCompact());
-        } else if (value instanceof final Object[] array) {
-            htm.add('[');
-            boolean comma = false;
-            for (final Object o : array) {
-                if (comma) {
-                    htm.add(CoreConstants.COMMA_CHAR);
-                }
-                emitValueCompact(o, htm);
-                comma = true;
+        switch (value) {
+            case final JSONObject obj -> {
+                final String json = obj.toJSONCompact();
+                htm.add(json);
             }
-            htm.add(']');
-        } else if (value instanceof final String str) {
-            htm.add('"');
-            escapeJSONString(str, htm);
-            htm.add('"');
-        } else if (value instanceof Double) {
-            htm.add(value.toString());
-        } else if (value instanceof Boolean) {
-            htm.add(value.toString());
-        } else {
-            htm.add("null");
+            case final Object[] array -> {
+                htm.add('[');
+                boolean comma = false;
+                for (final Object o : array) {
+                    if (comma) {
+                        htm.add(CoreConstants.COMMA_CHAR);
+                    }
+                    emitValueCompact(o, htm);
+                    comma = true;
+                }
+                htm.add(']');
+            }
+            case final String str -> {
+                htm.add('"');
+                escapeJSONString(str, htm);
+                htm.add('"');
+            }
+            case final Double ignored -> {
+                final String valueStr = value.toString();
+                htm.add(valueStr);
+            }
+            case final Boolean ignored -> {
+                final String valueStr = value.toString();
+                htm.add(valueStr);
+            }
+            case null, default -> htm.add("null");
         }
     }
 
     /**
      * Generates the JSON representation of the object.
      *
-     * @param indent the indentation level (the leading '{' is not indented - but all subsequent lines are indented
-     *               "indent + 1" steps)
+     * @param indent the indentation level (the leading left brace is not indented - but all subsequent lines are
+     *               indented "indent + 1" steps)
      * @return the JSON representation
      */
     public String toJSONFriendly(final int indent) {
@@ -202,9 +212,11 @@ public class JSONObject {
                 htm.indent(indent + 2);
             }
             htm.add('"');
-            escapeJSONString(entry.getKey(), htm);
+            final String key = entry.getKey();
+            escapeJSONString(key, htm);
             htm.add("\": ");
-            emitValueFriendly(entry.getValue(), htm, indent + 2);
+            final Object value = entry.getValue();
+            emitValueFriendly(value, htm, indent + 2);
             comma = true;
         }
         htm.add('}');
@@ -220,34 +232,42 @@ public class JSONObject {
      * @param indent the indentation level (the value itself is not indented - but array contents and object contents
      *               are indented "indent + 1" steps)
      */
-    private void emitValueFriendly(final Object value, final HtmlBuilder htm, final int indent) {
+    private static void emitValueFriendly(final Object value, final HtmlBuilder htm, final int indent) {
 
-        if (value instanceof final JSONObject obj) {
-            htm.add(obj.toJSONFriendly(indent));
-        } else if (value instanceof final Object[] array) {
-            htm.addln('[');
-            htm.indent(indent + 2);
-
-            boolean comma = false;
-            for (final Object o : array) {
-                if (comma) {
-                    htm.addln(CoreConstants.COMMA_CHAR);
-                    htm.indent(indent + 2);
-                }
-                emitValueFriendly(o, htm, indent + 2);
-                comma = true;
+        switch (value) {
+            case final JSONObject obj -> {
+                final String friendly = obj.toJSONFriendly(indent);
+                htm.add(friendly);
             }
-            htm.add(']');
-        } else if (value instanceof final String str) {
-            htm.add('"');
-            escapeJSONString(str, htm);
-            htm.add('"');
-        } else if (value instanceof Double) {
-            htm.add(value.toString());
-        } else if (value instanceof Boolean) {
-            htm.add(value.toString());
-        } else {
-            htm.add("null");
+            case final Object[] array -> {
+                htm.addln('[');
+                htm.indent(indent + 2);
+
+                boolean comma = false;
+                for (final Object o : array) {
+                    if (comma) {
+                        htm.addln(CoreConstants.COMMA_CHAR);
+                        htm.indent(indent + 2);
+                    }
+                    emitValueFriendly(o, htm, indent + 2);
+                    comma = true;
+                }
+                htm.add(']');
+            }
+            case final String str -> {
+                htm.add('"');
+                escapeJSONString(str, htm);
+                htm.add('"');
+            }
+            case final Double ignored -> {
+                final String valueStr = value.toString();
+                htm.add(valueStr);
+            }
+            case final Boolean ignored -> {
+                final String valueStr = value.toString();
+                htm.add(valueStr);
+            }
+            case null, default -> htm.add("null");
         }
     }
 }
