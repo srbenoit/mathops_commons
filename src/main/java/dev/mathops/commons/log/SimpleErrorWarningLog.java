@@ -148,7 +148,7 @@ public class SimpleErrorWarningLog implements IErrorWarningLog {
     @Override
     public final boolean indicateNoInterface(final String name) {
 
-        final String msg = Res.fmt(Res.ERRLOG_NO_INTERFACE, name);
+        final String msg = Res.fmt(Res.ERR_LOG_NO_INTERFACE, name);
 
         Log.severe(msg);
         addError(msg);

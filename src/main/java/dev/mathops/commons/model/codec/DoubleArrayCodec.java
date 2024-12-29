@@ -37,7 +37,7 @@ public enum DoubleArrayCodec implements Codec<double[]> {
         }
 
         try {
-            double[] result;
+            final double[] result;
 
             if (str.isBlank()) {
                 result = new double[0];
@@ -69,7 +69,7 @@ public enum DoubleArrayCodec implements Codec<double[]> {
             throw new IllegalArgumentException(msg);
         }
 
-        String result;
+        final String result;
 
         final int len = obj.length;
         if (len == 0) {

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Tests for the ResBundle class.
  */
-final class TestResBundle extends ResBundle {
+final class TestResBundle {
 
     /** A frequently used string. */
     private static final String HELLO_STR = "Hello {0}";
@@ -72,13 +72,13 @@ final class TestResBundle extends ResBundle {
     private static final String B = "b";
 
     /** A message key. */
-    private static final String HELLO = key(0);
+    private static final String HELLO = ResBundle.key(0);
 
     /** A message key. */
-    private static final String YES = key(1);
+    private static final String YES = ResBundle.key(1);
 
     /** A message key. */
-    private static final String MISSING = key(2);
+    private static final String MISSING = ResBundle.key(2);
 
     /** A common string. */
     private static final String UNUSED = "unused";
@@ -97,13 +97,7 @@ final class TestResBundle extends ResBundle {
      */
     TestResBundle() {
 
-        super(Locale.US, EN_US);
-
-        final Locale spanishLocale = Locale.of(SPANISH);
-        addMessages(spanishLocale, ES_ALL);
-
-        final Locale germanLocale = Locale.of(GERMAN);
-        addMessages(germanLocale, DE_ALL);
+        //  No action
     }
 
     /**
@@ -113,11 +107,13 @@ final class TestResBundle extends ResBundle {
     @DisplayName("Exception on missing Locale")
     void test001() {
 
+        final ResBundle bundle = makeBundle();
+
         final String[][] junk = new String[1][];
         junk[0] = new String[]{A, B};
 
         assertThrows(IllegalArgumentException.class, () -> {
-            addMessages(null, junk);
+            bundle.addMessages(null, junk);
         }, "No exception on missing Locale");
     }
 
@@ -128,9 +124,11 @@ final class TestResBundle extends ResBundle {
     @DisplayName("Exception on null message array")
     void test002() {
 
+        final ResBundle bundle = makeBundle();
+
         assertThrows(IllegalArgumentException.class, () -> {
                     final Locale frenchLocale = Locale.of(FRENCH);
-                    addMessages(frenchLocale, null);
+                    bundle.addMessages(frenchLocale, null);
                 },
                 "No exception on null message arrays");
     }
@@ -142,11 +140,13 @@ final class TestResBundle extends ResBundle {
     @DisplayName("Exception on null message sub-array")
     void test003() {
 
+        final ResBundle bundle = makeBundle();
+
         final String[][] junk = new String[1][];
 
         assertThrows(IllegalArgumentException.class, () -> {
                     final Locale frenchLocale = Locale.of(FRENCH);
-                    addMessages(frenchLocale, junk);
+                    bundle.addMessages(frenchLocale, junk);
                 },
                 "No exception on null message sub-array");
     }
@@ -158,12 +158,14 @@ final class TestResBundle extends ResBundle {
     @DisplayName("Exception on message sub-array of length 3")
     void test004() {
 
+        final ResBundle bundle = makeBundle();
+
         final String[][] junk = new String[1][];
         junk[0] = new String[3];
 
         assertThrows(IllegalArgumentException.class, () -> {
                     final Locale frenchLocale = Locale.of(FRENCH);
-                    addMessages(frenchLocale, junk);
+                    bundle.addMessages(frenchLocale, junk);
                 },
                 "No exception on message sub-array of length 3");
     }
@@ -175,12 +177,14 @@ final class TestResBundle extends ResBundle {
     @DisplayName("Exception on null messages")
     void test005() {
 
+        final ResBundle bundle = makeBundle();
+
         final String[][] junk = new String[1][];
         junk[0] = new String[2];
 
         assertThrows(IllegalArgumentException.class, () -> {
                     final Locale frenchLocale = Locale.of(FRENCH);
-                    addMessages(frenchLocale, junk);
+                    bundle.addMessages(frenchLocale, junk);
                 },
                 "No exception on null messages");
     }
@@ -192,13 +196,15 @@ final class TestResBundle extends ResBundle {
     @DisplayName("Exception on null message 1")
     void test006() {
 
+        final ResBundle bundle = makeBundle();
+
         final String[][] junk = new String[1][];
         junk[0] = new String[2];
         junk[0][0] = A;
 
         assertThrows(IllegalArgumentException.class, () -> {
                     final Locale frenchLocale = Locale.of(FRENCH);
-                    addMessages(frenchLocale, junk);
+                    bundle.addMessages(frenchLocale, junk);
                 },
                 "No exception on null message 1");
     }
@@ -210,13 +216,15 @@ final class TestResBundle extends ResBundle {
     @DisplayName("Exception on null message 0")
     void test007() {
 
+        final ResBundle bundle = makeBundle();
+
         final String[][] junk = new String[1][];
         junk[0] = new String[2];
         junk[0][1] = A;
 
         assertThrows(IllegalArgumentException.class, () -> {
                     final Locale frenchLocale = Locale.of(FRENCH);
-                    addMessages(frenchLocale, junk);
+                    bundle.addMessages(frenchLocale, junk);
                 },
                 "No exception on null message 0");
     }
@@ -228,17 +236,19 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'en', 'US', 'qux'")
     void test008() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(ENGLISH, US, VARIANT);
         Locale.setDefault(locale);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HELLO_STR, helloMsg, "GetEnUsQux Hello");
 
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(YES_STR, yesMsg, "GetEnUsQux Yes");
 
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetEnUsQux Empty");
 
         Locale.setDefault(def);
@@ -251,14 +261,16 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'en', 'US'")
     void test009() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         Locale.setDefault(Locale.US);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HELLO_STR, helloMsg, "GetEnUs Hello");
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(YES_STR, yesMsg, "GetEnUs Yes");
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetEnUs Empty");
 
         Locale.setDefault(def);
@@ -271,14 +283,16 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'en'")
     void test010() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         Locale.setDefault(Locale.ENGLISH);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HELLO_STR, helloMsg, "GetEn Hello");
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(YES_STR, yesMsg, "GetEn Yes");
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetEn Empty");
 
         Locale.setDefault(def);
@@ -291,15 +305,17 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'es', 'SP', 'qux'")
     void test011() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(SPANISH, SPAIN, VARIANT);
         Locale.setDefault(locale);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HOLA_STR, helloMsg, "GetEsSpQux Hello");
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(SI_STR, yesMsg, "GetEsSpQux Yes");
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetEsSpQux Empty");
 
         Locale.setDefault(def);
@@ -312,15 +328,17 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'es', 'SP'")
     void test012() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(SPANISH, SPAIN);
         Locale.setDefault(locale);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HOLA_STR, helloMsg, "GetEsSp Hello");
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(SI_STR, yesMsg, "GetEsSp Yes");
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetEsSp Empty");
 
         Locale.setDefault(def);
@@ -333,15 +351,17 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'es'")
     void test013() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(SPANISH);
         Locale.setDefault(locale);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HOLA_STR, helloMsg, "GetEs Hello");
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(SI_STR, yesMsg, "GetEs Yes");
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetEs Empty");
 
         Locale.setDefault(def);
@@ -354,15 +374,17 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'de'")
     void test014() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(GERMAN);
         Locale.setDefault(locale);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HALLO_STR, helloMsg, "GetDe Hello");
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(JA_STR, yesMsg, "GetDe Yes");
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetDe Empty");
 
         Locale.setDefault(def);
@@ -375,15 +397,17 @@ final class TestResBundle extends ResBundle {
     @DisplayName("getMsg() for 'la'")
     void test015() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(LA);
         Locale.setDefault(locale);
 
-        final String helloMsg = getMsg(HELLO);
+        final String helloMsg = bundle.getMsg(HELLO);
         assertEquals(HELLO_STR, helloMsg, "GetLa Hello");
-        final String yesMsg = getMsg(YES);
+        final String yesMsg = bundle.getMsg(YES);
         assertEquals(YES_STR, yesMsg, "GetLa Yes");
-        final String missingMsg = getMsg(MISSING);
+        final String missingMsg = bundle.getMsg(MISSING);
         assertEquals(CoreConstants.EMPTY, missingMsg, "GetLa Empty");
 
         Locale.setDefault(def);
@@ -396,11 +420,13 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'en', 'US', 'qux'")
     void test016() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(ENGLISH, US, VARIANT);
         Locale.setDefault(locale);
 
-        final String helloMsg = formatMsg(HELLO, YES_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, YES_STR);
         assertEquals(HELLO_YES_STR, helloMsg, "FmtEnUsQux Hello Yes");
 
         Locale.setDefault(def);
@@ -413,10 +439,12 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'en', 'US'")
     void test017() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         Locale.setDefault(Locale.US);
 
-        final String helloMsg = formatMsg(HELLO, YES_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, YES_STR);
         assertEquals(HELLO_YES_STR, helloMsg, "FmtEnUs Hello Yes");
 
         Locale.setDefault(def);
@@ -429,10 +457,12 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'en'")
     void test018() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         Locale.setDefault(Locale.ENGLISH);
 
-        final String helloMsg = formatMsg(HELLO, YES_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, YES_STR);
         assertEquals(HELLO_YES_STR, helloMsg, "FmtEn Hello Yes");
 
         Locale.setDefault(def);
@@ -445,11 +475,13 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'es', 'SP', 'qux'")
     void test019() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(SPANISH, SPAIN, VARIANT);
         Locale.setDefault(locale);
 
-        final String helloMsg = formatMsg(HELLO, SI_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, SI_STR);
         assertEquals(HOLA_SI_STR, helloMsg, "FmtEsSpQux Hola Si");
 
         Locale.setDefault(def);
@@ -462,11 +494,13 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'es', 'SP'")
     void test020() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(SPANISH, SPAIN);
         Locale.setDefault(locale);
 
-        final String helloMsg = formatMsg(HELLO, SI_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, SI_STR);
         assertEquals(HOLA_SI_STR, helloMsg, "FmtEsSp Hola Si");
 
         Locale.setDefault(def);
@@ -479,11 +513,13 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'es'")
     void test021() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(SPANISH);
         Locale.setDefault(locale);
 
-        final String helloMsg = formatMsg(HELLO, SI_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, SI_STR);
         assertEquals(HOLA_SI_STR, helloMsg, "FmtEs Hola Si");
 
         Locale.setDefault(def);
@@ -496,11 +532,13 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'de'")
     void test022() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(GERMAN);
         Locale.setDefault(locale);
 
-        final String helloMsg = formatMsg(HELLO, JA_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, JA_STR);
         assertEquals(HALLO_JA_STR, helloMsg, "FmtDe Hallo Ja");
 
         Locale.setDefault(def);
@@ -513,13 +551,31 @@ final class TestResBundle extends ResBundle {
     @DisplayName("formatMsg() for 'la'")
     void test023() {
 
+        final ResBundle bundle = makeBundle();
+
         final Locale def = Locale.getDefault();
         final Locale locale = Locale.of(LA);
         Locale.setDefault(locale);
 
-        final String helloMsg = formatMsg(HELLO, YES_STR);
+        final String helloMsg = bundle.formatMsg(HELLO, YES_STR);
         assertEquals(HELLO_YES_STR, helloMsg, "FmtLa Hello Yes");
 
         Locale.setDefault(def);
+    }
+
+    /**
+     * Creates a test bundle.
+     *
+     * @return the test bundle
+     */
+    private static ResBundle makeBundle() {
+
+        final ResBundle bundle = new ResBundle(Locale.US, EN_US);
+        final Locale spanishLocale = Locale.of(SPANISH);
+        bundle.addMessages(spanishLocale, ES_ALL);
+        final Locale germanLocale = Locale.of(GERMAN);
+        bundle.addMessages(germanLocale, DE_ALL);
+
+        return bundle;
     }
 }

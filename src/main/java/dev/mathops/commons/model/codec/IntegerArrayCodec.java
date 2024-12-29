@@ -37,7 +37,7 @@ public enum IntegerArrayCodec implements Codec<int[]> {
         }
 
         try {
-            int[] result;
+            final int[] result;
 
             if (str.isBlank()) {
                 result = new int[0];
@@ -69,7 +69,7 @@ public enum IntegerArrayCodec implements Codec<int[]> {
             throw new IllegalArgumentException(msg);
         }
 
-        String result;
+        final String result;
 
         final int len = obj.length;
         if (len == 0) {

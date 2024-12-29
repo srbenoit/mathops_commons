@@ -16,6 +16,7 @@
 package dev.mathops.commons.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -173,7 +174,7 @@ public class TypedMap {
 
         if (i >= 0) {
             final Object representation = this.data.get(i + 1);
-            if (representation instanceof String s) {
+            if (representation instanceof final String s) {
                 result = s;
             } else {
                 final Object value = this.data.get(i + 2);
@@ -206,7 +207,7 @@ public class TypedMap {
 
         if (i >= 0) {
             final Object value = this.data.get(i + 2);
-            if (value instanceof ModelTreeNode node) {
+            if (value instanceof final ModelTreeNode node) {
                 result = node;
             }
         }
@@ -249,13 +250,13 @@ public class TypedMap {
      *
      * @param target the list to which to add attribute keys
      */
-    public void getAttributeKeys(final List<? super TypedKey<?>> target) {
+    public final void getAttributeKeys(final Collection<? super TypedKey<?>> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.ATTRIBUTE) {
+            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.ATTRIBUTE) {
                 target.add(firstKey);
             }
         }
@@ -266,13 +267,13 @@ public class TypedMap {
      *
      * @param target the list to which to add property keys
      */
-    public void getPropertyKeys(final List<? super TypedKey<?>> target) {
+    public final void getPropertyKeys(final Collection<? super TypedKey<?>> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.PROPERTY) {
+            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.PROPERTY) {
                 target.add(firstKey);
             }
         }
@@ -283,13 +284,13 @@ public class TypedMap {
      *
      * @param target the list to which to add data keys
      */
-    public void getDataKeys(final List<? super TypedKey<?>> target) {
+    public final void getDataKeys(final Collection<? super TypedKey<?>> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.DATA) {
+            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.DATA) {
                 target.add(firstKey);
             }
         }
@@ -300,13 +301,13 @@ public class TypedMap {
      *
      * @param target the list to which to add node keys
      */
-    public void getNodeKeys(final List<? super TypedKey<?>> target) {
+    public final void getNodeKeys(final Collection<? super TypedKey<?>> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.NODE) {
+            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.NODE) {
                 target.add(firstKey);
             }
         }
@@ -335,7 +336,8 @@ public class TypedMap {
         final int len = this.data.size();
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof TypedKey<?> firstKey && firstKey.hashCode() == key.hashCode() && firstKey.equals(key)) {
+            if (o instanceof final TypedKey<?> firstKey && firstKey.hashCode() == key.hashCode() && firstKey.equals(
+                    key)) {
                 index = i;
                 break;
             }
@@ -350,11 +352,13 @@ public class TypedMap {
      * @return the string representation
      */
     @Override
-    public String toString() {
+    public final String toString() {
 
         final StringBuilder builder = new StringBuilder(100);
 
-        builder.append(getClass().getName());
+        final Class<? extends TypedMap> cls = getClass();
+        final String className = cls.getName();
+        builder.append(className);
         builder.append('{');
 
         final int len = this.data.size();
@@ -362,18 +366,19 @@ public class TypedMap {
         for (int i = 0; i < len; i += 3) {
             final Object key = this.data.get(i);
             if (key instanceof final TypedKey<?> typedKey) {
-                builder.append(typedKey.getName());
+                final String keyName = typedKey.getName();
+                builder.append(keyName);
                 builder.append('=');
 
-                final Object obj = this.data.get(i + 2);
-                if (obj != null) {
-                    builder.append(obj);
+                final Object obj2 = this.data.get(i + 2);
+                if (obj2 != null) {
+                    builder.append(obj2);
                 }
 
-                final Object str = this.data.get(i + 1);
-                if (str != null) {
+                final Object obj1 = this.data.get(i + 1);
+                if (obj1 != null) {
                     builder.append('[');
-                    builder.append(str);
+                    builder.append(obj1);
                     builder.append(']');
                 }
             }

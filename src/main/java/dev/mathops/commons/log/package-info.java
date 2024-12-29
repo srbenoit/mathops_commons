@@ -23,7 +23,7 @@
  *
  * LogSettings
  *
- * LogEnry
+ * LogEntry
  *
  * LogRotator (utility)
  * </pre>

@@ -91,7 +91,7 @@ final class LogRotator {
             }
         }
 
-        return err.length() > 0 ? err.toString() : null;
+        return err.isEmpty() ? null : err.toString();
     }
 
     /**
@@ -137,18 +137,18 @@ final class LogRotator {
     /**
      * Attempts to copy a file.
      *
-     * @param source the source file
-     * @param dest   the destination file
-     * @param err    a {@code HtmlBuilder} to which to log errors
+     * @param source      the source file
+     * @param destination the destination file
+     * @param err         a {@code HtmlBuilder} to which to log errors
      * @return {@code true} if copy succeeded
      */
-    private static boolean copyFile(final File source, final File dest, final StringBuilder err) {
+    private static boolean copyFile(final File source, final File destination, final StringBuilder err) {
 
         boolean ok = false;
 
         final byte[] buffer = new byte[BUF_SIZE];
         try (final FileInputStream fis = new FileInputStream(source);
-             final FileOutputStream fos = new FileOutputStream(dest)) {
+             final FileOutputStream fos = new FileOutputStream(destination)) {
 
             int len = fis.read(buffer);
             while (len > 0) {

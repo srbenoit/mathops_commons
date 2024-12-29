@@ -53,21 +53,21 @@ public class Rational extends Number {
             throw new IllegalArgumentException(msg);
         }
 
-        final long n;
-        final long d;
+        final long numerator;
+        final long denominator;
         if (theDenominator < 0L) {
-            n = -theNumerator;
-            d = -theDenominator;
+            numerator = -theNumerator;
+            denominator = -theDenominator;
         } else {
-            n = theNumerator;
-            d = theDenominator;
+            numerator = theNumerator;
+            denominator = theDenominator;
         }
 
-        final long abs = Math.abs(n);
-        final long gcd = gcdByEuclidAlgorithm(abs, d);
+        final long abs = Math.abs(numerator);
+        final long gcd = gcdByEuclidAlgorithm(abs, denominator);
 
-        this.numerator = n / gcd;
-        this.denominator = d / gcd;
+        this.numerator = numerator / gcd;
+        this.denominator = denominator / gcd;
     }
 
     /**
@@ -103,11 +103,11 @@ public class Rational extends Number {
         } else {
             final String preSlash = str.substring(0, slash);
             final String numeratorStr = preSlash.trim();
-            final long n = Long.parseLong(numeratorStr);
+            final long numerator = Long.parseLong(numeratorStr);
             final String postSlash = str.substring(slash + 1);
             final String denominatorStr = postSlash.trim();
-            final long d = Long.parseLong(denominatorStr);
-            result = new Rational(n, d);
+            final long denominator = Long.parseLong(denominatorStr);
+            result = new Rational(numerator, denominator);
         }
 
         return result;

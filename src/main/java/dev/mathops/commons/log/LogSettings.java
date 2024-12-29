@@ -314,13 +314,13 @@ public final class LogSettings {
 
         final int length = theFilenameBase.length();
         if (length == 0) {
-            final String msg = Res.get(Res.EMPTY_FNAME);
+            final String msg = Res.get(Res.EMPTY_FILENAME);
             throw new IllegalArgumentException(msg);
         }
 
         final int char0 = (int) theFilenameBase.charAt(0);
         if (VALID_1.indexOf(char0) == -1) {
-            final String msg = Res.get(Res.FNAME_CHAR1);
+            final String msg = Res.get(Res.FILENAME_CHAR1);
             throw new IllegalArgumentException(msg);
         }
 
@@ -329,7 +329,7 @@ public final class LogSettings {
 
             if (VALID_2.indexOf((int) chr) == -1) {
                 final String charStr = Character.toString(chr);
-                final String msg = Res.fmt(Res.FNAME_CHAR1, charStr);
+                final String msg = Res.fmt(Res.FILENAME_CHAR1, charStr);
                 throw new IllegalArgumentException(msg);
             }
         }

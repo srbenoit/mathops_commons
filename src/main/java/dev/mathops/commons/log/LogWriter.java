@@ -61,8 +61,8 @@ public final class LogWriter extends LogEntryList {
 
         if (LoggingSubsystem.getInstallation() != null && this.settings.isLogToFiles()) {
             final File logDir = determineLogDir();
-            final String filanemeBase = this.settings.getFilenameBase();
-            this.curFile = new File(logDir, filanemeBase + EXTENSION);
+            final String filenameBase = this.settings.getFilenameBase();
+            this.curFile = new File(logDir, filenameBase + EXTENSION);
 
             if (this.curFile.exists() && !this.settings.isAppend()) {
                 rotateLogs();
@@ -186,7 +186,7 @@ public final class LogWriter extends LogEntryList {
             final String path = this.settings.getLogFilePath();
 
             if (path != null && !path.isEmpty()) {
-                final int chr0 = path.charAt(0);
+                final int chr0 = (int) path.charAt(0);
 
                 if (chr0 == (int) SLASH || chr0 == (int) BACKSLASH) {
                     result = new File(path);
@@ -200,7 +200,7 @@ public final class LogWriter extends LogEntryList {
 
                 if (!result.exists() && !result.mkdirs()) {
                     final String absPath = result.getAbsolutePath();
-                    final String msg = Res.fmt(Res.CANT_MK_LOGDIR, absPath);
+                    final String msg = Res.fmt(Res.CANT_MK_LOG_DIR, absPath);
                     writeConsole(msg, true);
                 }
             }

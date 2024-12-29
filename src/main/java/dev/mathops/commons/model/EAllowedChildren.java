@@ -30,5 +30,5 @@ public enum EAllowedChildren {
     DATA,
 
     /** Both element and data nodes. */
-    ELEMENT_AND_DATA;
+    ELEMENT_AND_DATA
 }

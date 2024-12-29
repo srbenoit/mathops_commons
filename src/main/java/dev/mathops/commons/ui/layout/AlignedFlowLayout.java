@@ -31,22 +31,22 @@ public final class AlignedFlowLayout implements LayoutManager {
     public static final int LEFT = 0;
 
     /** This value indicates that each row of components should be centered. */
-    private static final int CENTER = 1;
+    public static final int CENTER = 1;
 
     /** This value indicates that each row of components should be right-justified. */
-    private static final int RIGHT = 2;
+    public static final int RIGHT = 2;
 
     /** This value indicates that each row of components should be vertically top-justified. */
     public static final int TOP = 3;
 
     /** This value indicates that each row of components should be vertically middle-justified. */
-    private static final int MIDDLE = 4;
+    public static final int MIDDLE = 4;
 
     /** This value indicates that each row of components should be vertically bottom-justified. */
-    private static final int BOTTOM = 5;
+    public static final int BOTTOM = 5;
 
     /** This value indicates that each row of components should be vertically baseline-justified. */
-    private static final int BASELINE = 6;
+    public static final int BASELINE = 6;
 
     /** An empty array. */
     private static final int[] EMPTY_ARRAY = new int[0];
@@ -61,27 +61,24 @@ public final class AlignedFlowLayout implements LayoutManager {
      * </ul>
      *
      * @see #getAlignment
-     * @see #setAlignment
      */
-    private int alignment;
+    private final int alignment;
 
     /**
      * The flow layout manager allows a separation of components with gaps. The horizontal gap will specify the space
      * between components and between the components and the borders of the {@code Container}.
      *
-     * @see #getHgap()
-     * @see #setHgap(int)
+     * @see #getHGap()
      */
-    private int hgap;
+    private final int hGap;
 
     /**
      * The flow layout manager allows a separation of components with gaps. The vertical gap will specify the space
      * between rows and between the rows and the borders of the {@code Container}.
      *
-     * @see #getHgap()
-     * @see #setHgap(int)
+     * @see #getHGap()
      */
-    private int vgap;
+    private final int vGap;
 
     /**
      * The property that determines how components are aligned vertically in each row. It can be one of the following
@@ -92,10 +89,8 @@ public final class AlignedFlowLayout implements LayoutManager {
      * <li>{@code BOTTOM}
      * <li>{@code BASELINE}
      * </ul>
-     *
-     * @see #setVerticalAlign(int)
      */
-    private int verticalAlign;
+    private final int verticalAlign;
 
     /**
      * Constructs a new {@code AlignedFlowLayout} with a centered alignment, a default 5-unit horizontal and vertical
@@ -140,11 +135,10 @@ public final class AlignedFlowLayout implements LayoutManager {
      *                         {@code Container}
      * @param theVerticalAlign the vertical alignment
      */
-    public AlignedFlowLayout(final int theAlignment, final int theHGap, final int theVGap,
-                             final int theVerticalAlign) {
+    public AlignedFlowLayout(final int theAlignment, final int theHGap, final int theVGap, final int theVerticalAlign) {
 
-        this.hgap = theHGap;
-        this.vgap = theVGap;
+        this.hGap = theHGap;
+        this.vGap = theVGap;
         this.alignment = theAlignment;
         this.verticalAlign = theVerticalAlign;
     }
@@ -162,43 +156,15 @@ public final class AlignedFlowLayout implements LayoutManager {
     }
 
     /**
-     * Sets the alignment for this layout. Possible values are
-     * <ul>
-     * <li>{@code AlignedFlowLayout.LEFT}
-     * <li>{@code AlignedFlowLayout.RIGHT}
-     * <li>{@code AlignedFlowLayout.CENTER}
-     * </ul>
-     *
-     * @param align one of the alignment values shown above
-     * @see #getAlignment()
-     */
-    public void setAlignment(final int align) {
-
-        this.alignment = align;
-    }
-
-    /**
      * Gets the horizontal gap between components and between the components and the borders of the {@code Container}
      *
      * @return the horizontal gap between components and between the components and the borders of the
      *         {@code Container}
      * @see java.awt.FlowLayout#setHgap
      */
-    public int getHgap() {
+    public int getHGap() {
 
-        return this.hgap;
-    }
-
-    /**
-     * Sets the horizontal gap between components and between the components and the borders of the {@code Container}.
-     *
-     * @param theHGap the horizontal gap between components and between the components and the borders of the
-     *                {@code Container}
-     * @see java.awt.FlowLayout#getHgap
-     */
-    public void setHgap(final int theHGap) {
-
-        this.hgap = theHGap;
+        return this.hGap;
     }
 
     /**
@@ -207,37 +173,9 @@ public final class AlignedFlowLayout implements LayoutManager {
      * @return the vertical gap between components and between the components and the borders of the {@code Container}
      * @see java.awt.FlowLayout#setVgap
      */
-    public int getVgap() {
+    public int getVGap() {
 
-        return this.vgap;
-    }
-
-    /**
-     * Sets the vertical gap between components and between the components and the borders of the {@code Container}.
-     *
-     * @param theVGap the vertical gap between components and between the components and the borders of the
-     *                {@code Container}
-     * @see java.awt.FlowLayout#getVgap
-     */
-    public void setVgap(final int theVGap) {
-
-        this.vgap = theVGap;
-    }
-
-    /**
-     * Sets the vertical alignment of components. Possible values are:
-     * <ul>
-     * <li>{@code AlignedFlowLayout.TOP}
-     * <li>{@code AlignedFlowLayout.MIDDLE}
-     * <li>{@code AlignedFlowLayout.BOTTOM}
-     * <li>{@code AlignedFlowLayout.BASELINE}
-     * </ul>
-     *
-     * @param theVerticalAlign the vertical alignment
-     */
-    private void setVerticalAlign(final int theVerticalAlign) {
-
-        this.verticalAlign = theVerticalAlign;
+        return this.vGap;
     }
 
     /**
@@ -281,12 +219,12 @@ public final class AlignedFlowLayout implements LayoutManager {
 
         synchronized (parent.getTreeLock()) {
             final Dimension dim = new Dimension(0, 0);
-            final int nmembers = parent.getComponentCount();
+            final int numMembers = parent.getComponentCount();
             boolean firstVisible = true;
             int maxAscent = 0;
             int maxDescent = 0;
 
-            for (int i = 0; i < nmembers; i++) {
+            for (int i = 0; i < numMembers; i++) {
                 final Component component = parent.getComponent(i);
                 if (component.isVisible()) {
                     final Dimension preferredSize = component.getPreferredSize();
@@ -294,7 +232,7 @@ public final class AlignedFlowLayout implements LayoutManager {
                     if (firstVisible) {
                         firstVisible = false;
                     } else {
-                        dim.width += this.hgap;
+                        dim.width += this.hGap;
                     }
                     dim.width += preferredSize.width;
                     if (useBaseline) {
@@ -307,8 +245,8 @@ public final class AlignedFlowLayout implements LayoutManager {
                 }
             }
             final Insets insets = parent.getInsets();
-            dim.width += insets.left + insets.right + (this.hgap << 1);
-            dim.height += insets.top + insets.bottom + (this.vgap << 1);
+            dim.width += insets.left + insets.right + (this.hGap << 1);
+            dim.height += insets.top + insets.bottom + (this.vGap << 1);
             return dim;
         }
     }
@@ -329,8 +267,8 @@ public final class AlignedFlowLayout implements LayoutManager {
         final boolean useBaseline = this.verticalAlign == BASELINE;
         final Dimension dim = new Dimension(0, 0);
 
-        final int twiceHGap = this.hgap << 1;
-        final int twiceVGap = this.vgap << 1;
+        final int twiceHGap = this.hGap << 1;
+        final int twiceVGap = this.vGap << 1;
 
         int maxAscent = 0;
         int maxDescent = 0;
@@ -347,7 +285,7 @@ public final class AlignedFlowLayout implements LayoutManager {
                     if (firstVisible) {
                         firstVisible = false;
                     } else {
-                        dim.width += this.hgap;
+                        dim.width += this.hGap;
                     }
                     dim.width += minimumSize.width;
                     if (useBaseline) {
@@ -379,12 +317,10 @@ public final class AlignedFlowLayout implements LayoutManager {
     public void layoutContainer(final Container parent) {
 
         final boolean useBaseline = this.verticalAlign == BASELINE;
-        final int theHGap = this.hgap;
-        final int theVGap = this.vgap;
 
         synchronized (parent.getTreeLock()) {
             final Insets insets = parent.getInsets();
-            final int maxWidth = parent.getWidth() - (insets.left + insets.right + (theHGap << 1));
+            final int maxWidth = parent.getWidth() - (insets.left + insets.right + (this.hGap << 1));
 
             final int numMembers = parent.getComponentCount();
             final boolean ltr = parent.getComponentOrientation().isLeftToRight();
@@ -393,8 +329,8 @@ public final class AlignedFlowLayout implements LayoutManager {
             final int[] descent = useBaseline ? new int[numMembers] : EMPTY_ARRAY;
 
             int x = 0;
-            int y = insets.top + theVGap;
-            int rowheight = 0;
+            int y = insets.top + this.vGap;
+            int rowHeight = 0;
             int start = 0;
 
             // Lay out members in rows, wrapping when width exceeds container's width,
@@ -418,24 +354,24 @@ public final class AlignedFlowLayout implements LayoutManager {
 
                     if ((x == 0) || ((x + dimension.width) <= maxWidth)) {
                         if (x > 0) {
-                            x += theHGap;
+                            x += this.hGap;
                         }
                         x += dimension.width;
-                        rowheight = Math.max(rowheight, dimension.height);
+                        rowHeight = Math.max(rowHeight, dimension.height);
                     } else {
                         // Need to start a new row, so align the row we've just finished
-                        rowheight = moveComponents(parent, insets.left + theHGap, y, maxWidth - x,
-                                rowheight, start, i, ltr, ascent, descent);
+                        rowHeight = moveComponents(parent, insets.left + this.hGap, y, maxWidth - x,
+                                rowHeight, start, i, ltr, ascent, descent);
 
                         x = dimension.width;
-                        y += theVGap + rowheight;
-                        rowheight = dimension.height;
+                        y += this.vGap + rowHeight;
+                        rowHeight = dimension.height;
                         start = i;
                     }
                 }
             }
 
-            moveComponents(parent, insets.left + theHGap, y, maxWidth - x, rowheight, start,
+            moveComponents(parent, insets.left + this.vGap, y, maxWidth - x, rowHeight, start,
                     numMembers, ltr, ascent, descent);
         }
     }
@@ -447,7 +383,7 @@ public final class AlignedFlowLayout implements LayoutManager {
      * @param x         the x coordinate of the left edge of the layout space
      * @param y         the y coordinate of the top edge of the layout space
      * @param width     the remaining width (max width minus width of components in row)
-     * @param rowheight the height of the tallest component in the row
+     * @param rowHeight the height of the tallest component in the row
      * @param rowStart  the beginning of the row
      * @param rowEnd    the ending of the row
      * @param ltr       true if component layout is "left to right"
@@ -456,7 +392,7 @@ public final class AlignedFlowLayout implements LayoutManager {
      * @return actual row height (baseline alignment can expand a row)
      */
     private int moveComponents(final Container target, final int x, final int y, final int width,
-                               final int rowheight, final int rowStart, final int rowEnd, final boolean ltr,
+                               final int rowHeight, final int rowStart, final int rowEnd, final boolean ltr,
                                final int[] ascent, final int[] descent) {
 
         int xx = x;
@@ -474,10 +410,10 @@ public final class AlignedFlowLayout implements LayoutManager {
                 break;
         }
 
-        int actualRowHeight = rowheight;
+        int actualRowHeight = rowHeight;
 
         int maxAscent = 0;
-        int nonbaselineHeight = 0;
+        int nonBaselineHeight = 0;
         int baselineOffset = 0;
         if (this.verticalAlign == BASELINE) {
             int maxDescent = 0;
@@ -490,11 +426,11 @@ public final class AlignedFlowLayout implements LayoutManager {
                         maxDescent = Math.max(maxDescent, descent[i]);
                     } else {
                         final int height = component.getHeight();
-                        nonbaselineHeight = Math.max(height, nonbaselineHeight);
+                        nonBaselineHeight = Math.max(height, nonBaselineHeight);
                     }
                 }
             }
-            actualRowHeight = Math.max(maxAscent + maxDescent, nonbaselineHeight);
+            actualRowHeight = Math.max(maxAscent + maxDescent, nonBaselineHeight);
             baselineOffset = (actualRowHeight - maxAscent - maxDescent) / 2;
         }
 
@@ -522,7 +458,7 @@ public final class AlignedFlowLayout implements LayoutManager {
                     final int componentWidth = component.getWidth();
                     component.setLocation(targetWidth - xx - componentWidth, cy);
                 }
-                xx += component.getWidth() + this.hgap;
+                xx += component.getWidth() + this.hGap;
             }
         }
 
@@ -543,6 +479,6 @@ public final class AlignedFlowLayout implements LayoutManager {
             default -> ",align=center";
         };
 
-        return getClass().getName() + "[hgap=" + this.hgap + ",vgap=" + this.vgap + str + "]";
+        return getClass().getName() + "[hgap=" + this.hGap + ",vgap=" + this.vGap + str + "]";
     }
 }

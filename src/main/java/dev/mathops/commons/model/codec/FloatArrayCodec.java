@@ -37,7 +37,7 @@ public enum FloatArrayCodec implements Codec<float[]> {
         }
 
         try {
-            float[] result;
+            final float[] result;
 
             if (str.isBlank()) {
                 result = new float[0];
@@ -69,7 +69,7 @@ public enum FloatArrayCodec implements Codec<float[]> {
             throw new IllegalArgumentException(msg);
         }
 
-        String result;
+        final String result;
 
         final int len = obj.length;
         if (len == 0) {

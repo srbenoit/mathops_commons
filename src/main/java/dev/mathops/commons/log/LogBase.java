@@ -129,7 +129,7 @@ public class LogBase extends Synchronized {
         appendContent(builder, args);
         builder.append(CoreConstants.SPC_CHAR);
         appendSource(builder);
-        addExceptionInfo(builder, INDENT, args);
+        addExceptionInfo(builder, args);
 
         final String msg = builder.toString();
         this.logWriter.writeMessage(msg, true);
@@ -142,7 +142,7 @@ public class LogBase extends Synchronized {
      * @param builder the {@code StringBuilder} to which to append
      * @param args    the arguments to concatenate
      */
-    private void appendContent(final StringBuilder builder, final Object... args) {
+    private static void appendContent(final StringBuilder builder, final Object... args) {
 
         for (final Object arg : args) {
             if (arg == null) {
@@ -163,10 +163,9 @@ public class LogBase extends Synchronized {
      * {@code Throwable} arguments, in the order in which they appear in the arguments list.
      *
      * @param builder the {@code StringBuilder} to which to append
-     * @param indent  the level to which to indent each line
      * @param args    the arguments to concatenate
      */
-    private void addExceptionInfo(final StringBuilder builder, final String indent, final Object... args) {
+    private static void addExceptionInfo(final StringBuilder builder, final Object... args) {
 
         for (final Object arg : args) {
             if (arg instanceof Throwable thrown) {
@@ -174,7 +173,7 @@ public class LogBase extends Synchronized {
                     builder.append(CoreConstants.CRLF);
                     final Class<? extends Throwable> cls = thrown.getClass();
                     final String clsName = cls.getSimpleName();
-                    builder.append(indent);
+                    builder.append(INDENT);
                     builder.append(clsName);
 
                     if (thrown.getLocalizedMessage() != null) {
@@ -188,7 +187,7 @@ public class LogBase extends Synchronized {
                     for (final StackTraceElement stackTraceElement : stack) {
                         builder.append(CoreConstants.CRLF);
                         final String stackItemStr = stackTraceElement.toString();
-                        builder.append(indent);
+                        builder.append(INDENT);
                         builder.append(stackItemStr);
                     }
 
@@ -196,7 +195,7 @@ public class LogBase extends Synchronized {
 
                     if (thrown != null) {
                         builder.append(CoreConstants.CRLF);
-                        builder.append(indent);
+                        builder.append(INDENT);
                         builder.append("CAUSED BY:");
                     }
                 }
@@ -227,30 +226,29 @@ public class LogBase extends Synchronized {
 
         for (final StackTraceElement stackTraceElement : stack) {
 
-            String clsname = stackTraceElement.getClassName();
+            String className = stackTraceElement.getClassName();
 
-            if (clsname.startsWith("jdk.internal.reflect.")
-                || clsname.startsWith("java.lang.reflect.")
-                || clsname.startsWith("org.junit.")) {
+            if (className.startsWith("jdk.internal.reflect.")
+                || className.startsWith("java.lang.reflect.")
+                || className.startsWith("org.junit.")) {
                 continue;
             }
 
-            if (clsname.endsWith(".java")) {
-                final int classNameLen = clsname.length();
-                clsname = clsname.substring(0, classNameLen - 5);
+            if (className.endsWith(".java")) {
+                final int classNameLen = className.length();
+                className = className.substring(0, classNameLen - 5);
             }
 
-            final int lastDot = clsname.lastIndexOf((int) '.');
-            final String pkgname = lastDot == -1 ? clsname : clsname.substring(0, lastDot + 1);
-            final String name = clsname.substring(lastDot + 1);
+            final int lastDot = className.lastIndexOf((int) '.');
+            final String packageName = lastDot == -1 ? className : className.substring(0, lastDot + 1);
+            final String name = className.substring(lastDot + 1);
 
-            if (pkgname.equals(this.pkg) && name.startsWith("Log")) {
+            if (packageName.equals(this.pkg) && name.startsWith("Log")) {
                 continue;
             }
 
             final int lineNumber = stackTraceElement.getLineNumber();
             final String lineNumberStr = Integer.toString(lineNumber);
-            final String className = stackTraceElement.getClassName();
             builder.append(" (");
             builder.append(className);
             builder.append(".java:");
@@ -274,7 +272,7 @@ public class LogBase extends Synchronized {
      * @param args the objects
      * @return the resulting string
      */
-    final String listToString(final Object... args) {
+    static String listToString(final Object... args) {
 
         final StringBuilder builder = new StringBuilder(100);
 

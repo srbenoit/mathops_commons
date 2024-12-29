@@ -63,7 +63,7 @@ public final class Installations {
      */
     public static Installation getMyInstallation() {
 
-        return get().getThreadLocal().get();
+        return Installations.getThreadLocal().get();
     }
 
     /**
@@ -73,7 +73,7 @@ public final class Installations {
      */
     public static void setMyInstallation(final Installation myInstallation) {
 
-        get().getThreadLocal().set(myInstallation);
+        Installations.getThreadLocal().set(myInstallation);
     }
 
     /**
@@ -121,7 +121,7 @@ public final class Installations {
      *
      * @return the thread-local installation
      */
-    private ThreadLocalInstallation getThreadLocal() {
+    private static ThreadLocalInstallation getThreadLocal() {
 
         return THREAD_LOCAL;
     }

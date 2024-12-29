@@ -573,8 +573,8 @@ final class TestLog {
         final boolean file02exists = FILE02.exists();
         assertTrue(file02exists, "Logging of info, config: file 2 not created");
 
-        final boolean file03exiss = FILE03.exists();
-        assertFalse(file03exiss, "Logging of info, config: file 3 not created");
+        final boolean file03exists = FILE03.exists();
+        assertFalse(file03exists, "Logging of info, config: file 3 not created");
 
         final String str1 = getFile(FILE01);
         if (isDateInvalid(str1)) {
@@ -648,8 +648,8 @@ final class TestLog {
 
         logMessages();
 
-        final boolean fiole01exists = FILE01.exists();
-        assertTrue(fiole01exists, "Log entering, exiting: File 1 exists");
+        final boolean file01exists = FILE01.exists();
+        assertTrue(file01exists, "Log entering, exiting: File 1 exists");
 
         final boolean file02exists = FILE02.exists();
         assertTrue(file02exists, "Log entering, exiting: File 2 exists");

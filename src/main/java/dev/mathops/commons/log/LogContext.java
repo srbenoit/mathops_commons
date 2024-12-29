@@ -27,11 +27,11 @@ class LogContext {
     /**
      * Constructs a new {@code LogContext}.
      *
-     * @param theRemoteAddr the remote address
+     * @param theRemoteAddress the remote address
      */
-    LogContext(final String theRemoteAddr) {
+    LogContext(final String theRemoteAddress) {
 
-        this.remoteAddress = theRemoteAddr;
+        this.remoteAddress = theRemoteAddress;
     }
 
     /**

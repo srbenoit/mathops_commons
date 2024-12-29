@@ -37,7 +37,7 @@ public enum LongArrayCodec implements Codec<long[]> {
         }
 
         try {
-            long[] result;
+            final long[] result;
 
             if (str.isBlank()) {
                 result = new long[0];
@@ -69,7 +69,7 @@ public enum LongArrayCodec implements Codec<long[]> {
             throw new IllegalArgumentException(msg);
         }
 
-        String result;
+        final String result;
 
         final int len = obj.length;
         if (len == 0) {

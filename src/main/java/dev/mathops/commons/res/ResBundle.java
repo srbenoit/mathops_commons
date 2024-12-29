@@ -103,7 +103,7 @@ public class ResBundle extends ResBundleBase {
     public final String formatMsg(final String key, final Object... arguments) {
 
         final Locale defaultLocale = Locale.getDefault();
-        return formatMsg(key, defaultLocale, arguments);
+        return formatLocalizedMsg(key, defaultLocale, arguments);
     }
 
     /**
@@ -115,7 +115,7 @@ public class ResBundle extends ResBundleBase {
      * @param arguments the arguments, as for {@code MessageFormat}
      * @return the formatted string (never {@code null})
      */
-    private String formatMsg(final String key, final Locale locale, final Object... arguments) {
+    private String formatLocalizedMsg(final String key, final Locale locale, final Object... arguments) {
 
         final String msg = getMsg(key, locale);
         return MessageFormat.format(msg, arguments);

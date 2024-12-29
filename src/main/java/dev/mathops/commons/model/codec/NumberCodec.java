@@ -106,7 +106,7 @@ public enum NumberCodec implements Codec<Number> {
             throw new IllegalArgumentException(msg);
         }
 
-        Number result;
+        final Number result;
 
         final int len = str.length();
         if (len == 0) {
@@ -129,11 +129,14 @@ public enum NumberCodec implements Codec<Number> {
                     // - A BigIrrational (has 'B' suffix)
 
                     if (last == INT_SUFFIX) {
-                        result = Integer.valueOf(str.substring(0, len - 1));
+                        final String substring = str.substring(0, len - 1);
+                        result = Integer.valueOf(substring);
                     } else if (last == SHORT_SUFFIX) {
-                        result = Short.valueOf(str.substring(0, len - 1));
+                        final String substring = str.substring(0, len - 1);
+                        result = Short.valueOf(substring);
                     } else if (last == BYTE_SUFFIX) {
-                        result = Byte.valueOf(str.substring(0, len - 1));
+                        final String substring = str.substring(0, len - 1);
+                        result = Byte.valueOf(substring);
                     } else if (last == BIG_SUFFIX) {
                         final String toParse = str.substring(0, len - 1);
 
@@ -255,7 +258,7 @@ public enum NumberCodec implements Codec<Number> {
             throw new IllegalArgumentException(msg);
         }
 
-        String str;
+        final String str;
 
         if (obj instanceof Long || obj instanceof Double || obj instanceof Rational || obj instanceof Irrational) {
             str = obj.toString();
@@ -267,13 +270,8 @@ public enum NumberCodec implements Codec<Number> {
             str = obj + "i";
         } else if (obj instanceof Float) {
             str = obj + "f";
-        } else if (obj instanceof BigInteger) {
-            str = obj + "B";
-        } else if (obj instanceof BigDecimal) {
-            str = obj + "B";
-        } else if (obj instanceof BigRational) {
-            str = obj + "B";
-        } else if (obj instanceof BigIrrational) {
+        } else if (obj instanceof BigInteger || obj instanceof BigDecimal || obj instanceof BigRational
+                   || obj instanceof BigIrrational) {
             str = obj + "B";
         } else {
             throw new IllegalArgumentException("Attempt to stringify unsupported Number type");

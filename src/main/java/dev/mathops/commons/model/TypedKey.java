@@ -170,9 +170,9 @@ public class TypedKey<T> {
     /**
      * Constructs a new {@code TypedKey}.
      *
-     * @param theCategory   the value category
-     * @param theName       the value name
-     * @param theCodec      the codec
+     * @param theCategory the value category
+     * @param theName     the value name
+     * @param theCodec    the codec
      * @throws IllegalArgumentException if category, name, or value class is null, or if the name is not valid.
      */
     protected TypedKey(final ETypedMapCategory theCategory, final String theName, final Codec<T> theCodec)
@@ -208,7 +208,7 @@ public class TypedKey<T> {
      * @param theName the name to validate
      * @throws IllegalArgumentException if the name is not valid
      */
-    private void validateName(final String theName) throws IllegalArgumentException {
+    private static void validateName(final String theName) throws IllegalArgumentException {
 
         final int c0 = (int) theName.charAt(0);
 
@@ -227,22 +227,23 @@ public class TypedKey<T> {
         ) {
             final int len = theName.length();
             for (int i = 1; i < len; ++i) {
-                final int c = (int) theName.charAt(i);
+                final int ci = (int) theName.charAt(i);
 
-                if (c == DASH || c == DOT || (c >= ZERO && c <= NINE)
-                    || c == COLON || (c >= UC_A && c <= UC_Z) || c == SPC || (c >= LC_A && c <= LC_Z) || c == MID_DOT
-                    || (c >= START1 && c <= END1)
-                    || (c >= START2 && c <= END2)
-                    || (c >= START3 && c <= END3)
-                    || (c >= START4A && c <= END4)
-                    || (c >= START5 && c <= END5)
-                    || (c >= START6 && c <= END6)
-                    || (c >= START12 && c <= END12)
-                    || (c >= START7 && c <= END7)
-                    || (c >= START8 && c <= END8)
-                    || (c >= START9 && c <= END9)
-                    || (c >= START10 && c <= END10)
-                    || (c >= START11 && c <= END11)) {
+                if (ci == DASH || ci == DOT || (ci >= ZERO && ci <= NINE) || ci == COLON
+                    || (ci >= UC_A && ci <= UC_Z) || ci == SPC || (ci >= LC_A && ci <= LC_Z)
+                    || ci == MID_DOT
+                    || (ci >= START1 && ci <= END1)
+                    || (ci >= START2 && ci <= END2)
+                    || (ci >= START3 && ci <= END3)
+                    || (ci >= START4A && ci <= END4)
+                    || (ci >= START5 && ci <= END5)
+                    || (ci >= START6 && ci <= END6)
+                    || (ci >= START12 && ci <= END12)
+                    || (ci >= START7 && ci <= END7)
+                    || (ci >= START8 && ci <= END8)
+                    || (ci >= START9 && ci <= END9)
+                    || (ci >= START10 && ci <= END10)
+                    || (ci >= START11 && ci <= END11)) {
                     continue;
                 }
 
@@ -302,7 +303,7 @@ public class TypedKey<T> {
     @SuppressWarnings("unchecked")
     public final T testObject(final Object o) {
 
-        T result;
+        final T result;
 
         if (o == null) {
             result = null;
@@ -344,8 +345,9 @@ public class TypedKey<T> {
             equal = true;
         } else if (obj instanceof final TypedKey<?> key) {
             if (this.hash == key.hashCode()) {
+                final Class<?> valueClass = getValueClass();
                 equal = key.getCategory() == this.category && key.getName().equals(this.name)
-                        && key.getValueClass().equals(getValueClass());
+                        && key.getValueClass().equals(valueClass);
             } else {
                 equal = false;
             }
@@ -367,7 +369,8 @@ public class TypedKey<T> {
         final StringBuilder builder = new StringBuilder(50);
 
         builder.append("TypedKey{category=");
-        builder.append(this.category.name());
+        final String categoryName = this.category.name();
+        builder.append(categoryName);
         builder.append(",name=');name='");
         builder.append(this.name);
         builder.append("',valueClass=");

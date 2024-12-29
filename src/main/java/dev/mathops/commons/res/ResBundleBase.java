@@ -210,9 +210,9 @@ class ResBundleBase {
         }
 
         if (match == null) {
-            final Iterator<Locale> iter2 = this.messageMap.keySet().iterator();
-            if (iter2.hasNext()) {
-                match = iter2.next();
+            final Iterator<Locale> iterator = this.messageMap.keySet().iterator();
+            if (iterator.hasNext()) {
+                match = iterator.next();
             }
         }
 

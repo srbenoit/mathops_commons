@@ -26,7 +26,7 @@ import java.util.List;
  * Any node may have an ordered list of child nodes.  This is achieved by adding two CONTENT value objects, one with
  * name "firstChild", one with name "lastChild", each storing a {@code ModelTreeNode} (the head and tail of the list).
  */
-public class ModelTreeNode extends TypedMap {
+public class ModelTreeNode {
 
     /** The NODE key used to store the parent node. */
     public static final NodeKey PARENT = new NodeKey("parent");
@@ -43,6 +43,9 @@ public class ModelTreeNode extends TypedMap {
     /** The NODE key used to store the next sibling node. */
     public static final NodeKey NEXT_SIBLING = new NodeKey("nextSibling");
 
+    /** The typed map. */
+    private final TypedMap map;
+
     /** The type of child nodes this node can hold. */
     private final EAllowedChildren allowedChildren;
 
@@ -51,8 +54,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public ModelTreeNode() {
 
-        super();
-
+        this.map = new TypedMap();
         this.allowedChildren = EAllowedChildren.ELEMENT_AND_DATA;
     }
 
@@ -69,7 +71,18 @@ public class ModelTreeNode extends TypedMap {
             throw new IllegalArgumentException("Allowed children specifier may not be null");
         }
 
+        this.map = new TypedMap();
         this.allowedChildren = theAllowedChildren;
+    }
+
+    /**
+     * Gets the typed map that stores the nodes attributes, properties, and data.
+     *
+     * @return the typed map
+     */
+    public final TypedMap getMap() {
+
+        return this.map;
     }
 
     /**
@@ -89,7 +102,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final ModelTreeNode getParent() {
 
-        return getNode(PARENT);
+        return this.map.getNode(PARENT);
     }
 
     /**
@@ -99,7 +112,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final void setParent(final ModelTreeNode newParent) {
 
-        putNode(PARENT, newParent);
+        this.map.putNode(PARENT, newParent);
     }
 
     /**
@@ -109,7 +122,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final ModelTreeNode getFirstChild() {
 
-        return getNode(FIRST_CHILD);
+        return this.map.getNode(FIRST_CHILD);
     }
 
     /**
@@ -119,7 +132,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final ModelTreeNode getLastChild() {
 
-        return getNode(LAST_CHILD);
+        return this.map.getNode(LAST_CHILD);
     }
 
     /**
@@ -131,19 +144,19 @@ public class ModelTreeNode extends TypedMap {
 
         node.setParent(this);
 
-        final ModelTreeNode tail = getNode(LAST_CHILD);
+        final ModelTreeNode tail = this.map.getNode(LAST_CHILD);
 
-        node.remove(NEXT_SIBLING);
+        node.getMap().remove(NEXT_SIBLING);
 
         if (tail == null) {
-            node.remove(PREVIOUS_SIBLING);
-            putNode(FIRST_CHILD, node);
+            node.getMap().remove(PREVIOUS_SIBLING);
+            this.map.putNode(FIRST_CHILD, node);
         } else {
-            node.putNode(PREVIOUS_SIBLING, tail);
-            tail.putNode(NEXT_SIBLING, node);
+            node.getMap().putNode(PREVIOUS_SIBLING, tail);
+            tail.getMap().putNode(NEXT_SIBLING, node);
         }
 
-        putNode(LAST_CHILD, node);
+        this.map.putNode(LAST_CHILD, node);
     }
 
     /**
@@ -153,7 +166,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final List<ModelTreeNode> getChildren() {
 
-        List<ModelTreeNode> result;
+        final List<ModelTreeNode> result;
 
         ModelTreeNode node = getFirstChild();
         if (node == null) {
@@ -176,7 +189,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final ModelTreeNode getPreviousSibling() {
 
-        return getNode(PREVIOUS_SIBLING);
+        return this.map.getNode(PREVIOUS_SIBLING);
     }
 
     /**
@@ -186,7 +199,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final void setPreviousSibling(final ModelTreeNode newPreviousSibling) {
 
-        putNode(PREVIOUS_SIBLING, newPreviousSibling);
+        this.map.putNode(PREVIOUS_SIBLING, newPreviousSibling);
     }
 
     /**
@@ -196,7 +209,7 @@ public class ModelTreeNode extends TypedMap {
      */
     public final ModelTreeNode getNextSibling() {
 
-        return getNode(NEXT_SIBLING);
+        return this.map.getNode(NEXT_SIBLING);
     }
 
     /**
@@ -206,6 +219,6 @@ public class ModelTreeNode extends TypedMap {
      */
     public final void setNextSibling(final ModelTreeNode newNextSibling) {
 
-        putNode(NEXT_SIBLING, newNextSibling);
+        this.map.putNode(NEXT_SIBLING, newNextSibling);
     }
 }

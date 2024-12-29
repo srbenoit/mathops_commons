@@ -28,16 +28,16 @@ final class Res extends ResBundle {
     static final String LOG_FAILED = key(6);
 
     /** Resource key. */
-    static final String EMPTY_FNAME = key(7);
+    static final String EMPTY_FILENAME = key(7);
 
     /** Resource key. */
-    static final String FNAME_CHAR1 = key(8);
+    static final String FILENAME_CHAR1 = key(8);
 
     /** Resource key. */
     static final String NO_SRC = key(9);
 
     /** Resource key. */
-    static final String ERRLOG_NO_INTERFACE = key(10);
+    static final String ERR_LOG_NO_INTERFACE = key(10);
 
     /** Resource key. */
     static final String SETTINGS_BAD_FILE_COUNT = key(11);
@@ -61,7 +61,7 @@ final class Res extends ResBundle {
     static final String SETTINGS_BAD_LEVEL = key(17);
 
     /** Resource key. */
-    static final String CANT_MK_LOGDIR = key(18);
+    static final String CANT_MK_LOG_DIR = key(18);
 
     /** The resources - an array of key-values pairs. */
     private static final String[][] EN_US = {
@@ -71,11 +71,11 @@ final class Res extends ResBundle {
             {COPY_FAIL, "Unable to copy {0} to {1} while rotating logs"},
             {COPY_ERROR, "Error copying file: {0}"},
             {LOG_FAILED, "Failed to log to {0}: {1}"},
-            {EMPTY_FNAME, "Log filename base may not be empty string"},
-            {FNAME_CHAR1, "Log filename must start with a character (A-Z or a-z)"},
+            {EMPTY_FILENAME, "Log filename base may not be empty string"},
+            {FILENAME_CHAR1, "Log filename must start with a character (A-Z or a-z)"},
             {NO_SRC, "(source unavailable for {0})"},
 
-            {ERRLOG_NO_INTERFACE, "Unable to retrieve {0} interface"},
+            {ERR_LOG_NO_INTERFACE, "Unable to retrieve {0} interface"},
 
             {SETTINGS_BAD_FILE_COUNT, "File count must be at least 1"},
             {SETTINGS_BAD_FILE_SIZE, "File size limit must be at least 1"},
@@ -84,7 +84,7 @@ final class Res extends ResBundle {
             {SETTINGS_BAD_SIZE, "Invalid log file size limit ''{0}'' (must be >=1)"},
             {SETTINGS_PARSE_SIZE, "Failed to parse log file size limit ''{0}''"},
             {SETTINGS_BAD_LEVEL, "Invalid log level: {0}"},
-            {CANT_MK_LOGDIR, "Unable to create directory: {0}"},
+            {CANT_MK_LOG_DIR, "Unable to create directory: {0}"},
 
     };
 

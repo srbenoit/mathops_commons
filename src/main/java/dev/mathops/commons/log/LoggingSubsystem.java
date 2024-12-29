@@ -45,11 +45,13 @@ public final class LoggingSubsystem {
             if (INSTANCE.innerGetInstallation() == null) {
                 if (theInstallation != null) {
                     INSTANCE.innerSetInstallation(theInstallation);
-                    configureSettings(INSTANCE.innerGetSettings(), theInstallation);
+                    final LogSettings theSettings = INSTANCE.innerGetSettings();
+                    configureSettings(theSettings, theInstallation);
                 }
             } else if (!INSTANCE.innerGetInstallation().equals(theInstallation)) {
                 INSTANCE.innerSetInstallation(theInstallation);
-                configureSettings(INSTANCE.innerGetSettings(), theInstallation);
+                final LogSettings theSettings = INSTANCE.innerGetSettings();
+                configureSettings(theSettings, theInstallation);
             }
         }
     }
@@ -102,8 +104,7 @@ public final class LoggingSubsystem {
      * @param theSettings     the setting to configure
      * @param theInstallation the installation (could be {@code null})
      */
-    public static void configureSettings(final LogSettings theSettings,
-                                         final Installation theInstallation) {
+    public static void configureSettings(final LogSettings theSettings, final Installation theInstallation) {
 
         if (theInstallation == null) {
             theSettings.configure(null);

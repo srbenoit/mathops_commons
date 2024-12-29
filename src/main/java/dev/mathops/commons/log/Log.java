@@ -138,7 +138,7 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINE_BIT) != 0) {
-                final String listString = INSTANCE.listToString(args);
+                final String listString = listToString(args);
                 INSTANCE.getLogWriter().writeMessage(listString, true);
             }
         }
@@ -154,7 +154,7 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINE_BIT) != 0) {
-                final String listString = INSTANCE.listToString(INDENT, args);
+                final String listString = listToString(INDENT, args);
                 INSTANCE.getLogWriter().writeMessage(listString, true);
             }
         }
@@ -170,7 +170,7 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINE_BIT) != 0) {
-                final String listString = INSTANCE.listToString(args);
+                final String listString = listToString(args);
                 INSTANCE.getLogWriter().writeMessage(listString, false);
             }
         }
@@ -187,7 +187,7 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINEST_BIT) != 0) {
-                final String listString = INSTANCE.listToString(args);
+                final String listString = listToString(args);
                 INSTANCE.getLogWriter().writeConsole(listString, false);
             }
         }
