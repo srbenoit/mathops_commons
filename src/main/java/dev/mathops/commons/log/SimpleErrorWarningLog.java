@@ -1,7 +1,5 @@
 package dev.mathops.commons.log;
 
-import dev.mathops.commons.builder.HtmlBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,12 +88,13 @@ public class SimpleErrorWarningLog implements IErrorWarningLog {
     public final String getErrorsHtml() {
 
         final int size = this.errors.size();
-        final HtmlBuilder htm = new HtmlBuilder(size * 40);
+        final StringBuilder builder = new StringBuilder(size * 40);
         for (final String err : this.errors) {
-            htm.add(err, "</br>");
+            builder.append(err);
+            builder.append("</br>");
         }
 
-        return htm.toString();
+        return builder.toString();
     }
 
     /**

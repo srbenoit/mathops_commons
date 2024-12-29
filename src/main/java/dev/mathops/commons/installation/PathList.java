@@ -1,7 +1,6 @@
 package dev.mathops.commons.installation;
 
 import dev.mathops.commons.CoreConstants;
-import dev.mathops.commons.builder.HtmlBuilder;
 import dev.mathops.commons.log.Log;
 
 import java.io.File;
@@ -244,14 +243,17 @@ public final class PathList {
         this.paths.clear();
         this.paths.putAll(newPaths);
 
-        final HtmlBuilder builder = new HtmlBuilder(500);
+        final StringBuilder builder = new StringBuilder(500);
 
         final Class<? extends PathList> myClass = getClass();
         final String myClassName = myClass.getName();
         final LocalDateTime now = LocalDateTime.now();
         final String formattedNow = now.format(DATE_FMT);
-        builder.addln("# Created by ", myClassName, " on ", formattedNow);
-        builder.addln();
+        builder.append("# Created by ");
+        builder.append(myClassName);
+        builder.append(" on ");
+        builder.append(formattedNow);
+        builder.append(CoreConstants.CRLF);
 
         final EPath[] values = EPath.values();
         for (final EPath value : values) {
@@ -263,15 +265,21 @@ public final class PathList {
                 final String key = value.getKey();
                 if (theFile.getAbsolutePath().startsWith("C:\\")) {
                     final String normalized = normalize(theFile);
-                    builder.addln(key, EQUALS, normalized);
+                    builder.append(key);
+                    builder.append(EQUALS);
+                    builder.append(normalized);
+                    builder.append(CoreConstants.CRLF);
                 } else {
                     final String absolutePath = theFile.getAbsolutePath();
-                    builder.addln(key, EQUALS, absolutePath);
+                    builder.append(key);
+                    builder.append(EQUALS);
+                    builder.append(absolutePath);
+                    builder.append(CoreConstants.CRLF);
                 }
             }
         }
 
-        builder.addln();
+        builder.append(CoreConstants.CRLF);
 
         final File newBaseDir = newPaths.get(EPath.BASE_DIR);
         final File file = new File(newBaseDir, PATHS_FILE_NAME);

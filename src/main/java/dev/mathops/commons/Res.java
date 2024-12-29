@@ -26,6 +26,14 @@ final class Res extends ResBundle {
     /** A resource key. */
     static final String CLASS_NOT_DEF = key(5);
 
+    // Used by HexEncoder
+
+    /** A resource key. */
+    static final String INVALID_HEX_LEN = key(6);
+
+    /** A resource key. */
+    static final String INVALID_HEX = key(7);
+
     //
 
     /** The resources - an array of key-values pairs. */
@@ -36,6 +44,9 @@ final class Res extends ResBundle {
             {CANT_INSTANTIATE_JAR, "jar file ''{0}'' could not be instantiated from file path."},
             {CLASS_NOT_FOUND, "Class ''{0}'' not found"},
             {CLASS_NOT_DEF, "Class ''{0}'' not defined"},
+
+            {INVALID_HEX_LEN, "Invalid length for hex string {0}"},
+            {INVALID_HEX, "Invalid hex string {0}"},
 
             //
     };

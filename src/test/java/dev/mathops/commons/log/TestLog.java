@@ -1,7 +1,6 @@
 package dev.mathops.commons.log;
 
 import dev.mathops.commons.CoreConstants;
-import dev.mathops.commons.builder.HtmlBuilder;
 import dev.mathops.commons.installation.Installation;
 import dev.mathops.commons.installation.Installations;
 import org.junit.jupiter.api.AfterAll;
@@ -838,16 +837,17 @@ final class TestLog {
 
         try (final InputStream input = new FileInputStream(file)) {
             final int fileLen = (int) file.length();
-            final HtmlBuilder htm = new HtmlBuilder(fileLen);
+            final StringBuilder builder = new StringBuilder(fileLen);
 
             try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
 
                 for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
-                    htm.addln(line);
+                    builder.append(line);
+                    builder.append(CoreConstants.CRLF);
                 }
             }
 
-            result = htm.toString();
+            result = builder.toString();
         } catch (final IOException ex) {
             // No action
         }

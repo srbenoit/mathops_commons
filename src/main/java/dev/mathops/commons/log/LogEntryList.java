@@ -1,7 +1,6 @@
 package dev.mathops.commons.log;
 
 import dev.mathops.commons.CoreConstants;
-import dev.mathops.commons.builder.HtmlBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +22,7 @@ class LogEntryList extends Synchronized {
     /** The maximum number of list entries to retain. */
     private int maxListEntries;
 
-    /**
-     * Constructs a new {@code LogEntryList}.
-     */
+    /** Constructs a new {@code LogEntryList}. */
     LogEntryList() {
 
         super();
@@ -120,13 +117,14 @@ class LogEntryList extends Synchronized {
     public final String errorMessagesAsString() {
 
         final int size = this.logData.size();
-        final HtmlBuilder htm = new HtmlBuilder(size * 100);
+        final StringBuilder builder = new StringBuilder(size * 100);
 
         for (final LogEntry logDatum : this.logData) {
-            htm.add(logDatum.message);
-            htm.add(CoreConstants.CRLF);
+            final String message = logDatum.getMessage();
+            builder.append(message);
+            builder.append(CoreConstants.CRLF);
         }
 
-        return htm.toString();
+        return builder.toString();
     }
 }

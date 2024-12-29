@@ -42,16 +42,46 @@ public final class LoggingSubsystem {
     public static void setInstallation(final Installation theInstallation) {
 
         synchronized (INSTANCE) {
-            if (getInstallation() == null) {
+            if (INSTANCE.innerGetInstallation() == null) {
                 if (theInstallation != null) {
-                    INSTANCE.installation = theInstallation;
-                    configureSettings(INSTANCE.settings, theInstallation);
+                    INSTANCE.innerSetInstallation(theInstallation);
+                    configureSettings(INSTANCE.innerGetSettings(), theInstallation);
                 }
-            } else if (!INSTANCE.installation.equals(theInstallation)) {
-                INSTANCE.installation = theInstallation;
-                configureSettings(INSTANCE.settings, theInstallation);
+            } else if (!INSTANCE.innerGetInstallation().equals(theInstallation)) {
+                INSTANCE.innerSetInstallation(theInstallation);
+                configureSettings(INSTANCE.innerGetSettings(), theInstallation);
             }
         }
+    }
+
+    /**
+     * Accessor to encapsulate installation.
+     *
+     * @return the installation
+     */
+    private Installation innerGetInstallation() {
+
+        return this.installation;
+    }
+
+    /**
+     * Mutator to encapsulate installation.
+     *
+     * @param theInstallation the new installation
+     */
+    private void innerSetInstallation(final Installation theInstallation) {
+
+        this.installation = theInstallation;
+    }
+
+    /**
+     * Accessor to encapsulate settings.
+     *
+     * @return the settings
+     */
+    private LogSettings innerGetSettings() {
+
+        return this.settings;
     }
 
     /**
@@ -62,7 +92,7 @@ public final class LoggingSubsystem {
     static Installation getInstallation() {
 
         synchronized (INSTANCE) {
-            return INSTANCE.installation;
+            return INSTANCE.innerGetInstallation();
         }
     }
 
@@ -95,6 +125,6 @@ public final class LoggingSubsystem {
      */
     public static LogSettings getSettings() {
 
-        return INSTANCE.settings;
+        return INSTANCE.innerGetSettings();
     }
 }

@@ -1,7 +1,6 @@
 package dev.mathops.commons.log;
 
 import dev.mathops.commons.CoreConstants;
-import dev.mathops.commons.builder.HtmlBuilder;
 
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -51,6 +50,9 @@ public final class LogSettings {
 
     /** Name of a logging level. */
     private static final String FINEST_LVL = "FINEST";
+
+    /** Common character. */
+    static final char COMMA = ',';
 
     /** The log level name. */
     private String logLevelName;
@@ -115,14 +117,14 @@ public final class LogSettings {
      */
     public void setFrom(final LogSettings source) {
 
-        this.logLevelName = source.logLevelName;
-        this.logLevel = source.logLevel;
-        this.logToConsole = source.logToConsole;
-        this.logToFiles = source.logToFiles;
-        this.logFilePath = source.logFilePath;
-        this.logFileCount = source.logFileCount;
-        this.logFileSizeLimit = source.logFileSizeLimit;
-        this.filenameBase = source.filenameBase;
+        this.logLevelName = source.getLogLevelName();
+        this.logLevel = source.getLogLevel();
+        this.logToConsole = source.isLogToConsole();
+        this.logToFiles = source.isLogToFiles();
+        this.logFilePath = source.getLogFilePath();
+        this.logFileCount = source.getLogFileCount();
+        this.logFileSizeLimit = source.getLogFileSizeLimit();
+        this.filenameBase = source.getFilenameBase();
         this.append = source.append;
     }
 
@@ -147,6 +149,16 @@ public final class LogSettings {
     }
 
     /**
+     * Sets the log level as an integer value (bitwise OR of constants from {@code LogBase}).
+     *
+     * @param theLogLevel the new log level
+     */
+    public void setLogLevel(final int theLogLevel) {
+
+        this.logLevel = theLogLevel;
+    }
+
+    /**
      * Sets the log levels.
      *
      * @param levels the log levels (bitwise OR of constants from {@code LeveledLogger}).
@@ -162,17 +174,17 @@ public final class LogSettings {
             } else if (masked == LogBase.NONE) {
                 this.logLevelName = NONE;
             } else {
-                final HtmlBuilder htm = new HtmlBuilder(30);
-                boolean comma = addToList(masked, LogBase.SEVERE_BIT, SEVERE_LVL, false, htm);
-                comma = addToList(masked, LogBase.WARNING_BIT, WARNING_LVL, comma, htm);
-                comma = addToList(masked, LogBase.INFO_BIT, INFO_LVL, comma, htm);
-                comma = addToList(masked, LogBase.CONFIG_BIT, CONFIG_LVL, comma, htm);
-                comma = addToList(masked, LogBase.ENTERING_BIT, ENTERING_LVL, comma, htm);
-                comma = addToList(masked, LogBase.EXITING_BIT, EXITING_LVL, comma, htm);
-                comma = addToList(masked, LogBase.FINE_BIT, FINE_LVL, comma, htm);
-                addToList(masked, LogBase.FINEST_BIT, FINEST_LVL, comma, htm);
+                final StringBuilder builder = new StringBuilder(30);
+                boolean comma = addToList(masked, LogBase.SEVERE_BIT, SEVERE_LVL, false, builder);
+                comma = addToList(masked, LogBase.WARNING_BIT, WARNING_LVL, comma, builder);
+                comma = addToList(masked, LogBase.INFO_BIT, INFO_LVL, comma, builder);
+                comma = addToList(masked, LogBase.CONFIG_BIT, CONFIG_LVL, comma, builder);
+                comma = addToList(masked, LogBase.ENTERING_BIT, ENTERING_LVL, comma, builder);
+                comma = addToList(masked, LogBase.EXITING_BIT, EXITING_LVL, comma, builder);
+                comma = addToList(masked, LogBase.FINE_BIT, FINE_LVL, comma, builder);
+                addToList(masked, LogBase.FINEST_BIT, FINEST_LVL, comma, builder);
 
-                this.logLevelName = htm.toString();
+                this.logLevelName = builder.toString();
             }
             this.dirty = true;
         }
@@ -396,14 +408,14 @@ public final class LogSettings {
      * @return true (use as new comma value)
      */
     private static boolean addToList(final int levels, final int bit, final String name, final boolean comma,
-                                     final HtmlBuilder builder) {
+                                     final StringBuilder builder) {
 
         boolean newComma = comma;
         if ((levels & bit) == bit) {
             if (comma) {
-                builder.add(CoreConstants.COMMA_CHAR);
+                builder.append(CoreConstants.COMMA_CHAR);
             }
-            builder.add(name);
+            builder.append(name);
             newComma = true;
         }
 

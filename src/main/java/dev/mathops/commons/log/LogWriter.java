@@ -24,8 +24,23 @@ public final class LogWriter extends LogEntryList {
     /** File extension for log files. */
     private static final String EXTENSION = ".log";
 
+    /** A character that can appear in filenames. */
+    private static final char SLASH = '/';
+
+    /** A character that can appear in filenames. */
+    private static final char BACKSLASH = '\\';
+
+    /** A character that can appear in filenames. */
+    private static final char CAP_A = 'A';
+
+    /** A character that can appear in filenames. */
+    private static final char CAP_Z = 'Z';
+
+    /** A character that can appear in filenames. */
+    private static final char COLON = ':';
+
     /** System output print stream that can support Unicode. */
-    private final PrintStream sysout;
+    private final PrintStream sysOut;
 
     /** The log settings. */
     private final LogSettings settings;
@@ -40,14 +55,14 @@ public final class LogWriter extends LogEntryList {
 
         super();
 
-        this.sysout = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        this.sysOut = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         this.settings = LoggingSubsystem.getSettings();
 
         if (LoggingSubsystem.getInstallation() != null && this.settings.isLogToFiles()) {
             final File logDir = determineLogDir();
-            final String filanemeNase = this.settings.getFilenameBase();
-            this.curFile = new File(logDir, filanemeNase + EXTENSION);
+            final String filanemeBase = this.settings.getFilenameBase();
+            this.curFile = new File(logDir, filanemeBase + EXTENSION);
 
             if (this.curFile.exists() && !this.settings.isAppend()) {
                 rotateLogs();
@@ -76,11 +91,11 @@ public final class LogWriter extends LogEntryList {
         synchronized (getSynch()) {
             if (this.settings.isLogToConsole()) {
                 if (linefeed) {
-                    this.sysout.println(msg);
+                    this.sysOut.println(msg);
                 } else {
-                    this.sysout.print(msg);
+                    this.sysOut.print(msg);
                 }
-                this.sysout.flush();
+                this.sysOut.flush();
             }
         }
     }
@@ -110,17 +125,17 @@ public final class LogWriter extends LogEntryList {
                         final byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
                         out.write(msgBytes);
                         if (linefeed) {
-                            final byte[] crlfBytes = CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8);
-                            out.write(crlfBytes);
+                            final byte[] lineEndBytes = CoreConstants.CRLF.getBytes(StandardCharsets.UTF_8);
+                            out.write(lineEndBytes);
                         }
                     }
                 } catch (final IOException ex) {
                     // Turn off file logging to prevent infinite loop when logging error
                     this.settings.setLogToFiles(false);
-                    final String path = this.curFile.getPath();
+                    final String curFilePath = this.curFile.getPath();
                     final Class<? extends IOException> exClass = ex.getClass();
                     final String simpleName = exClass.getSimpleName();
-                    final String logMsg = Res.fmt(Res.LOG_FAILED, path, simpleName);
+                    final String logMsg = Res.fmt(Res.LOG_FAILED, curFilePath, simpleName);
                     writeMessage(logMsg, true);
                     this.settings.setLogToFiles(true);
                 }
@@ -171,12 +186,12 @@ public final class LogWriter extends LogEntryList {
             final String path = this.settings.getLogFilePath();
 
             if (path != null && !path.isEmpty()) {
-                final char chr0 = path.charAt(0);
+                final int chr0 = path.charAt(0);
 
-                if ((int) chr0 == (int) '/' || (int) chr0 == (int) '\\') {
+                if (chr0 == (int) SLASH || chr0 == (int) BACKSLASH) {
                     result = new File(path);
-                } else if (path.length() > 1 && (int) chr0 >= (int) 'A' && (int) chr0 <= (int) 'Z'
-                           && (int) path.charAt(1) == (int) ':') {
+                } else if (path.length() > 1 && chr0 >= (int) CAP_A && chr0 <= (int) CAP_Z
+                           && (int) path.charAt(1) == (int) COLON) {
                     result = new File(path);
                 } else {
                     final File baseDir = installation.getBaseDir();

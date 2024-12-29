@@ -1,7 +1,6 @@
 package dev.mathops.commons.log;
 
 import dev.mathops.commons.CoreConstants;
-import dev.mathops.commons.builder.HtmlBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -54,11 +53,12 @@ public class LogBase extends Synchronized {
     /** The thread-local log context. */
     private static final ThreadLocalLogContext LOG_CONTEXT = new ThreadLocalLogContext();
 
+    /** A character used in filenames. */
+    private static final char DOT = '.';
+
+
     /** The writer that will write log records to configured outputs. */
     private final LogWriter logWriter;
-
-    /** A {@code HtmlBuilder} to assemble log messages. */
-    private final HtmlBuilder html;
 
     /** The name of this package, with trailing dot. */
     private final String pkg;
@@ -71,13 +71,12 @@ public class LogBase extends Synchronized {
         super();
 
         this.logWriter = new LogWriter();
-        this.html = new HtmlBuilder(INIT_BUILDER_SIZE);
 
         final String clsName = LogBase.class.getName();
         final String simple = LogBase.class.getSimpleName();
-        final int clsNameLen = clsName.length();
-        final int simpleLen = simple.length();
-        this.pkg = clsName.substring(0, clsNameLen - simpleLen);
+        final int classNameLength = clsName.length();
+        final int simpleNameLength = simple.length();
+        this.pkg = clsName.substring(0, classNameLength - simpleNameLength);
     }
 
     /**
@@ -104,8 +103,8 @@ public class LogBase extends Synchronized {
      * Logs a record with the format (where '*' is filled by severity character).
      *
      * <pre>
-     * MM/DD HH:mm:ss.SSS * [content] ([className]:[methodName] line [lineNumbner])
-     *                      [any Throwables with stack trace]
+     * MM/DD HH:mm:ss.SSS * [content] ([className]:[methodName] line [lineNumber])
+     *                      [any Throwables objects with stack trace]
      * </pre>
      *
      * @param severity the severity character to include in the log message
@@ -114,44 +113,46 @@ public class LogBase extends Synchronized {
     final void log(final char severity, final Object... args) {
 
         final LogContext ctx = LOG_CONTEXT.get();
+        final StringBuilder builder = new StringBuilder(100);
 
         final LocalDateTime now = LocalDateTime.now();
-        final String nowStr = now.format(DATE_FMT);
-        this.html.add(nowStr);
-        this.html.add(CoreConstants.SPC_CHAR);
+        final String formattedNow = now.format(DATE_FMT);
+        builder.append(formattedNow);
+        builder.append(CoreConstants.SPC_CHAR);
         if (ctx == null) {
-            this.html.add(INDENT);
+            builder.append(INDENT);
         } else {
-            this.html.add(ctx);
+            builder.append(ctx);
         }
-        this.html.add(severity);
-        this.html.add(CoreConstants.SPC_CHAR);
-        appendContent(args);
-        this.html.add(CoreConstants.SPC_CHAR);
-        appendSource();
-        addExceptionInfo(INDENT, args);
-        final String htmStr = this.html.toString();
-        this.logWriter.writeMessage(htmStr, true);
-        this.html.reset();
+        builder.append(severity);
+        builder.append(CoreConstants.SPC_CHAR);
+        appendContent(builder, args);
+        builder.append(CoreConstants.SPC_CHAR);
+        appendSource(builder);
+        addExceptionInfo(builder, INDENT, args);
+
+        final String msg = builder.toString();
+        this.logWriter.writeMessage(msg, true);
     }
 
     /**
      * Builds the content of the log message by concatenating the string representations of all non-{@code Throwable}
      * arguments.
      *
-     * @param args the arguments to concatenate
+     * @param builder the {@code StringBuilder} to which to append
+     * @param args    the arguments to concatenate
      */
-    private void appendContent(final Object... args) {
+    private void appendContent(final StringBuilder builder, final Object... args) {
 
         for (final Object arg : args) {
             if (arg == null) {
-                this.html.add("null");
+                builder.append("null");
             } else if (!(arg instanceof Throwable)) {
                 if (arg instanceof Object[]) {
-                    appendContent((Object[]) arg);
+                    appendContent(builder, (Object[]) arg);
                 } else {
                     final String argStr = arg.toString();
-                    this.html.add(argStr);
+                    builder.append(argStr);
                 }
             }
         }
@@ -161,37 +162,42 @@ public class LogBase extends Synchronized {
      * Builds the exception portion of the log message by concatenating the information and stack trace of all
      * {@code Throwable} arguments, in the order in which they appear in the arguments list.
      *
-     * @param indent the level to which to indent each line
-     * @param args   the arguments to concatenate
+     * @param builder the {@code StringBuilder} to which to append
+     * @param indent  the level to which to indent each line
+     * @param args    the arguments to concatenate
      */
-    private void addExceptionInfo(final String indent, final Object... args) {
+    private void addExceptionInfo(final StringBuilder builder, final String indent, final Object... args) {
 
         for (final Object arg : args) {
             if (arg instanceof Throwable thrown) {
                 while (thrown != null) {
-                    this.html.addln();
+                    builder.append(CoreConstants.CRLF);
                     final Class<? extends Throwable> cls = thrown.getClass();
                     final String clsName = cls.getSimpleName();
-                    this.html.add(indent, clsName);
+                    builder.append(indent);
+                    builder.append(clsName);
 
                     if (thrown.getLocalizedMessage() != null) {
                         final String locMsg = thrown.getLocalizedMessage();
-                        this.html.add(": ", locMsg);
+                        builder.append(": ");
+                        builder.append(locMsg);
                     }
 
                     final StackTraceElement[] stack = thrown.getStackTrace();
 
                     for (final StackTraceElement stackTraceElement : stack) {
-                        this.html.addln();
+                        builder.append(CoreConstants.CRLF);
                         final String stackItemStr = stackTraceElement.toString();
-                        this.html.add(indent, stackItemStr);
+                        builder.append(indent);
+                        builder.append(stackItemStr);
                     }
 
                     thrown = thrown.getCause();
 
                     if (thrown != null) {
-                        this.html.addln();
-                        this.html.add(indent, "CAUSED BY:");
+                        builder.append(CoreConstants.CRLF);
+                        builder.append(indent);
+                        builder.append("CAUSED BY:");
                     }
                 }
             }
@@ -210,8 +216,10 @@ public class LogBase extends Synchronized {
      * <pre>
      *   (source unavailable for [className])
      * </pre>
+     *
+     * @param builder the {@code StringBuilder} to which to append
      */
-    private void appendSource() {
+    private void appendSource(final StringBuilder builder) {
 
         final IllegalArgumentException except = new IllegalArgumentException();
         final StackTraceElement[] stack = except.getStackTrace();
@@ -222,8 +230,8 @@ public class LogBase extends Synchronized {
             String clsname = stackTraceElement.getClassName();
 
             if (clsname.startsWith("jdk.internal.reflect.")
-                    || clsname.startsWith("java.lang.reflect.")
-                    || clsname.startsWith("org.junit.")) {
+                || clsname.startsWith("java.lang.reflect.")
+                || clsname.startsWith("org.junit.")) {
                 continue;
             }
 
@@ -243,7 +251,11 @@ public class LogBase extends Synchronized {
             final int lineNumber = stackTraceElement.getLineNumber();
             final String lineNumberStr = Integer.toString(lineNumber);
             final String className = stackTraceElement.getClassName();
-            this.html.add(" (", className, ".java:", lineNumberStr, ")");
+            builder.append(" (");
+            builder.append(className);
+            builder.append(".java:");
+            builder.append(lineNumberStr);
+            builder.append(")");
             scanning = false;
             break;
         }
@@ -252,7 +264,7 @@ public class LogBase extends Synchronized {
             final Class<? extends LogBase> cls = getClass();
             final String clsName = cls.getName();
             final String msg = Res.fmt(Res.NO_SRC, clsName);
-            this.html.add(msg);
+            builder.append(msg);
         }
     }
 
@@ -264,12 +276,11 @@ public class LogBase extends Synchronized {
      */
     final String listToString(final Object... args) {
 
-        appendContent(args);
+        final StringBuilder builder = new StringBuilder(100);
 
-        final String result = this.html.toString();
-        this.html.reset();
+        appendContent(builder, args);
 
-        return result;
+        return builder.toString();
     }
 
     /**
@@ -279,8 +290,7 @@ public class LogBase extends Synchronized {
      * @param thePath          the path
      * @param theRemoteAddress the remote address
      */
-    public static void setHostPath(final String theHost, final String thePath,
-                                   final String theRemoteAddress) {
+    public static void setHostPath(final String theHost, final String thePath, final String theRemoteAddress) {
 
         if (theHost == null || thePath == null || theRemoteAddress == null) {
             LOG_CONTEXT.remove();

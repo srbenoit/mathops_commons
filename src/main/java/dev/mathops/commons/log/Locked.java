@@ -60,8 +60,8 @@ public class Locked {
 
                     if (curThread == this.curWriter) {
                         if (this.notifying) {
-                            final String message = Res.get(Res.MUT_IN_NOTIFY);
-                            throw new IllegalStateException(message);
+                            final String msg = Res.get(Res.MUT_IN_NOTIFY);
+                            throw new IllegalStateException(msg);
                         }
 
                         ++this.numWriters;

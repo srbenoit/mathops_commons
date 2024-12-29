@@ -1,7 +1,5 @@
 package dev.mathops.commons;
 
-import dev.mathops.commons.builder.HtmlBuilder;
-
 /**
  * System-wide constants.
  */
@@ -87,12 +85,12 @@ public enum CoreConstants {
      */
     public static String newId(final int length) {
 
-        final HtmlBuilder builder = new HtmlBuilder(length);
+        final StringBuilder builder = new StringBuilder(length);
 
         synchronized (RND) {
             for (int i = 0; i < length; ++i) {
                 final int randomInt = RND.nextInt(ID_CHARS.length);
-                builder.add(ID_CHARS[randomInt]);
+                builder.append(ID_CHARS[randomInt]);
             }
         }
 

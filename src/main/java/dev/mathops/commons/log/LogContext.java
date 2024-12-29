@@ -1,5 +1,7 @@
 package dev.mathops.commons.log;
 
+import dev.mathops.commons.CoreConstants;
+
 /**
  * A logging context that includes the host, path, remote IP address, and session associated with a log. This is stored
  * in a thread-local at the time a thread begins processing a transaction, and is cleared at the end of that transaction
@@ -7,8 +9,14 @@ package dev.mathops.commons.log;
  */
 class LogContext {
 
+    /** The column at which to make messages align vertically. */
+    private static final int MESSAGE_INDENT = 27;
+
+    /** A character used in log messages. */
+    private static final char COLON = ':';
+
     /** The remote address. */
-    private final String remoteAddr;
+    private final String remoteAddress;
 
     /** The log session ID. */
     private String sessionId = null;
@@ -23,7 +31,7 @@ class LogContext {
      */
     LogContext(final String theRemoteAddr) {
 
-        this.remoteAddr = theRemoteAddr;
+        this.remoteAddress = theRemoteAddr;
     }
 
     /**
@@ -89,16 +97,16 @@ class LogContext {
         final StringBuilder builder = new StringBuilder(20);
 
         // user ID should not exceed 9, and IP address should not exceed 15, so this string should
-        // never exceed 25 including the ':'. We pad all to 25 to make log messages line up.
+        // never exceed 25 including the ':'. We pad all to 27 to make log messages line up.
 
-        builder.append(this.remoteAddr);
+        builder.append(this.remoteAddress);
 
         if (this.userId != null) {
-            builder.append(':').append(this.userId);
+            builder.append(COLON).append(this.userId);
         }
 
-        while (builder.length() < 27) {
-            builder.append(' ');
+        while (builder.length() < MESSAGE_INDENT) {
+            builder.append(CoreConstants.SPC);
         }
 
         return builder.toString();

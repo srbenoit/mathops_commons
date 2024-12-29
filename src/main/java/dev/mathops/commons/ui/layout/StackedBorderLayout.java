@@ -15,7 +15,6 @@
 
 package dev.mathops.commons.ui.layout;
 
-import dev.mathops.commons.builder.SimpleBuilder;
 import dev.mathops.commons.log.Log;
 
 import java.awt.BorderLayout;
@@ -424,6 +423,6 @@ public class StackedBorderLayout implements LayoutManager2 {
         final String hGapStr = Integer.toString(this.hgap);
         final String vGapStr = Integer.toString(this.vgap);
 
-        return SimpleBuilder.concat(className, "[hgap=", hGapStr, ",vgap=", vGapStr, "]");
+        return className + "[hgap=" + hGapStr + ",vgap=" + vGapStr + "]";
     }
 }

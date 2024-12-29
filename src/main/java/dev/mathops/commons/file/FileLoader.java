@@ -1,7 +1,6 @@
 package dev.mathops.commons.file;
 
 import dev.mathops.commons.CoreConstants;
-import dev.mathops.commons.builder.HtmlBuilder;
 import dev.mathops.commons.log.Log;
 
 import javax.imageio.ImageIO;
@@ -94,7 +93,7 @@ public enum FileLoader {
         String result = null;
 
         try (final InputStream input = openInputStream(caller, name, logFail)) {
-            final HtmlBuilder builder = new HtmlBuilder(BUF_SIZE);
+            final StringBuilder builder = new StringBuilder(BUF_SIZE);
             readStreamAsString(input, builder);
             result = builder.toString();
         } catch (final IOException ex) {
@@ -114,11 +113,12 @@ public enum FileLoader {
      * @param builder a {@code HtmlBuilder} to which to add the loaded text from the stream
      * @throws IOException if an error occurred reading from the stream
      */
-    private static void readStreamAsString(final InputStream stream, final HtmlBuilder builder) throws IOException {
+    private static void readStreamAsString(final InputStream stream, final StringBuilder builder) throws IOException {
 
         try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
-                builder.add(line, CoreConstants.CRLF);
+                builder.append(line);
+                builder.append(CoreConstants.CRLF);
             }
         }
     }

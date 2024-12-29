@@ -1,7 +1,6 @@
 package dev.mathops.commons.log;
 
 import dev.mathops.commons.CoreConstants;
-import dev.mathops.commons.builder.HtmlBuilder;
 import dev.mathops.commons.installation.Installation;
 import dev.mathops.commons.installation.Installations;
 import org.junit.jupiter.api.AfterAll;
@@ -100,15 +99,22 @@ final class TestLogWriter {
         installDir = new File(tempDir, "zircon_temp_inst");
         if (installDir.exists() || installDir.mkdirs()) {
 
-            final HtmlBuilder builder = new HtmlBuilder(300);
+            final StringBuilder builder = new StringBuilder(300);
 
-            builder.addln("log-dir=$BASE_DIR/logs");
-            builder.addln("log-levels=ALL");
-            builder.addln("log-to-console=true");
-            builder.addln("log-to-file=true");
-            builder.addln("log-file-count=40");
-            builder.addln("log-file-size-limit=20000000");
-            builder.addln("log-file-name-base=zircon");
+            builder.append("log-dir=$BASE_DIR/logs");
+            builder.append(CoreConstants.CRLF);
+            builder.append("log-levels=ALL");
+            builder.append(CoreConstants.CRLF);
+            builder.append("log-to-console=true");
+            builder.append(CoreConstants.CRLF);
+            builder.append("log-to-file=true");
+            builder.append(CoreConstants.CRLF);
+            builder.append("log-file-count=40");
+            builder.append(CoreConstants.CRLF);
+            builder.append("log-file-size-limit=20000000");
+            builder.append(CoreConstants.CRLF);
+            builder.append("log-file-name-base=zircon");
+            builder.append(CoreConstants.CRLF);
 
             try (final FileOutputStream fw = new FileOutputStream(new File(installDir, "installation.properties"))) {
                 final byte[] bytes = builder.toString().getBytes(StandardCharsets.UTF_8);
@@ -203,11 +209,11 @@ final class TestLogWriter {
         final int count8 = writer.getNumInList();
         assertEquals(5, count8, "Log to list: bad list size after stopping");
 
-        final String msg0 = writer.getListMessage(0).message;
-        final String msg1 = writer.getListMessage(1).message;
-        final String msg2 = writer.getListMessage(2).message;
-        final String msg3 = writer.getListMessage(3).message;
-        final String msg4 = writer.getListMessage(4).message;
+        final String msg0 = writer.getListMessage(0).getMessage();
+        final String msg1 = writer.getListMessage(1).getMessage();
+        final String msg2 = writer.getListMessage(2).getMessage();
+        final String msg3 = writer.getListMessage(3).getMessage();
+        final String msg4 = writer.getListMessage(4).getMessage();
 
         assertEquals(LINE2, msg0, "Log to list: list message 1 content");
         assertEquals(LINE3, msg1, "Log to list: list message 2 content");
@@ -360,11 +366,12 @@ final class TestLogWriter {
 
         try (final InputStream input = new FileInputStream(file)) {
             final long length = file.length();
-            final HtmlBuilder builder = new HtmlBuilder((int) length);
+            final StringBuilder builder = new StringBuilder((int) length);
 
             try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
                 for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
-                    builder.addln(line);
+                    builder.append(line);
+                    builder.append(CoreConstants.CRLF);
                 }
             }
 

@@ -13,6 +13,24 @@ public final class Log extends LogBase {
     /** The singleton instance. */
     private static final Log INSTANCE = new Log();
 
+    /** A severity indicator character. */
+    static final char SEVERE = 'S';
+
+    /** A severity indicator character. */
+    static final char WARNING = 'W';
+
+    /** A severity indicator character. */
+    static final char INFO = 'I';
+
+    /** A severity indicator character. */
+    static final char CONFIG = 'C';
+
+    /** A severity indicator character. */
+    static final char ENTER = '>';
+
+    /** A severity indicator character. */
+    static final char EXIT = '<';
+
     /**
      * Private constructor to prevent direct instantiation.
      */
@@ -31,7 +49,7 @@ public final class Log extends LogBase {
         synchronized (INSTANCE) {
             final LogSettings settings = INSTANCE.getSettings();
             if ((settings.getLogLevel() & SEVERE_BIT) != 0) {
-                INSTANCE.log('S', args);
+                INSTANCE.log(SEVERE, args);
             }
         }
     }
@@ -46,7 +64,7 @@ public final class Log extends LogBase {
         synchronized (INSTANCE) {
             final LogSettings settings = INSTANCE.getSettings();
             if ((settings.getLogLevel() & WARNING_BIT) != 0) {
-                INSTANCE.log('W', args);
+                INSTANCE.log(WARNING, args);
             }
         }
     }
@@ -61,7 +79,7 @@ public final class Log extends LogBase {
         synchronized (INSTANCE) {
             final LogSettings settings = INSTANCE.getSettings();
             if ((settings.getLogLevel() & INFO_BIT) != 0) {
-                INSTANCE.log('I', args);
+                INSTANCE.log(INFO, args);
             }
         }
     }
@@ -76,7 +94,7 @@ public final class Log extends LogBase {
         synchronized (INSTANCE) {
             final LogSettings settings = INSTANCE.getSettings();
             if ((settings.getLogLevel() & CONFIG_BIT) != 0) {
-                INSTANCE.log('C', args);
+                INSTANCE.log(CONFIG, args);
             }
         }
     }
@@ -91,7 +109,7 @@ public final class Log extends LogBase {
         synchronized (INSTANCE) {
             final LogSettings settings = INSTANCE.getSettings();
             if ((settings.getLogLevel() & ENTERING_BIT) != 0) {
-                INSTANCE.log('>', args);
+                INSTANCE.log(ENTER, args);
             }
         }
     }
@@ -106,7 +124,7 @@ public final class Log extends LogBase {
         synchronized (INSTANCE) {
             final LogSettings settings = INSTANCE.getSettings();
             if ((settings.getLogLevel() & EXITING_BIT) != 0) {
-                INSTANCE.log('<', args);
+                INSTANCE.log(EXIT, args);
             }
         }
     }
@@ -120,8 +138,8 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINE_BIT) != 0) {
-                final String msg = INSTANCE.listToString(args);
-                INSTANCE.getLogWriter().writeMessage(msg, true);
+                final String listString = INSTANCE.listToString(args);
+                INSTANCE.getLogWriter().writeMessage(listString, true);
             }
         }
     }
@@ -136,14 +154,14 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINE_BIT) != 0) {
-                final String msg = INSTANCE.listToString(INDENT, args);
-                INSTANCE.getLogWriter().writeMessage(msg, true);
+                final String listString = INSTANCE.listToString(INDENT, args);
+                INSTANCE.getLogWriter().writeMessage(listString, true);
             }
         }
     }
 
     /**
-     * Logs a message with no date, severity labeling, or source information and with no linefeeds. This is intended to
+     * Logs a message with no date, severity labeling, or source information and with no line-feeds. This is intended to
      * allow log messages to be built up over multiple calls - it uses the same "FINE" log level.
      *
      * @param args the list of arguments that make up the log message
@@ -152,16 +170,16 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINE_BIT) != 0) {
-                final String msg = INSTANCE.listToString(args);
-                INSTANCE.getLogWriter().writeMessage(msg, false);
+                final String listString = INSTANCE.listToString(args);
+                INSTANCE.getLogWriter().writeMessage(listString, false);
             }
         }
     }
 
     /**
      * Logs a message with no date, severity labeling, or source information, that is logged only to the console and
-     * with no linefeeds. This is intended to be used for advancing progress information like a line of dots to indicate
-     * progress.
+     * with no line-feeds. This is intended to be used for advancing progress information like a line of dots to
+     * indicate progress.
      *
      * @param args the list of arguments that make up the log message
      */
@@ -169,8 +187,8 @@ public final class Log extends LogBase {
 
         synchronized (INSTANCE) {
             if ((INSTANCE.getSettings().getLogLevel() & FINEST_BIT) != 0) {
-                final String msg = INSTANCE.listToString(args);
-                INSTANCE.getLogWriter().writeConsole(msg, false);
+                final String listString = INSTANCE.listToString(args);
+                INSTANCE.getLogWriter().writeConsole(listString, false);
             }
         }
     }
