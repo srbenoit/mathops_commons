@@ -69,6 +69,9 @@ public enum CoreConstants {
     /** The standard end-of-line characters. */
     public static final String CRLF = "\r\n";
 
+    /** A regular expression commonly used to split a string. */
+    public static final String WHITESPACE_REGEX = "\\s+";
+
     /** Characters from which to make IDs (62). */
     private static final char[] ID_CHARS =
             "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789".toCharArray();
