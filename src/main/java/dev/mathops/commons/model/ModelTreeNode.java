@@ -80,7 +80,7 @@ public class ModelTreeNode {
      *
      * @return the typed map
      */
-    public final TypedMap getMap() {
+    public final TypedMap map() {
 
         return this.map;
     }
@@ -146,14 +146,14 @@ public class ModelTreeNode {
 
         final ModelTreeNode tail = this.map.getNode(LAST_CHILD);
 
-        node.getMap().remove(NEXT_SIBLING);
+        node.map().remove(NEXT_SIBLING);
 
         if (tail == null) {
-            node.getMap().remove(PREVIOUS_SIBLING);
+            node.map().remove(PREVIOUS_SIBLING);
             this.map.putNode(FIRST_CHILD, node);
         } else {
-            node.getMap().putNode(PREVIOUS_SIBLING, tail);
-            tail.getMap().putNode(NEXT_SIBLING, node);
+            node.map().putNode(PREVIOUS_SIBLING, tail);
+            tail.map().putNode(NEXT_SIBLING, node);
         }
 
         this.map.putNode(LAST_CHILD, node);
