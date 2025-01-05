@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,21 @@ public enum FileLoader {
      */
     public static String loadFileAsString(final File file, final boolean logFail) {
 
+        return loadFileAsString(file, StandardCharsets.UTF_8, logFail);
+    }
+
+    /**
+     * Loads a text file, storing the file contents in a {@code String}. Lines in the returned file are separated by
+     * single '\r\n' characters regardless of the line terminator in the source file. The last line will end with a
+     * '\r\n' character, whether there was one in the input file or not.
+     *
+     * @param file    the file to read
+     * @param charset the character set to use when interpreting bytes from the file
+     * @param logFail {@code true} to log a warning on failure
+     * @return the loaded file contents, or {@code null} if unable to load
+     */
+    public static String loadFileAsString(final File file, final Charset charset, final boolean logFail) {
+
         String result = null;
 
         final int len = (int) file.length();
@@ -60,7 +76,7 @@ public enum FileLoader {
         try (final InputStream input = new FileInputStream(file)) {
             final int count = input.read(buffer);
             if (count == len) {
-                result = new String(buffer, StandardCharsets.UTF_8);
+                result = new String(buffer, charset);
             } else if (logFail) {
                 final String filename = file.getName();
                 final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, filename);
@@ -90,11 +106,29 @@ public enum FileLoader {
      */
     public static String loadFileAsString(final Class<?> caller, final String name, final boolean logFail) {
 
+        return loadFileAsString(caller, name, StandardCharsets.UTF_8, logFail);
+    }
+
+    /**
+     * Loads a text file, storing the file contents in a {@code String}. Lines in the returned file are separated by
+     * single '\r\n' characters regardless of the line terminator in the source file. The last line will end with a
+     * '\r\n' character, whether there was one in the input file or not.
+     *
+     * @param caller  the class of the object making the call, so that relative resource paths are based on the caller's
+     *                position in the source tree
+     * @param name    the name of the file to read
+     * @param charset the character set to use when interpreting bytes from the file
+     * @param logFail {@code true} to log a warning on failure
+     * @return the loaded file contents, or {@code null} if unable to load
+     */
+    public static String loadFileAsString(final Class<?> caller, final String name, final Charset charset,
+                                          final boolean logFail) {
+
         String result = null;
 
         try (final InputStream input = openInputStream(caller, name, logFail)) {
             final StringBuilder builder = new StringBuilder(BUF_SIZE);
-            readStreamAsString(input, builder);
+            readStreamAsString(input, builder, charset);
             result = builder.toString();
         } catch (final IOException ex) {
             if (logFail) {
@@ -111,11 +145,13 @@ public enum FileLoader {
      *
      * @param stream  the stream to read
      * @param builder a {@code HtmlBuilder} to which to add the loaded text from the stream
+     * @param charset the character set to use when interpreting bytes from the file
      * @throws IOException if an error occurred reading from the stream
      */
-    private static void readStreamAsString(final InputStream stream, final StringBuilder builder) throws IOException {
+    private static void readStreamAsString(final InputStream stream, final StringBuilder builder,
+                                           final Charset charset) throws IOException {
 
-        try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+        try (final BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, charset))) {
             for (String line = rdr.readLine(); line != null; line = rdr.readLine()) {
                 builder.append(line);
                 builder.append(CoreConstants.CRLF);
@@ -132,10 +168,23 @@ public enum FileLoader {
      */
     public static String[] loadFileAsLines(final File file, final boolean logFail) {
 
+        return loadFileAsLines(file, StandardCharsets.UTF_8, logFail);
+    }
+
+    /**
+     * Loads a text file, storing the resulting lines of text in a {@code String} array.
+     *
+     * @param file    the file to read
+     * @param logFail {@code true} to log a warning on failure
+     * @param charset the character set to use when interpreting bytes from the file
+     * @return the loaded file contents, or {@code null} if unable to load
+     */
+    public static String[] loadFileAsLines(final File file, final Charset charset, final boolean logFail) {
+
         String[] result = null;
 
         try (final InputStream stream = new FileInputStream(file)) {
-            result = readStreamAsLines(stream);
+            result = readStreamAsLines(stream, charset);
         } catch (final IOException ex) {
             if (logFail) {
                 final String filename = file.getName();
@@ -158,10 +207,26 @@ public enum FileLoader {
      */
     public static String[] loadFileAsLines(final Class<?> caller, final String name, final boolean logFail) {
 
+        return loadFileAsLines(caller, name, StandardCharsets.UTF_8, logFail);
+    }
+
+    /**
+     * Loads a text file, storing the resulting lines of text in a {@code String} array.
+     *
+     * @param caller  the class of the object making the call, so that relative resource paths are based on the caller's
+     *                position in the source tree
+     * @param name    the name of the file to read
+     * @param charset the character set to use when interpreting bytes from the file
+     * @param logFail {@code true} to log a warning on failure
+     * @return the loaded file contents, or {@code null} if unable to load
+     */
+    public static String[] loadFileAsLines(final Class<?> caller, final String name, final Charset charset,
+                                           final boolean logFail) {
+
         String[] result = null;
 
         try (final InputStream input = openInputStream(caller, name, logFail)) {
-            result = readStreamAsLines(input);
+            result = readStreamAsLines(input, charset);
         } catch (final IOException ex) {
             if (logFail) {
                 final String errMsg = Res.fmt(Res.FILE_LOAD_FAIL, name);
@@ -176,14 +241,15 @@ public enum FileLoader {
      * Reads all lines of text from an input stream and returns them as a {@code String} array.
      *
      * @param stream the stream to read
+     * @param charset the character set to use when interpreting bytes from the file
      * @return the loaded contents, or {@code null} if unable to load
      * @throws IOException if an error occurred reading from the stream
      */
-    private static String[] readStreamAsLines(final InputStream stream) throws IOException {
+    private static String[] readStreamAsLines(final InputStream stream, final Charset charset) throws IOException {
 
         final String[] result;
 
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset))) {
             final List<String> lines = new ArrayList<>(EST_NUM_LINES);
 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
