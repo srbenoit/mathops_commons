@@ -68,6 +68,36 @@ public class IntValuedMap<T> {
     }
 
     /**
+     * Gets the number of entries in the map.
+     *
+     * @return the number of entries
+     */
+    public final int size() {
+
+        return this.numEntries;
+    }
+
+    /**
+     * Retrieves the list of keys in the map.
+     *
+     * @return the list of keys
+     */
+    public final List<T> getKeys() {
+
+        final List<T> list = new ArrayList<>(this.numEntries);
+
+        for (final Node<T> listHead : this.buckets) {
+            Node<T> current = listHead;
+            while (current != null) {
+                list.add(current.key);
+                current = current.next;
+            }
+        }
+
+        return list;
+    }
+
+    /**
      * Gets the value associated with a key.
      *
      * @param key          the key
