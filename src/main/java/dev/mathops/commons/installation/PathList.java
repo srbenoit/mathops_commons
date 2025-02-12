@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumMap;
@@ -147,7 +149,13 @@ public final class PathList {
 
         synchronized (SYNCH) {
             if (instance == null) {
-                instance = new PathList(Installations.DEF_BASE_DIR);
+                final File base = Installations.DEF_BASE_DIR;
+                if (base.exists() && base.isDirectory()) {
+                    instance = new PathList(Installations.DEF_BASE_DIR);
+                } else {
+                    final File currentDir = FileSystems.getDefault().getPath("").toFile();
+                    instance = new PathList(currentDir);
+                }
             }
             return instance;
         }
