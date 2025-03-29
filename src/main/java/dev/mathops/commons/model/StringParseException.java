@@ -1,5 +1,8 @@
 package dev.mathops.commons.model;
 
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serial;
 
 /**
@@ -49,5 +52,29 @@ public class StringParseException extends Exception {
     public StringParseException(final String message, final Throwable cause) {
 
         super(message, cause);
+    }
+
+    /**
+     * Implements readObject to prevent serialization.
+     *
+     * @param in the input stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws NotSerializableException {
+        final String className = StringParseException.class.getName();
+        throw new NotSerializableException(className);
+    }
+
+    /**
+     * Implements writeObject to prevent serialization.
+     *
+     * @param out the output stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void writeObject(final ObjectOutputStream out) throws NotSerializableException {
+        final String className = StringParseException.class.getName();
+        throw new NotSerializableException(className);
     }
 }

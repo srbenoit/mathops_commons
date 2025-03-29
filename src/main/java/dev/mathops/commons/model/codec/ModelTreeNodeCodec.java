@@ -37,7 +37,8 @@ public enum ModelTreeNodeCodec implements Codec<ModelTreeNode> {
             throw new IllegalArgumentException(msg);
         }
 
-        throw new StringParseException("Model tree nodes do not have string representations.");
+        final String msg = Res.get(Res.NO_STRING_REP);
+        throw new StringParseException(msg);
     }
 
     /**
@@ -54,6 +55,7 @@ public enum ModelTreeNodeCodec implements Codec<ModelTreeNode> {
             throw new IllegalArgumentException(msg);
         }
 
-        throw new IllegalArgumentException("Model tree nodes do not have string representations.");
+        final String msg = Res.get(Res.NO_STRING_REP);
+        throw new IllegalArgumentException(msg);
     }
 }

@@ -17,6 +17,9 @@ public final class Installations {
     /** The default name of the configuration file. */
     public static final String DEF_CFG_FILE_NAME = "installation.properties";
 
+    /** Commonly used string. */
+    public static final String ZIRCON = "zircon";
+
     /** The default base directory path. */
     public static final String MATHOPS_PATH = "/opt/zircon";
 
@@ -63,7 +66,7 @@ public final class Installations {
      */
     public static Installation getMyInstallation() {
 
-        return Installations.getThreadLocal().get();
+        return THREAD_LOCAL.get();
     }
 
     /**
@@ -73,7 +76,7 @@ public final class Installations {
      */
     public static void setMyInstallation(final Installation myInstallation) {
 
-        Installations.getThreadLocal().set(myInstallation);
+        THREAD_LOCAL.set(myInstallation);
     }
 
     /**
@@ -114,15 +117,5 @@ public final class Installations {
         synchronized (this.installationMap) {
             return this.installationMap.size();
         }
-    }
-
-    /**
-     * Gets the thread-local installation.
-     *
-     * @return the thread-local installation
-     */
-    private static ThreadLocalInstallation getThreadLocal() {
-
-        return THREAD_LOCAL;
     }
 }

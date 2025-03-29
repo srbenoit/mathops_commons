@@ -27,6 +27,14 @@ final class TestHexEncoder {
     private static final byte[] ZERO_LEN_BYTE_ARR = new byte[0];
 
     /**
+     * Constructs a new {@code TestHexEncoder}.
+     */
+    TestHexEncoder() {
+
+        // No action
+    }
+
+    /**
      * A test case.
      */
     @Test

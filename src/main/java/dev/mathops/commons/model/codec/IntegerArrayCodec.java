@@ -12,6 +12,9 @@ public enum IntegerArrayCodec implements Codec<int[]> {
     /** The single instance. */
     INST;
 
+    /** An empty array of integers. */
+    private static final int[] EMPTY_INT_ARRAY = new int[0];
+
     /**
      * Gets the type of object this codec converts.
      *
@@ -40,7 +43,7 @@ public enum IntegerArrayCodec implements Codec<int[]> {
             final int[] result;
 
             if (str.isBlank()) {
-                result = new int[0];
+                result = EMPTY_INT_ARRAY;
             } else {
                 final String[] parts = str.split(",");
                 final int len = parts.length;

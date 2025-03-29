@@ -85,6 +85,14 @@ final class TestLogWriter {
     private static LogSettings savedSettings = null;
 
     /**
+     * Constructs a new {@code TestLogWriter}.
+     */
+    TestLogWriter() {
+
+        // No action
+    }
+
+    /**
      * Sets up the test base directories.
      */
     @BeforeAll
@@ -99,25 +107,11 @@ final class TestLogWriter {
         installDir = new File(tempDir, "zircon_temp_inst");
         if (installDir.exists() || installDir.mkdirs()) {
 
-            final StringBuilder builder = new StringBuilder(300);
+            final String builderStr = makeTestFileContents();
 
-            builder.append("log-dir=$BASE_DIR/logs");
-            builder.append(CoreConstants.CRLF);
-            builder.append("log-levels=ALL");
-            builder.append(CoreConstants.CRLF);
-            builder.append("log-to-console=true");
-            builder.append(CoreConstants.CRLF);
-            builder.append("log-to-file=true");
-            builder.append(CoreConstants.CRLF);
-            builder.append("log-file-count=40");
-            builder.append(CoreConstants.CRLF);
-            builder.append("log-file-size-limit=20000000");
-            builder.append(CoreConstants.CRLF);
-            builder.append("log-file-name-base=zircon");
-            builder.append(CoreConstants.CRLF);
-
-            try (final FileOutputStream fw = new FileOutputStream(new File(installDir, "installation.properties"))) {
-                final byte[] bytes = builder.toString().getBytes(StandardCharsets.UTF_8);
+            try (final FileOutputStream fw = new FileOutputStream(
+                    new File(installDir, Installations.DEF_CFG_FILE_NAME))) {
+                final byte[] bytes = builderStr.getBytes(StandardCharsets.UTF_8);
                 fw.write(bytes);
             } catch (final IOException ex) {
                 Log.warning(ex);
@@ -126,6 +120,33 @@ final class TestLogWriter {
             final String absolutePath = installDir.getAbsolutePath();
             Log.warning("Unable to create ", absolutePath);
         }
+    }
+
+    /**
+     * Creates the contents of a test file.
+     *
+     * @return the file contents
+     */
+    private static String makeTestFileContents() {
+
+        final StringBuilder builder = new StringBuilder(300);
+
+        builder.append("log-dir=$BASE_DIR/logs");
+        builder.append(CoreConstants.CRLF);
+        builder.append("log-levels=ALL");
+        builder.append(CoreConstants.CRLF);
+        builder.append("log-to-console=true");
+        builder.append(CoreConstants.CRLF);
+        builder.append("log-to-file=true");
+        builder.append(CoreConstants.CRLF);
+        builder.append("log-file-count=40");
+        builder.append(CoreConstants.CRLF);
+        builder.append("log-file-size-limit=20000000");
+        builder.append(CoreConstants.CRLF);
+        builder.append("log-file-name-base=zircon");
+        builder.append(CoreConstants.CRLF);
+
+        return builder.toString();
     }
 
     /**

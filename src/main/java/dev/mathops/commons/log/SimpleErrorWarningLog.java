@@ -113,47 +113,38 @@ public class SimpleErrorWarningLog implements IErrorWarningLog {
      * Logs a warning to the system log and to the warnings list of an {@code ILogicProcess}.
      *
      * @param message the message to log
-     * @return false
      */
     @Override
-    public final boolean indicateWarning(final String message) {
+    public final void indicateWarning(final String message) {
 
         Log.warning(message);
         addWarning(message);
-
-        return false;
     }
 
     /**
      * Logs an error to the system log and to the errors list of an {@code ILogicProcess}.
      *
      * @param message the message to log
-     * @return false
      */
     @Override
-    public final boolean indicateError(final String message) {
+    public final void indicateError(final String message) {
 
         Log.severe(message);
         addError(message);
-
-        return false;
     }
 
     /**
      * Logs the failure to obtain an interface to the system log and to the errors list of an {@code ILogicProcess}.
      *
      * @param name the name of the interface being queried
-     * @return false
      */
     @Override
-    public final boolean indicateNoInterface(final String name) {
+    public final void indicateNoInterface(final String name) {
 
         final String msg = Res.fmt(Res.ERR_LOG_NO_INTERFACE, name);
 
         Log.severe(msg);
         addError(msg);
-
-        return false;
     }
 
     /**
@@ -161,15 +152,12 @@ public class SimpleErrorWarningLog implements IErrorWarningLog {
      *
      * @param message the message to log
      * @param ex      the exception that was thrown
-     * @return false
      */
     @Override
-    public final boolean indicateException(final String message, final Throwable ex) {
+    public final void indicateException(final String message, final Throwable ex) {
 
         Log.severe(message, ex);
         final String msg = ex.getMessage();
         addError(message + ": " + msg);
-
-        return false;
     }
 }

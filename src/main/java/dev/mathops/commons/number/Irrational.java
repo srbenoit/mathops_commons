@@ -19,6 +19,9 @@ package dev.mathops.commons.number;
 
 import dev.mathops.commons.log.Log;
 
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serial;
 
 /**
@@ -480,5 +483,29 @@ public final class Irrational extends Number {
         }
 
         return result.toString();
+    }
+
+    /**
+     * Implements readObject to prevent serialization.
+     *
+     * @param in the input stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws NotSerializableException {
+        final String className = Irrational.class.getName();
+        throw new NotSerializableException(className);
+    }
+
+    /**
+     * Implements writeObject to prevent serialization.
+     *
+     * @param out the output stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void writeObject(final ObjectOutputStream out) throws NotSerializableException {
+        final String className = Irrational.class.getName();
+        throw new NotSerializableException(className);
     }
 }

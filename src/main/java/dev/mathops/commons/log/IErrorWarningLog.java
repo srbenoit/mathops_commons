@@ -58,32 +58,28 @@ interface IErrorWarningLog {
      * Logs a warning to the system log and to the warnings list of an {@code ILogicProcess}.
      *
      * @param message the message to log
-     * @return false
      */
-    boolean indicateWarning(String message);
+    void indicateWarning(String message);
 
     /**
      * Logs an error to the system log and to the errors list of an {@code ILogicProcess}.
      *
      * @param message the message to log
-     * @return false
      */
-    boolean indicateError(String message);
+    void indicateError(String message);
 
     /**
      * Logs the failure to obtain an interface to the system log and to the errors list of an {@code ILogicProcess}.
      *
      * @param name the name of the interface being queried
-     * @return false
      */
-    boolean indicateNoInterface(String name);
+    void indicateNoInterface(String name);
 
     /**
      * Logs a failure with an exception to the system log and to the errors list of an {@code ILogicProcess}.
      *
      * @param message the message to log
      * @param ex      the exception that was thrown
-     * @return false
      */
-    boolean indicateException(String message, Throwable ex);
+    void indicateException(String message, Throwable ex);
 }

@@ -45,6 +45,14 @@ final class TestInstallation {
     private static final String TEST_CFG_FILE = "bogus.properties";
 
     /**
+     * Constructs a new {@code TestInstallation}.
+     */
+    TestInstallation() {
+
+        // No action
+    }
+
+    /**
      * Sets up the test base directories.
      */
     @BeforeAll

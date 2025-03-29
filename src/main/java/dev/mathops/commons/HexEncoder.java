@@ -12,6 +12,9 @@ public enum HexEncoder {
     /** Hex characters with lowercase. */
     private static final char[] LC_HEX = "0123456789abcdef".toCharArray();
 
+    /** A common bit mask. */
+    private static final int LOW_NIBBLE = 0x0F;
+
     /**
      * Decodes a string of hex characters into a byte array.
      *
@@ -84,8 +87,8 @@ public enum HexEncoder {
         final StringBuilder builder = new StringBuilder(bytes.length << 1);
 
         for (final byte aByte : bytes) {
-            builder.append(UC_HEX[((int) aByte >> 4) & 0x0F]);
-            builder.append(UC_HEX[(int) aByte & 0x0F]);
+            builder.append(UC_HEX[((int) aByte >> 4) & LOW_NIBBLE]);
+            builder.append(UC_HEX[(int) aByte & LOW_NIBBLE]);
         }
 
         return builder.toString();
@@ -99,7 +102,7 @@ public enum HexEncoder {
      */
     public static char encodeNibble(final int nibble) {
 
-        return UC_HEX[nibble & 0x0F];
+        return UC_HEX[nibble & LOW_NIBBLE];
     }
 
     /**
@@ -113,8 +116,8 @@ public enum HexEncoder {
         final StringBuilder builder = new StringBuilder(bytes.length << 1);
 
         for (final byte aByte : bytes) {
-            builder.append(LC_HEX[((int) aByte >> 4) & 0x0F]);
-            builder.append(LC_HEX[(int) aByte & 0x0F]);
+            builder.append(LC_HEX[((int) aByte >> 4) & LOW_NIBBLE]);
+            builder.append(LC_HEX[(int) aByte & LOW_NIBBLE]);
         }
 
         return builder.toString();

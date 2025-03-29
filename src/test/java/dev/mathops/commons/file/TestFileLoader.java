@@ -94,6 +94,14 @@ final class TestFileLoader {
     private static final String BOGUS = "Bogus";
 
     /**
+     * Constructs a new {@code TestFileLoader}.
+     */
+    TestFileLoader() {
+
+        // No action
+    }
+
+    /**
      * Test case.
      *
      * @throws IOException if write or read fails.

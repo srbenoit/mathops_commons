@@ -17,6 +17,9 @@
  *************************************************************************************************/
 package dev.mathops.commons.number;
 
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serial;
 
 /**
@@ -53,21 +56,21 @@ public class Rational extends Number {
             throw new IllegalArgumentException(msg);
         }
 
-        final long numerator;
-        final long denominator;
+        final long num;
+        final long den;
         if (theDenominator < 0L) {
-            numerator = -theNumerator;
-            denominator = -theDenominator;
+            num = -theNumerator;
+            den = -theDenominator;
         } else {
-            numerator = theNumerator;
-            denominator = theDenominator;
+            num = theNumerator;
+            den = theDenominator;
         }
 
-        final long abs = Math.abs(numerator);
-        final long gcd = gcdByEuclidAlgorithm(abs, denominator);
+        final long abs = Math.abs(num);
+        final long gcd = gcdByEuclidAlgorithm(abs, den);
 
-        this.numerator = numerator / gcd;
-        this.denominator = denominator / gcd;
+        this.numerator = num / gcd;
+        this.denominator = den / gcd;
     }
 
     /**
@@ -88,9 +91,9 @@ public class Rational extends Number {
      *
      * @param str the string to parse
      * @return the parsed {@code Rational}
-     * @throws IllegalArgumentException if the denominator is zero
+     * @throws NumberFormatException if the denominator is zero
      */
-    public static Rational valueOf(final String str) throws IllegalArgumentException {
+    public static Rational valueOf(final String str) throws NumberFormatException {
 
         final Rational result;
 
@@ -235,5 +238,29 @@ public class Rational extends Number {
         }
 
         return new Rational(this.denominator, this.numerator);
+    }
+
+    /**
+     * Implements readObject to prevent serialization.
+     *
+     * @param in the input stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws NotSerializableException {
+        final String className = Rational.class.getName();
+        throw new NotSerializableException(className);
+    }
+
+    /**
+     * Implements writeObject to prevent serialization.
+     *
+     * @param out the output stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void writeObject(final ObjectOutputStream out) throws NotSerializableException {
+        final String className = Rational.class.getName();
+        throw new NotSerializableException(className);
     }
 }

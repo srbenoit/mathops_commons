@@ -55,31 +55,31 @@ public final class LogSettings {
     static final char COMMA = ',';
 
     /** The log level name. */
-    private String logLevelName;
+    private String logLevelName = null;
 
     /** The log level integer value. */
-    private int logLevel;
+    private int logLevel = 0;
 
     /** Flag indicating log records should be written to console. */
-    private boolean logToConsole;
+    private boolean logToConsole = false;
 
     /** Flag indicating log records should be written to log files. */
-    private boolean logToFiles;
+    private boolean logToFiles = false;
 
     /** The log file path. */
-    private String logFilePath;
+    private String logFilePath = null;
 
     /** The maximum number of log files to retain (minimum of 1). */
-    private int logFileCount;
+    private int logFileCount = 0;
 
     /** An approximate upper limit on log file length. */
-    private int logFileSizeLimit;
+    private int logFileSizeLimit = 0;
 
     /** The prefix for log file names. */
-    private String filenameBase;
+    private String filenameBase = null;
 
     /** Flag indicating log records should be appended to existing logs on startup. */
-    private boolean append;
+    private boolean append = false;
 
     /** A flag indicating at least one setting has changed since last load or save. */
     private boolean dirty = false;
@@ -117,15 +117,17 @@ public final class LogSettings {
      */
     public void setFrom(final LogSettings source) {
 
-        this.logLevelName = source.getLogLevelName();
-        this.logLevel = source.getLogLevel();
-        this.logToConsole = source.isLogToConsole();
-        this.logToFiles = source.isLogToFiles();
-        this.logFilePath = source.getLogFilePath();
-        this.logFileCount = source.getLogFileCount();
-        this.logFileSizeLimit = source.getLogFileSizeLimit();
-        this.filenameBase = source.getFilenameBase();
-        this.append = source.append;
+        if (source != this) {
+            this.logLevelName = source.getLogLevelName();
+            this.logLevel = source.getLogLevel();
+            this.logToConsole = source.isLogToConsole();
+            this.logToFiles = source.isLogToFiles();
+            this.logFilePath = source.getLogFilePath();
+            this.logFileCount = source.getLogFileCount();
+            this.logFileSizeLimit = source.getLogFileSizeLimit();
+            this.filenameBase = source.getFilenameBase();
+            this.append = source.isAppend();
+        }
     }
 
     /**

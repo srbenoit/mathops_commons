@@ -1,5 +1,7 @@
 package dev.mathops.commons;
 
+import java.util.Arrays;
+
 /**
  * A seed for the random number generator. A seed consists of 8 32-bit integers.
  */
@@ -45,5 +47,23 @@ final class Seed {
     int getSeed(final int index) {
 
         return this.seedArray[index];
+    }
+
+    /**
+     * Generates a string representation of the object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final StringBuilder builder = new StringBuilder(100);
+
+        builder.append("Seed{seedArray='");
+        final String arrayStr = Arrays.toString(this.seedArray);
+        builder.append(arrayStr);
+        builder.append("'}");
+
+        return builder.toString();
     }
 }

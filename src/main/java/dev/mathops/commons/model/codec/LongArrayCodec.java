@@ -12,6 +12,9 @@ public enum LongArrayCodec implements Codec<long[]> {
     /** The single instance. */
     INST;
 
+    /** An empty array of longs. */
+    private static final long[] EMPTY_LONG_ARRAY = new long[0];
+
     /**
      * Gets the type of object this codec converts.
      *
@@ -40,7 +43,7 @@ public enum LongArrayCodec implements Codec<long[]> {
             final long[] result;
 
             if (str.isBlank()) {
-                result = new long[0];
+                result = EMPTY_LONG_ARRAY;
             } else {
                 final String[] parts = str.split(",");
                 final int len = parts.length;

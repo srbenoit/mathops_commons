@@ -225,4 +225,23 @@ public enum EMimeType {
 
         return result;
     }
+
+    /**
+     * Generates a string representation of the object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final StringBuilder builder = new StringBuilder(100);
+
+        builder.append("EMimeType{ext='");
+        builder.append(this.ext);
+        builder.append("', mime='");
+        builder.append(this.mime);
+        builder.append("'}");
+
+        return builder.toString();
+    }
 }

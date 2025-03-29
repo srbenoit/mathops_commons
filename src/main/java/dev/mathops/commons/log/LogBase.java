@@ -56,7 +56,6 @@ public class LogBase extends Synchronized {
     /** A character used in filenames. */
     private static final char DOT = '.';
 
-
     /** The writer that will write log records to configured outputs. */
     private final LogWriter logWriter;
 
@@ -191,9 +190,9 @@ public class LogBase extends Synchronized {
                         builder.append(stackItemStr);
                     }
 
-                    thrown = thrown.getCause();
+                    if (thrown.getCause() != null) {
+                        thrown = thrown.getCause();
 
-                    if (thrown != null) {
                         builder.append(CoreConstants.CRLF);
                         builder.append(INDENT);
                         builder.append("CAUSED BY:");
@@ -220,7 +219,7 @@ public class LogBase extends Synchronized {
      */
     private void appendSource(final StringBuilder builder) {
 
-        final IllegalArgumentException except = new IllegalArgumentException();
+        final IllegalArgumentException except = new IllegalArgumentException("ex");
         final StackTraceElement[] stack = except.getStackTrace();
         boolean scanning = true;
 
