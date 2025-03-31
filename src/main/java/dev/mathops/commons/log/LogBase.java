@@ -190,13 +190,14 @@ public class LogBase extends Synchronized {
                         builder.append(stackItemStr);
                     }
 
-                    if (thrown.getCause() != null) {
-                        thrown = thrown.getCause();
-
-                        builder.append(CoreConstants.CRLF);
-                        builder.append(INDENT);
-                        builder.append("CAUSED BY:");
+                    thrown = thrown.getCause();
+                    if (thrown == null) {
+                        break;
                     }
+
+                    builder.append(CoreConstants.CRLF);
+                    builder.append(INDENT);
+                    builder.append("CAUSED BY:");
                 }
             }
         }
