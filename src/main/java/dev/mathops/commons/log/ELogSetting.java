@@ -1,5 +1,7 @@
 package dev.mathops.commons.log;
 
+import dev.mathops.commons.installation.Installations;
+
 /**
  * The set of configurable settings for the logging system.
  */
@@ -24,7 +26,7 @@ enum ELogSetting {
     FILE_SIZE_LIMIT("log-file-size-limit", Integer.toString(Integer.MAX_VALUE)),
 
     /** Base for log file names. */
-    FILE_NAME_BASE("log-file-name-base", "zircon"),
+    FILE_NAME_BASE("log-file-name-base", Installations.ZIRCON),
 
     /** Boolean flag indicating log messages should append to existing file at startup. */
     FILE_APPEND("log-file-append", "true");
@@ -45,5 +47,24 @@ enum ELogSetting {
 
         this.key = theKey;
         this.defaultValue = theDefaultValue;
+    }
+
+    /**
+     * Generates a string representation of the object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final StringBuilder builder = new StringBuilder(100);
+
+        builder.append("ELogSetting{key='");
+        builder.append(this.key);
+        builder.append("', defaultValue='");
+        builder.append(this.defaultValue);
+        builder.append("'}");
+
+        return builder.toString();
     }
 }

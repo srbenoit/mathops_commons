@@ -40,7 +40,7 @@ final class Res extends ResBundle {
     private static final String[][] EN_US = {
             {NULL_CATEGORY, "Value category may not be null"},
             {NULL_NAME, "Name may not be null or blank"},
-            {NULL_NAME, "Name may not be null or blank"},
+            {NULL_VALUE_CLASS, "Value class may not be null"},
             {NULL_CODEC, "Codec may not be null"},
     };
 

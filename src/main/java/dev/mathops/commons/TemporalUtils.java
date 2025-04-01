@@ -65,8 +65,17 @@ public enum TemporalUtils {
     /** A date/time format that matches that expected by Informix. */
     public static final DateTimeFormatter FMT_INFORMIX = DateTimeFormatter.ofPattern("MMddyy", Locale.US);
 
-    /** The number of minutes ina day. */
+    /** The number of minutes in a day. */
     public static final int MINUTES_PER_DAY = 1440;
+
+    /** The number of minutes in an hour. */
+    private static final int MINUTES_PER_HOUR = 60;
+
+    /** The number of seconds in a minute. */
+    private static final int SECONDS_PER_MINUTE = 60;
+
+    /** The number of seconds in an hour. */
+    private static final int SECONDS_PER_HOUR = 3600;
 
     /**
      * Gets a local date/time represented by a Java (long) timestamp in the system default time zone.
@@ -113,7 +122,7 @@ public enum TemporalUtils {
             min -= MINUTES_PER_DAY;
         }
 
-        final LocalTime actualTime = LocalTime.of(min / 60, min % 60);
+        final LocalTime actualTime = LocalTime.of(min / SECONDS_PER_MINUTE, min % SECONDS_PER_MINUTE);
 
         return LocalDateTime.of(actualDate, actualTime);
     }
@@ -127,7 +136,7 @@ public enum TemporalUtils {
      */
     public static int minuteOfDay(final LocalDateTime time) {
 
-        return time.getHour() * 60 + time.getMinute();
+        return time.getHour() * MINUTES_PER_HOUR + time.getMinute();
     }
 
     /**
@@ -139,7 +148,7 @@ public enum TemporalUtils {
      */
     public static int minuteOfDay(final LocalTime time) {
 
-        return time.getHour() * 60 + time.getMinute();
+        return time.getHour() * MINUTES_PER_HOUR + time.getMinute();
     }
 
     /**
@@ -151,6 +160,6 @@ public enum TemporalUtils {
      */
     public static int secondOfDay(final LocalTime time) {
 
-        return time.getHour() * 3600 + time.getMinute() * 60 + time.getSecond();
+        return time.getHour() * SECONDS_PER_HOUR + time.getMinute() * SECONDS_PER_MINUTE + time.getSecond();
     }
 }

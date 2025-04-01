@@ -28,6 +28,8 @@ final class Res extends ResBundle {
     /** A resource key. */
     static final String NULL_OBJECT = key(2);
 
+    /** A resource key. */
+    static final String NO_STRING_REP = key(3);
 
     //
 
@@ -35,6 +37,7 @@ final class Res extends ResBundle {
     private static final String[][] EN_US = {
             {NULL_STRING, "String to parse may not be null"},
             {NULL_OBJECT, "Object to stringify may not be null"},
+            {NO_STRING_REP, "Model tree nodes do not have string representations."},
     };
 
     /** The singleton instance. */

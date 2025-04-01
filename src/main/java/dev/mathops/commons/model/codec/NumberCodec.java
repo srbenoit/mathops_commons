@@ -123,7 +123,7 @@ public enum NumberCodec implements Codec<Number> {
                 if (dot == -1) {
 
                     // There is no '/' and no '.'; this could be (in increasing order of likelihood):
-                    // - A long integer, integer (has i suffix), short integer (has s suffix), or byte (has b suffix)
+                    // - A long integer, integer ("i" suffix), short integer ("s" suffix), or byte ("b" suffix)
                     // - An irrational such as "2PI", "E", or "3R2" (if it contains "PI", "E", or "R")
                     // - A BigInteger (has 'B' suffix)
                     // - A BigIrrational (has 'B' suffix)

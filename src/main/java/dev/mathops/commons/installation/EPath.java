@@ -6,7 +6,7 @@ package dev.mathops.commons.installation;
 public enum EPath {
 
     /** The base directory of an installation. */
-    BASE_DIR("base-dir", "/opt/zircon"),
+    BASE_DIR("base-dir", Installations.MATHOPS_PATH),
 
     /** The path where log files are written. */
     LOG_PATH("log-path", "{base-dir}/logs"),
@@ -83,5 +83,24 @@ public enum EPath {
     public String getDefaultPath() {
 
         return this.defaultPath;
+    }
+
+    /**
+     * Generates a string representation of the object.
+     *
+     * @return the string representation
+     */
+    @Override
+    public String toString() {
+
+        final StringBuilder builder = new StringBuilder(100);
+
+        builder.append("EPath{key='");
+        builder.append(this.key);
+        builder.append("', defaultPath='");
+        builder.append(this.defaultPath);
+        builder.append("'}");
+
+        return builder.toString();
     }
 }

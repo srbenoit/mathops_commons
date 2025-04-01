@@ -12,6 +12,9 @@ public enum DoubleArrayCodec implements Codec<double[]> {
     /** The single instance. */
     INST;
 
+    /** An empty array of doubles. */
+    private static final double[] EMPTY_DBL_ARRAY = new double[0];
+
     /**
      * Gets the type of object this codec converts.
      *
@@ -40,7 +43,7 @@ public enum DoubleArrayCodec implements Codec<double[]> {
             final double[] result;
 
             if (str.isBlank()) {
-                result = new double[0];
+                result = EMPTY_DBL_ARRAY;
             } else {
                 final String[] parts = str.split(",");
                 final int len = parts.length;

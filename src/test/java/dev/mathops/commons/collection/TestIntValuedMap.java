@@ -14,6 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 final class TestIntValuedMap {
 
     /**
+     * Constructs a new {@code TestIntValuedMap}.
+     */
+    TestIntValuedMap() {
+
+        // No action
+    }
+
+    /**
      * A test case.
      */
     @Test

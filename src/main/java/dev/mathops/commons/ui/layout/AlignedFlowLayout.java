@@ -479,6 +479,6 @@ public final class AlignedFlowLayout implements LayoutManager {
             default -> ",align=center";
         };
 
-        return getClass().getName() + "[hgap=" + this.hGap + ",vgap=" + this.vGap + str + "]";
+        return getClass().getName() + "[h-gap=" + this.hGap + ",v-gap=" + this.vGap + str + "]";
     }
 }

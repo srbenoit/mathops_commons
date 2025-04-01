@@ -33,6 +33,9 @@ import java.util.List;
  */
 public class StackedBorderLayout implements LayoutManager2 {
 
+    /** A common position. */
+    private static final float HALF = 0.5f;
+
     /** The horizontal gaps between components. */
     private final int hgap;
 
@@ -143,9 +146,8 @@ public class StackedBorderLayout implements LayoutManager2 {
     }
 
     /**
-     * @deprecated replaced by {@code addLayoutComponent(Component, Object)}.
+     * Replaced by {@code addLayoutComponent(Component, Object)}.
      */
-    @Deprecated
     @Override
     public final void addLayoutComponent(final String name, final Component comp) {
 
@@ -159,24 +161,33 @@ public class StackedBorderLayout implements LayoutManager2 {
                 case EAST -> this.east.add(comp);
                 case WEST -> this.west.add(comp);
                 case BorderLayout.PAGE_START -> {
-                    Log.warning("BorderLayout constant used in StackedBorderLayout: ", new IllegalArgumentException());
+                    logBorderLayoutConstantUsed();
                     this.north.add(comp);
                 }
                 case BorderLayout.PAGE_END -> {
-                    Log.warning("BorderLayout constant used in StackedBorderLayout: ", new IllegalArgumentException());
+                    logBorderLayoutConstantUsed();
                     this.south.add(comp);
                 }
                 case BorderLayout.LINE_START -> {
-                    Log.warning("BorderLayout constant used in StackedBorderLayout: ", new IllegalArgumentException());
+                    logBorderLayoutConstantUsed();
                     this.west.add(comp);
                 }
                 case BorderLayout.LINE_END -> {
-                    Log.warning("BorderLayout constant used in StackedBorderLayout: ", new IllegalArgumentException());
+                    logBorderLayoutConstantUsed();
                     this.east.add(comp);
                 }
                 default -> throw new IllegalArgumentException("cannot add to layout: unknown constraint: " + name);
             }
         }
+    }
+
+    /**
+     * Logs the fact that a {@code BorderLayout} constant was used as a constraint for {@code StackedBorderLayout}.
+     */
+    private static void logBorderLayoutConstantUsed() {
+
+        final String msg = Res.get(Res.BORDER_LAYOUT_CONST_USED);
+        Log.warning(msg, new IllegalArgumentException("ex"));
     }
 
     /**
@@ -323,7 +334,7 @@ public class StackedBorderLayout implements LayoutManager2 {
     @Override
     public final float getLayoutAlignmentX(final Container target) {
 
-        return 0.5f;
+        return HALF;
     }
 
     /**
@@ -334,7 +345,7 @@ public class StackedBorderLayout implements LayoutManager2 {
     @Override
     public final float getLayoutAlignmentY(final Container target) {
 
-        return 0.5f;
+        return HALF;
     }
 
     /**
@@ -417,12 +428,17 @@ public class StackedBorderLayout implements LayoutManager2 {
     @Override
     public final String toString() {
 
-        final Class<? extends StackedBorderLayout> cls = getClass();
-        final String className = cls.getName();
-
         final String hGapStr = Integer.toString(this.hgap);
         final String vGapStr = Integer.toString(this.vgap);
 
-        return className + "[hgap=" + hGapStr + ",vgap=" + vGapStr + "]";
+        final StringBuilder builder = new StringBuilder(60);
+
+        builder.append("StackedBorderLayout[hgap=");
+        builder.append(hGapStr);
+        builder.append(",vgap=");
+        builder.append(vGapStr);
+        builder.append("]");
+
+        return builder.toString();
     }
 }

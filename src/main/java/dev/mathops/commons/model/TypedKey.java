@@ -303,17 +303,13 @@ public class TypedKey<T> {
     @SuppressWarnings("unchecked")
     public final T testObject(final Object o) {
 
-        final T result;
+        T result = null;
 
-        if (o == null) {
-            result = null;
-        } else {
+        if (o != null) {
             final Class<T> valueClass = this.codec.getType();
 
             if (valueClass.isInstance(o)) {
                 result = (T) o;
-            } else {
-                result = null;
             }
         }
 

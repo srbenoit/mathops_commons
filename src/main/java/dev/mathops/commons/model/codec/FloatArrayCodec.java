@@ -12,6 +12,9 @@ public enum FloatArrayCodec implements Codec<float[]> {
     /** The single instance. */
     INST;
 
+    /** An empty array of floats. */
+    private static final float[] EMPTY_FLOAT_ARRAY = new float[0];
+
     /**
      * Gets the type of object this codec converts.
      *
@@ -40,7 +43,7 @@ public enum FloatArrayCodec implements Codec<float[]> {
             final float[] result;
 
             if (str.isBlank()) {
-                result = new float[0];
+                result = EMPTY_FLOAT_ARRAY;
             } else {
                 final String[] parts = str.split(",");
                 final int len = parts.length;

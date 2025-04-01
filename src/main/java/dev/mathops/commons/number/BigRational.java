@@ -17,6 +17,9 @@
  *************************************************************************************************/
 package dev.mathops.commons.number;
 
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.math.BigInteger;
 
@@ -230,5 +233,29 @@ public class BigRational extends Number {
         }
 
         return new BigRational(this.denominator, this.numerator);
+    }
+
+    /**
+     * Implements readObject to prevent serialization.
+     *
+     * @param in the input stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws NotSerializableException {
+        final String className = BigRational.class.getName();
+        throw new NotSerializableException(className);
+    }
+
+    /**
+     * Implements writeObject to prevent serialization.
+     *
+     * @param out the output stream
+     * @throws NotSerializableException always
+     */
+    @Serial
+    private void writeObject(final ObjectOutputStream out) throws NotSerializableException {
+        final String className = BigRational.class.getName();
+        throw new NotSerializableException(className);
     }
 }

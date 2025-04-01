@@ -1,5 +1,6 @@
 package dev.mathops.commons.log;
 
+import dev.mathops.commons.installation.Installations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +19,13 @@ final class TestLogSettings {
     /** Commonly used string. */
     private static final String LOGS = "logs";
 
-    /** Commonly used string. */
-    private static final String ZIRCON = "zircon";
+    /**
+     * Constructs a new {@code TestLogSettings}.
+     */
+    TestLogSettings() {
+
+        // No action
+    }
 
     /**
      * Tests the state of a {@code LogSettings} object after construction. All fields should be initialized to the
@@ -53,7 +59,7 @@ final class TestLogSettings {
         assertEquals(Integer.MAX_VALUE, logFileSizeLimit, "Log file size default is unlimited");
 
         final String filenameBase = settings.getFilenameBase();
-        assertEquals(ZIRCON, filenameBase, "Log filename base default is zircon");
+        assertEquals(Installations.ZIRCON, filenameBase, "Log filename base default is zircon");
 
         final boolean append = settings.isAppend();
         assertTrue(append, "Log append default us true");
@@ -97,7 +103,7 @@ final class TestLogSettings {
         assertEquals(Integer.MAX_VALUE, logFileSizeLimit, "Log file size with null config is unlimited");
 
         final String filenameBase = settings.getFilenameBase();
-        assertEquals(ZIRCON, filenameBase, "Log filename base with null config is zircon");
+        assertEquals(Installations.ZIRCON, filenameBase, "Log filename base with null config is zircon");
 
         final boolean append = settings.isAppend();
         assertTrue(append, "Log append with null config us true");
@@ -141,7 +147,7 @@ final class TestLogSettings {
         assertEquals(Integer.MAX_VALUE, logFileSizeLimit, "Log file size with null installation is unlimited");
 
         final String filenameBase = settings.getFilenameBase();
-        assertEquals(ZIRCON, filenameBase, "Log filename base with null installation is zircon");
+        assertEquals(Installations.ZIRCON, filenameBase, "Log filename base with null installation is zircon");
 
         final boolean append = settings.isAppend();
         assertTrue(append, "Log append with null installation us true");

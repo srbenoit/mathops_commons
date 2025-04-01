@@ -135,6 +135,14 @@ final class TestLog {
     private static LogSettings savedSettings = null;
 
     /**
+     * Constructs a new {@code TestLog}.
+     */
+    TestLog() {
+
+        // No action
+    }
+
+    /**
      * Sets up the test base directories.
      */
     @BeforeAll
