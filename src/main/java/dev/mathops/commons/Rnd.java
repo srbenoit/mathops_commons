@@ -3,7 +3,7 @@ package dev.mathops.commons;
 /**
  * Pseudo-random number generator taking an 8-integer seed and generating a series of integer values.
  */
-final class Rnd {
+public final class Rnd {
 
     /** The initial value of the carry field. */
     private static final int INITIAL_CARRY = 123456;
@@ -52,7 +52,7 @@ final class Rnd {
      *
      * @param seed the seed
      */
-    Rnd(final Seed seed) {
+    public Rnd(final Seed seed) {
 
         this.origSeed = new int[8];
         seed.getSeedArray(this.origSeed);

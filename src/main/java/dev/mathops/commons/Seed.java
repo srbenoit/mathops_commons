@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * A seed for the random number generator. A seed consists of 8 32-bit integers.
  */
-final class Seed {
+public final class Seed {
 
     /** Seed values. */
     private final int[] seedArray;
@@ -18,7 +18,7 @@ final class Seed {
      * @param theSeed1 the first {@code long} seed value
      * @param theSeed2 the second {@code long} seed value
      */
-    Seed(final long theSeed1, final long theSeed2) {
+    public Seed(final long theSeed1, final long theSeed2) {
 
         final int left1 = (int) theSeed1;
         final int right1 = (int) (theSeed1 >> Integer.SIZE);
