@@ -403,7 +403,7 @@ public final class Irrational extends Number {
     public int hashCode() {
 
         final long value = ((long) this.factor.hashCode() << 24) + (this.base << 16) + (this.numerator << 8)
-                + this.denominator;
+                           + this.denominator;
 
         return Long.hashCode(value);
     }
@@ -423,7 +423,10 @@ public final class Irrational extends Number {
         if (obj == this) {
             equal = true;
         } else if (obj instanceof final Irrational irrational) {
-            equal = doubleValue() == irrational.doubleValue();
+            equal = this.factor == irrational.factor
+                    && this.base == irrational.base
+                    && this.numerator == irrational.numerator
+                    && this.denominator == irrational.denominator;
         } else {
             equal = false;
         }

@@ -406,7 +406,10 @@ public final class BigIrrational extends Number {
         if (obj == this) {
             equal = true;
         } else if (obj instanceof final BigIrrational irrational) {
-            equal = doubleValue() == irrational.doubleValue();
+            equal = this.factor == irrational.factor
+                    && this.base == irrational.base
+                    && this.numerator.equals(irrational.numerator)
+                    && this.denominator.equals(irrational.denominator);
         } else {
             equal = false;
         }
