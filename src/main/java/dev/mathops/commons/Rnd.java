@@ -82,7 +82,7 @@ public final class Rnd {
      * Resets the generator based on its original seed values. After a reset, calling {@code next} any number of times
      * will generate the same pseudo-random sequence as when the object was initially created.
      */
-    private void reset() {
+    public void reset() {
 
         this.val1 = this.origSeed[0];
         this.val2 = this.origSeed[1];
@@ -100,7 +100,7 @@ public final class Rnd {
      *
      * @return the value
      */
-    private int nextInt() {
+    public int nextInt() {
 
         final long temp = MULTIPLIER * (long) this.val8 + (long) this.carry;
 
