@@ -84,8 +84,8 @@ public enum NumberParser {
                         result = new BigInteger(str);
                     } catch (final NumberFormatException ex2) {
                         final String toParse = str.replace(Irrational.PI_STR, Irrational.PI);
-                        final String msg = Res.fmt(Res.ATTEMPTING_TO_PARSE_IRRATIONAL, toParse);
-                        Log.info(msg);
+//                        final String msg = Res.fmt(Res.ATTEMPTING_TO_PARSE_IRRATIONAL, toParse);
+//                        Log.info(msg);
 
                         try {
                             result = Irrational.valueOf(toParse);
@@ -108,7 +108,6 @@ public enum NumberParser {
                 }
             }
         } else {
-
             // There is a '/' character, so this could be (in increasing order of likelihood)
             // A Rational, like 1/2
             // An Irrational like PI/2, 2E/4, or 3R2/2
@@ -122,8 +121,8 @@ public enum NumberParser {
                     result = BigRational.valueOf(str);
                 } catch (final NumberFormatException ex2) {
                     final String toParse = str.replace(Irrational.PI_STR, Irrational.PI);
-                    final String msg = Res.fmt(Res.ATTEMPTING_TO_PARSE_IRRATIONAL, toParse);
-                    Log.info(msg);
+//                    final String msg = Res.fmt(Res.ATTEMPTING_TO_PARSE_IRRATIONAL, toParse);
+//                    Log.info(msg);
 
                     try {
                         result = Irrational.valueOf(str);
