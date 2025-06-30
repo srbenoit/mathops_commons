@@ -29,10 +29,7 @@ final class Res extends ResBundle {
     static final String NULL_NAME = key(2);
 
     /** A resource key. */
-    static final String NULL_VALUE_CLASS = key(3);
-
-    /** A resource key. */
-    static final String NULL_CODEC = key(4);
+    static final String NULL_CODEC = key(3);
 
     //
 
@@ -40,7 +37,6 @@ final class Res extends ResBundle {
     private static final String[][] EN_US = {
             {NULL_CATEGORY, "Value category may not be null"},
             {NULL_NAME, "Name may not be null or blank"},
-            {NULL_VALUE_CLASS, "Value class may not be null"},
             {NULL_CODEC, "Codec may not be null"},
     };
 
