@@ -116,6 +116,24 @@ public class ModelTreeNode {
     }
 
     /**
+     * Returns the number of children in the node.
+     *
+     * @return the number of children
+     */
+    public final int countChildren() {
+
+        int count = 0;
+
+        ModelTreeNode node = getFirstChild();
+        while (node != null) {
+            ++count;
+            node = node.getNextSibling();
+        }
+
+        return count;
+    }
+
+    /**
      * Gets the first child node.
      *
      * @return the first child node; null if this node has no child nodes
