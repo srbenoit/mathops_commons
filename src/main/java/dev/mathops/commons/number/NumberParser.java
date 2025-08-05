@@ -125,9 +125,9 @@ public enum NumberParser {
 //                    Log.info(msg);
 
                     try {
-                        result = Irrational.valueOf(str);
+                        result = Irrational.valueOf(toParse);
                     } catch (final NumberFormatException ex3) {
-                        result = BigIrrational.valueOf(str);
+                        result = BigIrrational.valueOf(toParse);
                     }
                 }
             }
