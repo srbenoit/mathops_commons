@@ -40,6 +40,17 @@ public class TypedMap {
     }
 
     /**
+     * Gets the data array object at a specified index.
+     *
+     * @param index the index
+     * @return the data object
+     */
+    private Object getData(final int index) {
+
+        return this.data.get(index);
+    }
+
+    /**
      * Sets the object value associated with a key.  This operation clears any cached String representation associated
      * with the key.
      *
@@ -68,6 +79,77 @@ public class TypedMap {
     }
 
     /**
+     * Copies an attribute value (of any type) from a source map to this map.
+     *
+     * @param source the source map from which to copy
+     * @param key    the key of the value to copy (if the source map does not have an attribute with this key, no action
+     *               is taken)
+     */
+    public final void copyAttributeFrom(final TypedMap source, final AttrKey<?> key) {
+
+        if (source == null) {
+            throw new IllegalArgumentException("Source map may not be null");
+        }
+        if (key == null) {
+            throw new IllegalArgumentException("Value key may not be null");
+        }
+
+        final int sourceIndex = source.indexOfKey(key);
+        if (sourceIndex > -1) {
+            final Object stringValue = source.getData(sourceIndex + 1);
+            final Object typedValue = source.getData(sourceIndex + 2);
+            store(key, stringValue, typedValue);
+        }
+    }
+
+    /**
+     * Copies all attribute values (of any type) from a source map to this map.
+     *
+     * @param source the source map from which to copy
+     */
+    public final void copyAllAttributesFrom(final TypedMap source) {
+
+        if (source == null) {
+            throw new IllegalArgumentException("Source map may not be null");
+        }
+
+        final int count = source.size() * 3;
+
+        for (int i = 0; i < count; i += 3) {
+            final Object first = source.getData(i);
+            if (first instanceof final AttrKey<?> key) {
+                final Object stringValue = source.getData(i + 1);
+                final Object typedValue = source.getData(i + 2);
+                store(key, stringValue, typedValue);
+            }
+        }
+    }
+
+    /**
+     * Stores an entry in the data array, adding a new entry if the key does not already exist in the data array, or
+     * updating the data value if it does.
+     *
+     * @param key         the key
+     * @param stringValue the string value
+     * @param objectValue the typed value
+     */
+    private void store(final TypedKey<?> key, final Object stringValue, final Object objectValue) {
+
+        final int i = indexOfKey(key);
+
+        if (i == -1) {
+            // This object does not already have the attribute - add it
+            this.data.add(key);
+            this.data.add(stringValue);
+            this.data.add(objectValue);
+        } else {
+            // This object has the attribute - update it
+            this.data.set(i + 1, stringValue);
+            this.data.set(i + 2, objectValue);
+        }
+    }
+
+    /**
      * Sets the string representation associated with a key.  This operation clears any cached parsed object associated
      * with the key.
      *
@@ -83,15 +165,7 @@ public class TypedMap {
             throw new IllegalArgumentException("String representation may not be null");
         }
 
-        final int i = indexOfKey(key);
-        if (i == -1) {
-            this.data.add(key);
-            this.data.add(str);
-            this.data.add(null);
-        } else {
-            this.data.set(i + 1, str);
-            this.data.set(i + 2, null);
-        }
+        store(key, str, null);
     }
 
     /**
@@ -109,15 +183,7 @@ public class TypedMap {
             throw new IllegalArgumentException("Node may not be null");
         }
 
-        final int i = indexOfKey(key);
-        if (i == -1) {
-            this.data.add(key);
-            this.data.add(null);
-            this.data.add(node);
-        } else {
-            this.data.set(i + 1, null);
-            this.data.set(i + 2, node);
-        }
+        store(key, null, node);
     }
 
     /**
@@ -250,13 +316,13 @@ public class TypedMap {
      *
      * @param target the list to which to add attribute keys
      */
-    public final void getAttributeKeys(final Collection<? super TypedKey<?>> target) {
+    public final void getAttributeKeys(final Collection<? super AttrKey<?>> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.ATTRIBUTE) {
+            if (o instanceof final AttrKey<?> firstKey) {
                 target.add(firstKey);
             }
         }
@@ -267,13 +333,13 @@ public class TypedMap {
      *
      * @param target the list to which to add property keys
      */
-    public final void getPropertyKeys(final Collection<? super TypedKey<?>> target) {
+    public final void getPropertyKeys(final Collection<? super PropKey<?>> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.PROPERTY) {
+            if (o instanceof final PropKey<?> firstKey) {
                 target.add(firstKey);
             }
         }
@@ -284,13 +350,13 @@ public class TypedMap {
      *
      * @param target the list to which to add data keys
      */
-    public final void getDataKeys(final Collection<? super TypedKey<?>> target) {
+    public final void getDataKeys(final Collection<? super DataKey<?>> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.DATA) {
+            if (o instanceof final DataKey<?> firstKey) {
                 target.add(firstKey);
             }
         }
@@ -301,13 +367,13 @@ public class TypedMap {
      *
      * @param target the list to which to add node keys
      */
-    public final void getNodeKeys(final Collection<? super TypedKey<?>> target) {
+    public final void getNodeKeys(final Collection<? super NodeKey> target) {
 
         final int len = this.data.size();
 
         for (int i = 0; i < len; i += 3) {
             final Object o = this.data.get(i);
-            if (o instanceof final TypedKey<?> firstKey && firstKey.getCategory() == ETypedMapCategory.NODE) {
+            if (o instanceof final NodeKey firstKey) {
                 target.add(firstKey);
             }
         }
