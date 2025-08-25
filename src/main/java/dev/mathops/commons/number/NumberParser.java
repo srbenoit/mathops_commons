@@ -17,8 +17,6 @@
  *************************************************************************************************/
 package dev.mathops.commons.number;
 
-import dev.mathops.commons.log.Log;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 

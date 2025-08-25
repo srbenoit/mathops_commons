@@ -112,9 +112,8 @@ final class TestResBundle {
         final String[][] junk = new String[1][];
         junk[0] = new String[]{A, B};
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            bundle.addMessages(null, junk);
-        }, "No exception on missing Locale");
+        assertThrows(IllegalArgumentException.class, () ->
+                bundle.addMessages(null, junk), "No exception on missing Locale");
     }
 
     /**

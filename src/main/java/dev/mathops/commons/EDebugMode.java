@@ -9,5 +9,5 @@ public enum EDebugMode {
     NORMAL,
 
     /** Debug mode - actions not taken but log messages generated to indicate what actions would have occurred. */
-    DEBUG;
+    DEBUG,
 }
