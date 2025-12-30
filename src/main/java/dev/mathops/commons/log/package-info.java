@@ -4,9 +4,9 @@
  * limits on file size and number of log files retained. Otherwise, CLIENT logging is used, where log data is simply
  * written to the console.
  * <p>
- * Within a VM, logging begins in CLIENT mode, and remains in that mode until a valid {@code Installation} is provided
- * (where "valid" means that the base directory exists, and it is possible to create and write to the log directory
- * specified in the paths defined in that base directory).
+ * Within a VM, logging begins in CLIENT mode, and remains in that mode until a valid {@code Installation} is provided.
+ * Here, "valid" means that the base directory exists, and it is possible to create and write to the log directory
+ * specified in the paths defined in that base directory.
  *
  * <pre>
  * Synchronized

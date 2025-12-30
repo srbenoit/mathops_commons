@@ -8,8 +8,8 @@ import java.util.Properties;
  * Provides VM-wide control of the logging subsystem. There is a single log flow for the VM. Until an Installation has
  * been set in this class, log messages go solely to the console and all levels of event are logged. Once an
  * installation is set, logging preferences are read from that installation's base directory and file-based logging may
- * begin. Note that there can be multiple Installations on a single server computer, but each must run in its own VM,
- * and a single web server (such as Apache Tomcat) which runs in a VM may present only one Installation's websites.
+ * begin. Note that there can be multiple Installations on a single server computer, but each must run in its own VM. A
+ * single web server (such as Apache Tomcat) which runs in a VM may present only one Installation's websites.
  */
 public final class LoggingSubsystem {
 

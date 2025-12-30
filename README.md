@@ -34,7 +34,7 @@ associated with each attribute/property in the spirit of CSS property values.
 ## number
 
 Some additional numeric types including Rational and BigRational (these track integer numerator and denominator, are
-always in reduced form). This package includes arithmetic opertations on these types that preserve "rational" values
+always in reduced form). This package includes arithmetic operations on these types that preserve "rational" values
 (so 1/3 can be represented exactly, for example). This package also includes an Irrational type that handles common use
 cases in algebra and trigonometry (rational multiples of pi, e, or roots, like "5 root 3 over 2" or "5 pi over 6").
 

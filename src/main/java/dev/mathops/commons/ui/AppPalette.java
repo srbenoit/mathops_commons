@@ -77,7 +77,7 @@ public final class AppPalette {
         if (bgLuminance > 0.2) {
             // Light mode - the "second background accent" is the critical luminance level - we want this to be 0.85 or
             // greater, so we force the first accent to be 0.875 or higher, and the background to be 0.90 or higher.
-            double minLuminance;
+            final double minLuminance;
 
             if (bgLuminance >= 0.62) {
                 // This will keep the darkest accent above 0.5 luminance
@@ -248,7 +248,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeLightModeAccent1(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeLightModeAccent1(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -266,7 +266,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeLightModeAccent2(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeLightModeAccent2(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -284,7 +284,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeLightModeAccent3(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeLightModeAccent3(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -307,7 +307,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeLightModeAccent4(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeLightModeAccent4(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -330,7 +330,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeLightModeAccent5(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeLightModeAccent5(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -353,7 +353,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeDarkModeAccent1(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeDarkModeAccent1(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -375,7 +375,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeDarkModeAccent2(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeDarkModeAccent2(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -397,7 +397,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeDarkModeAccent3(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeDarkModeAccent3(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -419,7 +419,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeDarkModeAccent4(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeDarkModeAccent4(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -441,7 +441,7 @@ public final class AppPalette {
      * @param whichPalette the palette choice
      * @return the accent 1 color
      */
-    private Color makeDarkModeAccent5(final double bgLuminance, final EAppPalette whichPalette) {
+    private static Color makeDarkModeAccent5(final double bgLuminance, final EAppPalette whichPalette) {
 
         final double[] rgb = new double[3];
 
@@ -463,7 +463,7 @@ public final class AppPalette {
      * @param rgb         the target RGB color - luminosity may be adjusted to achieve target contrast level
      * @return the contrasting accent color
      */
-    private Color makeLightModeColor(final double bgLuminance, final double[] rgb) {
+    private static Color makeLightModeColor(final double bgLuminance, final double[] rgb) {
 
         final Color result;
 
@@ -491,7 +491,7 @@ public final class AppPalette {
      * @param rgb         the target RGB color - luminosity may be adjusted to achieve target contrast level
      * @return the contrasting accent color
      */
-    private Color makeDarkModeColor(final double bgLuminance, final double[] rgb) {
+    private static Color makeDarkModeColor(final double bgLuminance, final double[] rgb) {
 
         final Color result;
 

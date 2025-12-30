@@ -9,8 +9,7 @@ public enum CoreConstants {
     /**
      * A static object on which to synchronize single-instance object instance creation. This allows us to avoid
      * creating single-instance objects immediately on class load (through a static member that is initialized to a new
-     * instance immediately), and also avoid having each such class define an instance synch object (again, created on
-     * class load), just to have something on which to synchronize instance creation.
+     * instance immediately), and also avoid having each such class define an instance synchronization object.
      * <p>
      * The pattern for use of this object is: <pre>
      * public final class MySingleInstanceClass {

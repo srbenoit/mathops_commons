@@ -1,10 +1,10 @@
 package dev.mathops.commons.log;
 
 /**
- * A logged object that manages a read lock and a write lock in such a way that only one thread may hold the write lock
- * at a given time, and only when there are no read locks, but multiple threads may hold read locks (assuming there is
- * no write lock). That is, the object can be written (mutated) by only one thread, but multiple threads can access the
- * object knowing that it will not be mutated at the same time.
+ * A logged object that manages a read lock and a write lock. Only one thread may hold the write lock at a given time,
+ * and only when there are no read locks, but multiple threads may hold read locks.  This assumes there is no write
+ * lock. That is, the object can be written (mutated) by only one thread, but multiple threads can access the object
+ * knowing that it will not be mutated at the same time.
  */
 public class Locked {
 
@@ -21,9 +21,9 @@ public class Locked {
     private Thread curWriter = null;
 
     /**
-     * Flag indicating the object is notifying listeners of a mutation (this is done without write locks held, but if a
-     * listener attempts to mutate the object during notification by attempting to obtain a write lock, this must fail -
-     * otherwise, a listener could mutate the object before subsequent listeners are notified of the original change).
+     * Flag indicating the object is notifying listeners of a mutation.  This is done without write locks held, but if a
+     * listener attempts to mutate the object during notification by attempting to obtain a write lock, this must fail;
+     * otherwise, a listener could mutate the object before subsequent listeners are notified of the original change.
      */
     private final boolean notifying;
 

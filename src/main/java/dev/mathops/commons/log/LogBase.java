@@ -168,7 +168,7 @@ public class LogBase extends Synchronized {
 
         for (final Object arg : args) {
             if (arg instanceof Throwable thrown) {
-                while (thrown != null) {
+                while (true) {
                     builder.append(CoreConstants.CRLF);
                     final Class<? extends Throwable> cls = thrown.getClass();
                     final String clsName = cls.getSimpleName();

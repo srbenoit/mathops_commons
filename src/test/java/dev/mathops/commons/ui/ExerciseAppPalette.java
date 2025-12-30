@@ -15,7 +15,7 @@ import java.awt.FlowLayout;
 /**
  * Exercises the {@code AppPalette} class.
  */
-public class ExerciseAppPalette implements Runnable {
+public final class ExerciseAppPalette implements Runnable {
 
     private ExerciseAppPalette() {
 
@@ -152,9 +152,8 @@ public class ExerciseAppPalette implements Runnable {
     /**
      * Main method to launch the application
      *
-     * @param args command-line arguments
      */
-    public static void main(final String... args) {
+    static void main() {
 
         SwingUtilities.invokeLater(new ExerciseAppPalette());
     }
