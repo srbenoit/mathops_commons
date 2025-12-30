@@ -80,7 +80,7 @@ public enum LongArrayCodec implements Codec<long[]> {
         } else if (len == 1) {
             result = Long.toString(obj[0]);
         } else {
-            final StringBuilder builder = new StringBuilder(10 * len);
+            final StringBuilder builder = new StringBuilder(9 * len);
             builder.append(obj[0]);
             for (int i = 1; i < len; ++i) {
                 builder.append(",");

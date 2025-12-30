@@ -80,7 +80,7 @@ public enum DoubleArrayCodec implements Codec<double[]> {
         } else if (len == 1) {
             result = Double.toString(obj[0]);
         } else {
-            final StringBuilder builder = new StringBuilder(10 * len);
+            final StringBuilder builder = new StringBuilder(18 * len);
             builder.append(obj[0]);
             for (int i = 1; i < len; ++i) {
                 builder.append(",");

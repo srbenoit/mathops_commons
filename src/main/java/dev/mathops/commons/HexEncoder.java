@@ -84,11 +84,34 @@ public enum HexEncoder {
      */
     public static String encodeUppercase(final byte[] bytes) {
 
+        return encode(bytes, UC_HEX);
+    }
+
+    /**
+     * Encodes an array of bytes as hexadecimal, using lowercase letters 'A' through 'F'.
+     *
+     * @param bytes the byte array
+     * @return the encoded hex string
+     */
+    public static String encodeLowercase(final byte[] bytes) {
+
+        return encode(bytes, LC_HEX);
+    }
+
+    /**
+     * Encodes an array of bytes as hexadecimal, using a provided alphabet.
+     *
+     * @param bytes the byte array
+     * @param hex   the hex alphabet
+     * @return the encoded hex string
+     */
+    private static String encode(final byte[] bytes, final char[] hex) {
+
         final StringBuilder builder = new StringBuilder(bytes.length << 1);
 
         for (final byte aByte : bytes) {
-            builder.append(UC_HEX[((int) aByte >> 4) & LOW_NIBBLE]);
-            builder.append(UC_HEX[(int) aByte & LOW_NIBBLE]);
+            builder.append(hex[((int) aByte >> 4) & LOW_NIBBLE]);
+            builder.append(hex[(int) aByte & LOW_NIBBLE]);
         }
 
         return builder.toString();
@@ -103,23 +126,5 @@ public enum HexEncoder {
     public static char encodeNibble(final int nibble) {
 
         return UC_HEX[nibble & LOW_NIBBLE];
-    }
-
-    /**
-     * Encodes an array of bytes as hexadecimal, using lowercase letters 'A' through 'F'.
-     *
-     * @param bytes the byte array
-     * @return the encoded hex string
-     */
-    public static String encodeLowercase(final byte[] bytes) {
-
-        final StringBuilder builder = new StringBuilder(bytes.length << 1);
-
-        for (final byte aByte : bytes) {
-            builder.append(LC_HEX[((int) aByte >> 4) & LOW_NIBBLE]);
-            builder.append(LC_HEX[(int) aByte & LOW_NIBBLE]);
-        }
-
-        return builder.toString();
     }
 }

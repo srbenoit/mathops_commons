@@ -131,8 +131,7 @@ public class IntValuedMap<T> {
      */
     public final void put(final T key, final int value) {
 
-        final int newSize = this.numEntries + 1;
-        if (newSize > this.growThreshold) {
+        if (this.numEntries + 1 > this.growThreshold) {
             // The following will update bucketMask, buckets, growThreshold, shrinkThreshold
             rehash();
         }
@@ -268,8 +267,7 @@ public class IntValuedMap<T> {
     public final int adjust(final T key, final int delta, final int defaultInitialValue) {
 
         // Ensure there is space in case we need to create a new node
-        final int newSize = this.numEntries + 1;
-        if (newSize > this.growThreshold) {
+        if (this.numEntries + 1 > this.growThreshold) {
             // The following will update bucketMask, buckets, growThreshold, shrinkThreshold
             rehash();
         }

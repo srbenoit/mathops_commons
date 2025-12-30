@@ -20,7 +20,7 @@ public interface Codec<T> {
      * @param str the string to parse
      * @return the parsed instance
      * @throws IllegalArgumentException if {@code str} is {@code null}
-     * @throws StringParseException if the string cannot be parsed as an instance of the class
+     * @throws StringParseException     if the string cannot be parsed as an instance of the class
      */
     T parse(String str) throws IllegalArgumentException, StringParseException;
 

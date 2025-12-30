@@ -216,13 +216,14 @@ public final class AlignedFlowLayout implements LayoutManager {
     public Dimension preferredLayoutSize(final Container parent) {
 
         final boolean useBaseline = this.verticalAlign == BASELINE;
+        final Dimension dim = new Dimension(0, 0);
+
+        int maxAscent = 0;
+        int maxDescent = 0;
+        boolean firstVisible = true;
 
         synchronized (parent.getTreeLock()) {
-            final Dimension dim = new Dimension(0, 0);
             final int numMembers = parent.getComponentCount();
-            boolean firstVisible = true;
-            int maxAscent = 0;
-            int maxDescent = 0;
 
             for (int i = 0; i < numMembers; i++) {
                 final Component component = parent.getComponent(i);
@@ -272,10 +273,10 @@ public final class AlignedFlowLayout implements LayoutManager {
 
         int maxAscent = 0;
         int maxDescent = 0;
+        boolean firstVisible = true;
 
         synchronized (parent.getTreeLock()) {
             final int numMembers = parent.getComponentCount();
-            boolean firstVisible = true;
 
             for (int i = 0; i < numMembers; i++) {
                 final Component component = parent.getComponent(i);

@@ -212,38 +212,12 @@ public class TypedKey<T> {
 
         final int c0 = (int) theName.charAt(0);
 
-        if (c0 == COLON || (c0 >= UC_A && c0 <= UC_Z) || c0 == SPC || (c0 >= LC_A && c0 <= LC_Z)
-            || (c0 >= START1 && c0 <= END1)
-            || (c0 >= START2 && c0 <= END2)
-            || (c0 >= START3 && c0 <= END3)
-            || (c0 >= START4 && c0 <= END4)
-            || (c0 >= START5 && c0 <= END5)
-            || (c0 >= START6 && c0 <= END6)
-            || (c0 >= START7 && c0 <= END7)
-            || (c0 >= START8 && c0 <= END8)
-            || (c0 >= START9 && c0 <= END9)
-            || (c0 >= START10 && c0 <= END10)
-            || (c0 >= START11 && c0 <= END11)
-        ) {
+        if (isNameStartChar(c0)) {
             final int len = theName.length();
             for (int i = 1; i < len; ++i) {
                 final int ci = (int) theName.charAt(i);
 
-                if (ci == DASH || ci == DOT || (ci >= ZERO && ci <= NINE) || ci == COLON
-                    || (ci >= UC_A && ci <= UC_Z) || ci == SPC || (ci >= LC_A && ci <= LC_Z)
-                    || ci == MID_DOT
-                    || (ci >= START1 && ci <= END1)
-                    || (ci >= START2 && ci <= END2)
-                    || (ci >= START3 && ci <= END3)
-                    || (ci >= START4A && ci <= END4)
-                    || (ci >= START5 && ci <= END5)
-                    || (ci >= START6 && ci <= END6)
-                    || (ci >= START12 && ci <= END12)
-                    || (ci >= START7 && ci <= END7)
-                    || (ci >= START8 && ci <= END8)
-                    || (ci >= START9 && ci <= END9)
-                    || (ci >= START10 && ci <= END10)
-                    || (ci >= START11 && ci <= END11)) {
+                if (ci == DASH || ci == DOT || (ci >= ZERO && ci <= NINE) || isNameStartChar(ci)) {
                     continue;
                 }
 
@@ -252,6 +226,28 @@ public class TypedKey<T> {
         } else {
             throw new IllegalArgumentException("Invalid name start character");
         }
+    }
+
+    /**
+     * Tests whether a character is a valid XML name-start character.
+     *
+     * @param c0 the character to test
+     * @return true if the character  is a valid name-start character
+     */
+    private static boolean isNameStartChar(final int c0) {
+
+        return c0 == COLON || (c0 >= UC_A && c0 <= UC_Z) || c0 == SPC || (c0 >= LC_A && c0 <= LC_Z)
+               || (c0 >= START1 && c0 <= END1)
+               || (c0 >= START2 && c0 <= END2)
+               || (c0 >= START3 && c0 <= END3)
+               || (c0 >= START4 && c0 <= END4)
+               || (c0 >= START5 && c0 <= END5)
+               || (c0 >= START6 && c0 <= END6)
+               || (c0 >= START7 && c0 <= END7)
+               || (c0 >= START8 && c0 <= END8)
+               || (c0 >= START9 && c0 <= END9)
+               || (c0 >= START10 && c0 <= END10)
+               || (c0 >= START11 && c0 <= END11);
     }
 
     /**

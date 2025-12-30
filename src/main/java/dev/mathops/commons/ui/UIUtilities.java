@@ -5,7 +5,7 @@ import javax.swing.SwingConstants;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * A set of utilities for user interface construction.
@@ -58,19 +58,9 @@ public enum UIUtilities {
      */
     public static void makeLabelsSameSizeRightAligned(final JLabel[] labels) {
 
-        int maxW = 0;
-        int maxH = 0;
-        for (final JLabel lbl : labels) {
-            lbl.setHorizontalAlignment(SwingConstants.RIGHT);
-            final Dimension size = lbl.getPreferredSize();
-            maxW = Math.max(maxW, size.width);
-            maxH = Math.max(maxH, size.height);
-        }
+        final List<JLabel> list = List.of(labels);
 
-        final Dimension newSize = new Dimension(maxW, maxH);
-        for (final JLabel lbl1 : labels) {
-            lbl1.setPreferredSize(newSize);
-        }
+        makeLabelsSameSizeRightAligned(list);
     }
 
     /**
