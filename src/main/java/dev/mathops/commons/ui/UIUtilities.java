@@ -5,6 +5,7 @@ import javax.swing.SwingConstants;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.util.Collection;
 
 /**
  * A set of utilities for user interface construction.
@@ -36,7 +37,7 @@ public enum UIUtilities {
      * @param xPos   the x position (0.0 is left, 1.0 is right, 0.5 is centered)
      * @param yPos   the y position (0.0 is top, 1.0 is bottom, 0.5 is centered)
      */
-    private static void packAndShow(final Window window, final double xPos, final double yPos) {
+    public static void packAndShow(final Window window, final double xPos, final double yPos) {
 
         window.pack();
 
@@ -61,6 +62,49 @@ public enum UIUtilities {
         int maxH = 0;
         for (final JLabel lbl : labels) {
             lbl.setHorizontalAlignment(SwingConstants.RIGHT);
+            final Dimension size = lbl.getPreferredSize();
+            maxW = Math.max(maxW, size.width);
+            maxH = Math.max(maxH, size.height);
+        }
+
+        final Dimension newSize = new Dimension(maxW, maxH);
+        for (final JLabel lbl1 : labels) {
+            lbl1.setPreferredSize(newSize);
+        }
+    }
+
+    /**
+     * Given an array of labels, makes all of them right-aligned, and with the same preferred size.
+     *
+     * @param labels the array of labels to process
+     */
+    public static void makeLabelsSameSizeRightAligned(final Iterable<? extends JLabel> labels) {
+
+        int maxW = 0;
+        int maxH = 0;
+        for (final JLabel lbl : labels) {
+            lbl.setHorizontalAlignment(SwingConstants.RIGHT);
+            final Dimension size = lbl.getPreferredSize();
+            maxW = Math.max(maxW, size.width);
+            maxH = Math.max(maxH, size.height);
+        }
+
+        final Dimension newSize = new Dimension(maxW, maxH);
+        for (final JLabel lbl1 : labels) {
+            lbl1.setPreferredSize(newSize);
+        }
+    }
+
+    /**
+     * Given an array of labels, makes all of them the same preferred size.
+     *
+     * @param labels the array of labels to process
+     */
+    public static void makeLabelsSameSize(final Iterable<? extends JLabel> labels) {
+
+        int maxW = 0;
+        int maxH = 0;
+        for (final JLabel lbl : labels) {
             final Dimension size = lbl.getPreferredSize();
             maxW = Math.max(maxW, size.width);
             maxH = Math.max(maxH, size.height);

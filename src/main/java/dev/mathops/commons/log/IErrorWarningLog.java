@@ -3,7 +3,7 @@ package dev.mathops.commons.log;
 /**
  * An interface for processes that can accumulate error and warning messages.
  */
-interface IErrorWarningLog {
+public interface IErrorWarningLog {
 
     /**
      * Adds an error to the list of errors encountered during the process.

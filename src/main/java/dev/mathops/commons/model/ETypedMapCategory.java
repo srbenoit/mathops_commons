@@ -20,7 +20,7 @@ package dev.mathops.commons.model;
  */
 public enum ETypedMapCategory {
 
-    /** Attribute (persist ed). */
+    /** Attribute (persisted). */
     ATTRIBUTE,
 
     /** Property (ephemeral, not persisted). */
