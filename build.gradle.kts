@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `maven-publish`
 }
 
 sourceSets {
@@ -8,22 +9,18 @@ sourceSets {
     }
 }
 
-group = "dev.mathops.commons"
-version = "1.0-SNAPSHOT"
+group = "com.github.srbenoit"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
     useJUnitPlatform()
-}
-
-tasks.compileJava {
-    options.javaModuleVersion = provider { "1.0" }
 }
